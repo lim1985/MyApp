@@ -141,10 +141,11 @@
           hasFeedback
           validateStatus='warning'
         >
-          <a-select defaultValue='1' v-model="mdl.status">
+          <a-select defaultValue='1' id="status" v-model="mdl.status">
             <a-select-option value='1'>Option 1</a-select-option>
             <a-select-option value='2'>Option 2</a-select-option>
             <a-select-option value='3'>Option 3</a-select-option>
+            <a-select-option value='9'>Option 9</a-select-option>
           </a-select>
         </a-form-item>
 
@@ -191,6 +192,7 @@
           />
         </a-form-item> -->  
     <user-modal ref="UserPhonemodal" @ok="handleSaveOk" @close="handleSaveClose"/>
+    <UpdateUserModal ref="UpdateUserPhonemodal" @ok="handleSaveOk" @close="handleSaveClose"/>
   </a-card>
 </template>
 
@@ -202,14 +204,16 @@
   import { mapState} from 'vuex'
   import {GetALLByDepID,AddPhoneUser} from '@/api/manage'
   import UserModal from './modules/UserPhone/addUserPhone'
-// GetPermissioninfobyKey,getRoleList,SelectALLDepByKey,GetPermissionByroleID,SelectDepByID
+  import UpdateUserModal from './modules/UserPhone/UpdateUserPhone'
+
   export default {
     name: "TableList",
     components: {
       AInput,
       ATextarea,
       STable,
-      UserModal
+      UserModal,
+      UpdateUserModal  
     },
     computed:{
       ...mapState({
@@ -387,9 +391,15 @@
             // })
         },
       handleEdit (record) {
-        this.mdl = Object.assign({}, record)
+        console.log(record)
+        setTimeout(() => {
+            this.$refs.UpdateUserPhonemodal.add(record);  
+        }, 100);
+        //  setTimeout(() => {
+        // this.mdl = Object.assign({}, record)
+        //  }, 100);
         // console.log(this.mdl)
-        this.visible = true
+        // this.visible = true
       },
       handleOk () {
 

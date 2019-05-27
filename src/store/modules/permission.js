@@ -72,6 +72,7 @@ const permission = {
        console.log(asyncRouterMap)
       //  console.log(typeof(newasyncRoterMap))
        let  userid= {AdminID:Vue.ls.get(User_ID)}
+     
        const obj=newasyncRoterMap(userid)
       //  console.log(typeof(obj))
       

@@ -9,7 +9,6 @@
   >
     <a-spin :spinning="confirmLoading">
       <a-form :form="form">
-
         <a-form-item
           label="父级ID"
         >

@@ -19,7 +19,7 @@
           </a-col>
           <a-col :md="8" :sm="24">
             <span class="table-page-search-submitButtons">
-              <a-button @click="addpermission()" style="margin-left: 8px" type="primary">添加类别</a-button>           
+              <a-button @click="showPermissionModel()" style="margin-left: 8px" type="primary">添加类别</a-button>           
               <a-button style="margin-left: 8px" type="primary">查询</a-button>
               <a-button style="margin-left: 8px">重置</a-button>
             </span>
@@ -433,7 +433,7 @@
       })
   
     },     
-      addpermission()
+      showPermissionModel()
       {
         this.addPre_model=true
       },

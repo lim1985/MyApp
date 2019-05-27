@@ -54,9 +54,6 @@ export function getAdminInfo(parameter) {
   })
 }
 
-
-
-
 export function logout() {
   return axios({
     url: '/auth/logout',

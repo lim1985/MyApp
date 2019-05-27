@@ -13,7 +13,8 @@ const user = {
     info: {},
     userinfo:'',
     userID:'',
-    DEPKEY:''
+    DEPKEY:'',
+    UserPhoneID:''
   },
 
   mutations: {
@@ -41,6 +42,9 @@ const user = {
     },
     SET_DEPKEY:(state,key)=>{
       state.DEPKEY=key
+    },
+    SET_UserPhoneID:(state,key)=>{
+      state.UserPhoneID=key
     }
   },
 

@@ -16,7 +16,7 @@
         >
           <a-input 
             placeholder='联系人姓名' 
-            v-decorator="['UserName',{rules: [{ required: true },{ validator: checkUsername }]}]"
+            v-decorator="['UserName',{rules: [{ required: true },{ validator: v().checkUsername }]}]"
           /> 
           <!-- <a-input placeholder='联系人姓名' v-model="Mymdl.UserName" id='UserName' /> -->
         </a-form-item>
@@ -48,7 +48,7 @@
               hasFeedback  
               v-bind="formItemLayout"             
             >
-              <a-input placeholder='填写联系人的职务信息' v-decorator="['UJOB',{rules: [{ required: false},{validator: checkjob}]}]"/> 
+              <a-input placeholder='填写联系人的职务信息' v-decorator="['UJOB',{rules: [{ required: false},{validator: v().checkjob}]}]"/> 
               <!-- <a-input placeholder='填写联系人的职务信息' v-model="Mymdl.UJOB" id='UJOB' />  -->
             </a-form-item>
           </a-col>
@@ -60,7 +60,7 @@
               label='办公座机'  
               hasFeedback                 
             >
-              <a-input placeholder='填写联系人的办公座机' v-decorator="['tel',{rules: [{ required: false },{ validator: checkTel }]}]"/>
+              <a-input placeholder='填写联系人的办公座机' v-decorator="['tel',{rules: [{ required: false },{ validator: v().checkTel }]}]"/>
             </a-form-item>           
           </a-col>
           <a-col :span="24">
@@ -71,7 +71,7 @@
             >
               <!-- :help="Tips"  
               :validateStatus="status"     -->
-              <a-input placeholder='填写联系人的办公手机' v-decorator="['cellphone',{rules: [{ required: true },{ validator: checkPhone }]}]"/> 
+              <a-input placeholder='填写联系人的办公手机' v-decorator="['cellphone',{rules: [{ required: true },{ validator:v().checkPhone }]}]"/> 
               <!-- <a-input placeholder='填写联系人的办公手机' v-model="Mymdl.cellphone" id='cellphone' /> -->
             </a-form-item>   
           </a-col>          
@@ -83,16 +83,19 @@
 
 <script>
   import Vue from 'vue'  
+  import { mapState} from 'vuex'
   import { User_ID } from "@/store/mutation-types" 
-  import {Select_PermissionsByRolesID,getUserrolesbyAdminID,AddPhoneUser,asyncValidateTel} from '@/api/manage'
-import { Promise } from 'q';
+  import {Select_PermissionsByRolesID,getUserrolesbyAdminID,AddPhoneUser} from '@/api/manage'
+  import { Promise } from 'q';
+  import Validate from '@/tools/Validate/index'
+
 
   //GetALLByDepID
+
 export default {
-  name: 'AdduserModal',
-   
+  name: 'AdduserModal', 
   data () {
-    return {
+    return {      
       tel:'',
       Isvalidate:false,
       status:'',
@@ -122,96 +125,101 @@ export default {
     console.log('form::', this.form)
   },
   created () {
-
-  },
-   computed: {
-    // 计算属性的 getter
-  },
-   watch: {
-      tel(val) {
-        console.log(val)
-        return val
-        // this.ValidateTel(val);
      
-        
-      }},
+    // this.v();
+  },
+    computed:{
+      ...mapState({
+        S_DEPKEY:state=>state.user.DEPKEY,
+        V_name:state=>state.user.name,
+        UserPhoneID:state=>state.user.UserPhoneID        
+      })    
+    },
+   watch: {
+   
+      },
   async mounted(){   
       this.options=await this.GetDepnameAndchild()
       // console.log(this.options)    
     },
   methods:  {
-    ValidateTel(s)
-    { 
-      return new Promise(function(resolve){
-          setTimeout(async() => {
-       let obj=new Object();
-           obj.cellphone=s
-           obj.H_cellphone=''
-       
-              let res= await asyncValidateTel(obj)
-              resolve(res)
-          }, 1000);
-       })
+    v(){
+      console.log(Validate)
+      
     },
-    checkjob(rule, value, callback)
-    {
-      let reg=/([\u4E00-\u9FA5]|[\uFE30-\uFFA0])+/;
-      if(!value)
-      {
-        callback();
-        return 
-      }else if(!reg.test(value))
-      {
-        callback('职务只能输入中文及中文标点符号')
-        return
-      }
-      callback();
-    },
-    checkTel(rule, value, callback){
-      let reg=/^(\(\d{3,4}\)|\d{3,4}-|\s)?\d{7,14}$/;
-      if(!value)
-      {
-        callback();
-        return 
-      }else if(!reg.test(value))
-      {
-        callback('请正确填写座机号码。如：0739-5388888')
-        return
-      }
-        callback();
-    },
-    checkUsername(rule,value,callback)
-    {
-      let reg = /^[\u0391-\uFFE5]{0,4}$/;
-      if(!reg.test(value))
-      {
-        callback('姓名只能输入最多4个汉字')
-        return
-      }
-       callback();
+    //  ValidatePhone(s,id)
+    // {        
+    //   return new Promise(function(resolve){
+    //       setTimeout(async() => {  
+            
+    //             let obj=new Object();
+    //             obj.tel=s;
+    //             obj.ID=id;
+                 
+    //           let res= await asyncValidateTel(obj)
+    //           resolve(res)
+    //       }, 1000);
+    //    })
+    // }, 
+    // checkjob(rule, value, callback)
+    // {
+    //   let reg=/([\u4E00-\u9FA5]|[\uFE30-\uFFA0])+/;
+    //   if(!value)
+    //   {
+    //     callback();
+    //     return 
+    //   }else if(!reg.test(value))
+    //   {
+    //     callback('职务只能输入中文及中文标点符号')
+    //     return
+    //   }
+    //   callback();
+    // },
+    // checkTel(rule, value, callback){
+    //   let reg=/^(\(\d{3,4}\)|\d{3,4}-|\s)?\d{7,14}$/;
+    //   if(!value)
+    //   {
+    //     callback();
+    //     return 
+    //   }else if(!reg.test(value))
+    //   {
+    //     callback('请正确填写座机号码。如：0739-5388888')
+    //     return
+    //   }
+    //     callback();
+    // },
+    // checkUsername(rule,value,callback)
+    // {
+    //   let reg = /^[\u0391-\uFFE5]{0,4}$/;
+    //   if(!reg.test(value))
+    //   {
+    //     callback('姓名只能输入最多4个汉字')
+    //     return
+    //   }
+    //    callback();
 
-    },
-    async checkPhone(rule, value, callback) {  
-      var reg = /^1(3|4|5|7|8|9)\d{9}$/;   
-      if (!reg.test(value)) {
-         callback('请输入正确的手机号');              
-         return;
-      } 
-       else
-      {
-        console.log(value)
-        let s =await this.ValidateTel(value)
-            console.log(s)   
-            if(s.code==-3)
-            {
-              callback('该手机号已经被其他人使用，请重新填写。')
-            } 
-            else
-            {
-              callback();
-            }               
-      }            
-    },
+    // },
+    // async checkPhone(rule, value, callback) {  
+    //   var reg = /^1(3|4|5|7|8|9)\d{9}$/;   
+    //   if (!reg.test(value)) {
+    //      callback('请输入正确的手机号');              
+    //      return;
+    //   } 
+    //    else
+    //   {
+    //     console.log(value)
+    //     let s =await this.ValidatePhone(value,"-1")
+    //         console.log(s)   
+    //         if(s.code==-3)
+    //         {
+    //           callback('该手机号已经被其他人使用，请重新填写。')
+    //         } 
+    //         else
+    //         {
+    //           callback();
+    //         }               
+    //   }            
+    // },
      
        async GetDepnameAndchild()
     {
@@ -262,8 +270,7 @@ export default {
       this.edit();
     },
     edit () {
-      // this.mdl = Object.assign({}, record)
-      
+      // this.mdl = Object.assign({}, record)      
       this.$nextTick(() => {
         this.form.resetFields();
         // this.form.setFieldsValue({ ...record })

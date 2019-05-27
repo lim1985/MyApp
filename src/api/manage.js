@@ -6,13 +6,13 @@ const api = {
   orgTree: '/org/tree',
   permission: '/permission',
   //权限接口
-  addPermission: 'http://172.20.8.28:3001/api/PermissionAdd',//添加权限
-  UpdataPermission: 'http://172.20.8.28:3001/api/PermissionUpdata',//修改权限
-  DelPermission: 'http://172.20.8.28:3001/api/PermissionDel',//修改权限 
-  GetPermissionList:'http://172.20.8.28:3001/api/PermissionList',
-  GetPermissionInfo:'http://172.20.8.28:3001/api/Permissionbykey',
-  GetPermissionAll:'http://172.20.8.28:3001/api/getAllPermissAndDeplist',//返回所有权限和部门
-  GetDepTreelist:'http://172.20.8.28:3001/api/getAllDepTreeList',//返回部门树
+  addPermission: 'http://172.20.8.28:3001/api/PermissionAdd',//添加权限//src\views\list\PermissionList.vue页面使用了该接口
+  UpdataPermission: 'http://172.20.8.28:3001/api/PermissionUpdata',//修改权限//src\views\list\PermissionList.vue页面使用了该接口
+  DelPermission: 'http://172.20.8.28:3001/api/PermissionDel',//修改权限//src\views\list\PermissionList.vue页面使用了该接口
+  GetAllPermissionList:'http://172.20.8.28:3001/api/PermissionList',//未找到使用页面
+  GetPermissionInfo:'http://172.20.8.28:3001/api/Permissionbykey',//使用页面src\views\list\Department.vue
+  GetPermissionAll:'http://172.20.8.28:3001/api/getAllPermissAndDeplist',//返回所有权限和部门DepCardList.vue RoleList.vue 使用该接口
+  GetDepTreelist:'http://172.20.8.28:3001/api/getAllDepTreeList',//返回部门树//src\views\other\TreeList.vue页面使用了该接口
   UpdataPermissionInformation:'http://172.20.8.28:3001/api/UpdataPermissionInformation',
 
   
@@ -39,6 +39,9 @@ const api = {
   SelectDepartmentByID:'http://172.20.8.28:3001/api/DepartmentGetByID',
   //通讯录管理接口
   //通讯录人员添加
+
+
+  UpdateUserPhone:'http://172.20.8.28:3001/api/UpdatePhoneUser',
   asyncValidateTel:'http://172.20.8.28:3001/api/asyncValidateTel',
   AddPhoneUser:'http://172.20.8.28:3001/api/AddPhoneUser',
   GetAllPhoneUserByPermissionKey:'http://172.20.8.28:3001/api/AllPhoneUserByPermissionkey',
@@ -49,9 +52,13 @@ const api = {
 }
 
 export default api
-
-
-
+export function UpdateUserPhone (parameter) {
+  return axios({
+    url: api.UpdateUserPhone,
+    method: 'post',
+    data:parameter 
+  })
+}
 export function GetALLByDepID (parameter) {
   return axios({
     url: api.GetALLByDepID,
@@ -273,9 +280,9 @@ export function AddPermission(parameter) {
   })
 }
 //获取权限列表
-export function GetPermissionList(parameter) {
+export function GetAllPermissionList(parameter) {
   return axios({
-    url: api.GetPermissionList,
+    url: api.GetAllPermissionList,
     method: 'get',
     params: parameter
   })
