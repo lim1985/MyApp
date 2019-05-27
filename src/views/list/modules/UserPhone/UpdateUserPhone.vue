@@ -48,7 +48,7 @@
               <a-input 
                 disabled
                 placeholder='联系人姓名' 
-                v-decorator="['UserName',{rules: [{ required: true },{ validator: v().checkUsername }]}]"
+                v-decorator="['UserName',{rules: [{ required: true },{ validator:v().checkUsername }]}]"
               /> 
               <!-- <a-input placeholder='联系人姓名' v-model="Mymdl.UserName" id='UserName' /> -->
             </a-form-item>
@@ -207,7 +207,7 @@
   import {UpdateUserPhone,Select_PermissionsByRolesID,getUserrolesbyAdminID,AddPhoneUser} from '@/api/manage'
   import { Promise } from 'q';
   import Validate from '@/tools/Validate/index'
-  //GetALLByDepID
+  //GetALLByDepID,asyncValidateTel
 export default {
   name: 'AdduserModal',
    
@@ -263,11 +263,11 @@ export default {
     },
   methods:  {
       v(){
-      console.log(Validate)
+      // console.log(Validate)
       return Validate 
     },
       onChange(date, dateString) {
-      console.log(date, dateString);
+       console.log(date, dateString);
     },
     // ValidatePhone(s,id)
     // {        

@@ -16,7 +16,7 @@
         >
           <a-input 
             placeholder='联系人姓名' 
-            v-decorator="['UserName',{rules: [{ required: true },{ validator: v().checkUsername }]}]"
+            v-decorator="['UserName',{rules: [{ required: true },{ validator:v().checkUsername }]}]"
           /> 
           <!-- <a-input placeholder='联系人姓名' v-model="Mymdl.UserName" id='UserName' /> -->
         </a-form-item>
@@ -48,7 +48,7 @@
               hasFeedback  
               v-bind="formItemLayout"             
             >
-              <a-input placeholder='填写联系人的职务信息' v-decorator="['UJOB',{rules: [{ required: false},{validator: v().checkjob}]}]"/> 
+              <a-input placeholder='填写联系人的职务信息' v-decorator="['UJOB',{rules: [{ required: false},{validator:v().checkjob}]}]"/> 
               <!-- <a-input placeholder='填写联系人的职务信息' v-model="Mymdl.UJOB" id='UJOB' />  -->
             </a-form-item>
           </a-col>
@@ -60,7 +60,7 @@
               label='办公座机'  
               hasFeedback                 
             >
-              <a-input placeholder='填写联系人的办公座机' v-decorator="['tel',{rules: [{ required: false },{ validator: v().checkTel }]}]"/>
+              <a-input placeholder='填写联系人的办公座机' v-decorator="['tel',{rules: [{ required: false },{ validator:v().checkTel }]}]"/>
             </a-form-item>           
           </a-col>
           <a-col :span="24">
@@ -90,7 +90,7 @@
   import Validate from '@/tools/Validate/index'
 
 
-  //GetALLByDepID
+  //GetALLByDepID,asyncValidateTel
 
 export default {
   name: 'AdduserModal', 
@@ -143,9 +143,8 @@ export default {
       // console.log(this.options)    
     },
   methods:  {
-    v(){
-      console.log(Validate)
-      
+    v(){     
+        return Validate;
     },
     //  ValidatePhone(s,id)
     // {        
