@@ -16,6 +16,20 @@ const Validate={
         }, 1000);
     })
   },
+  checkNum1to100(rule, value, callback)
+  {
+    let reg=/^(100|[1-9]\d|\d)$/
+    if(!value)
+    {
+      callback();
+    }
+    else if(!reg.test(value))
+    {
+      callback('权重只能输入1-100的数字')
+      return
+    }
+    callback();
+  },
 checkNum(rule, value, callback)
 {
   let reg=/^[-+]?\d*$/;   
@@ -104,15 +118,17 @@ async checkPhone(rule, value, callback) {
     } 
      else
     {
-      console.log(value)
+     
       let s =await Validate.ValidatePhone(value,"-1")
-          console.log(s)   
+          console.log(s)
           if(s.code==-3)
           {
-            callback('该手机号已经被其他人使用，请重新填写。')
+            store.commit('SET_ReferenceStatus',true); 
+            store.commit('SET_ReferenceUserId',s.result.ID);        
+            callback('该手机号已经被其他人使用，只能添加引用，不可重复添加。')
           } 
           else
-          {
+          { store.commit('SET_ReferenceStatus',false);  
             callback();
           }               
     }            

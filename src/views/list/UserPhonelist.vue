@@ -62,9 +62,10 @@
     </div> -->
 
     <div class="table-operator">
-      <a-button type="primary" @click="addphone()" icon="plus">添加联系人</a-button>
+      <a-button type="primary" @click="addphone()" :style="{ fontSize: '18px' }" icon="user-add">添加联系人</a-button>
       <a-dropdown v-if="selectedRowKeys.length > 0">
         <a-menu slot="overlay">
+          <a-menu-item key="3"><a-icon type="lock" />发短信</a-menu-item>
           <a-menu-item key="1"><a-icon type="delete" />删除</a-menu-item>
           <!-- lock | unlock -->
           <a-menu-item key="2"><a-icon type="lock" />锁定</a-menu-item>
@@ -84,21 +85,24 @@
       :showAlertInfo="true"
       @onSelect="onChange"
     >
-      <span slot="action" slot-scope="text, record">
-        <a @click="handleEdit(record)">编辑</a>
+      <span slot="action" slot-scope="text, record,index">
+        <a v-show="record.Ustatus==9 || record.Ustatus==7" @click="handleEdit(record)">编辑</a>
         <a-divider type="vertical" />
         <a-dropdown>
           <a class="ant-dropdown-link">
-            更多 <a-icon type="down" />
+            操作 <a-icon type="down" />
           </a>
           <a-menu slot="overlay">
             <a-menu-item>
+              <a @click="sendsms(index,record)">发短信</a>
+            </a-menu-item>
+            <a-menu-item>
               <a href="javascript:;">详情</a>
             </a-menu-item>
-            <a-menu-item>
+            <a-menu-item v-show="record.Ustatus==9 || record.Ustatus==7">
               <a href="javascript:;">禁用</a>
             </a-menu-item>
-            <a-menu-item>
+            <a-menu-item v-show="record.Ustatus==9 || record.Ustatus==7|| record.Ustatus==6">
               <a href="javascript:;">删除</a>
             </a-menu-item>
           </a-menu>
@@ -193,6 +197,7 @@
         </a-form-item> -->  
     <user-modal ref="UserPhonemodal" @ok="handleSaveOk" @close="handleSaveClose"/>
     <UpdateUserModal ref="UpdateUserPhonemodal" @ok="handleSaveOk" @close="handleSaveClose"/>
+    <SendsmsModal ref="SendsmsModal" :Pupuarr="Pupu" @ok="handleSaveOk" @close="handleSaveClose"/>
   </a-card>
 </template>
 
@@ -205,6 +210,7 @@
   import {GetALLByDepID,AddPhoneUser} from '@/api/manage'
   import UserModal from './modules/UserPhone/addUserPhone'
   import UpdateUserModal from './modules/UserPhone/UpdateUserPhone'
+  import SendsmsModal from './modules/sendSMS/sendsms'
 
   export default {
     name: "TableList",
@@ -213,7 +219,8 @@
       ATextarea,
       STable,
       UserModal,
-      UpdateUserModal  
+      UpdateUserModal,
+      SendsmsModal  
     },
     computed:{
       ...mapState({
@@ -226,6 +233,7 @@
         initLoaddata:[],
         key:'',
         Sex:1,
+        Pupu:[],
         datas:{},
         DepName:[],
         PhoneVisible:false,
@@ -254,8 +262,20 @@
           },
           {
             title: '状态',
-            dataIndex: 'status',
-            customRender: (text) => text 
+            dataIndex: 'Ustatus',
+            customRender: (text=>{
+              if(text==9)
+              {
+                return '正常'
+              }else if(text==7)
+              {
+                return '停用'
+              }else if(text==6)
+              {
+                return '引用'
+              }
+            
+            }) 
           },
           {
             title: '职务',
@@ -311,16 +331,26 @@
           parameter = {pageNo:1,pageSize:10};
         }        
         this.queryParam.DepID=s  
-        console.log(s)
+    
         return GetALLByDepID(Object.assign(parameter,this.queryParam))
-            .then(res => {                  
-              return res.result
+            .then(res => {   
+              
+              let data= res.result        
+            data.data.forEach(v => {
+                if(v.Rstatus==6)
+                {
+                  v.Ustatus=v.Rstatus
+                }
+            });
+            console.log(data)
+            
+           this.Pupu=data.data.map(item=>{
+             return {Phone:item.cellphone,username:item.UserName,DPname:item.DepartmentName,ID:item.ID,UJOB:item.UJOB,checked:false}
+           })
+           
+              return data
 
-            }).then(res=>{
-              console.log('上一个返回的')
-              console.log(res)                    
-               return res
-            })             
+            })           
         },
         options:[],
         selectedRowKeys: [],
@@ -337,10 +367,17 @@
       // this.options=await this.GetDepnameAndchild();
     },
     methods: {
+      sendsms(i,record)
+      {
+       
+       this.$refs.SendsmsModal.get(i,record);      
+     
+      },
     handleSaveClose(){
           this.$refs.mytable.refresh()
     },
     handleSaveOk(){
+      console.log('AddOK')
           this.$refs.mytable.refresh()
       },
     filter(inputValue, path) {
@@ -358,7 +395,7 @@
         this.UseAddform.validateFields(async(err, values) => {
           if (!err) {
           const res=await AddPhoneUser(this.Mymdl)
-          console.log(res)
+        
           if(res.code==-1)
           {            
              this.$message.error('该号码已被使用，请重新输入！');                    
@@ -391,7 +428,7 @@
             // })
         },
       handleEdit (record) {
-        console.log(record)
+       
         setTimeout(() => {
             this.$refs.UpdateUserPhonemodal.add(record);  
         }, 100);

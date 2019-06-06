@@ -59,7 +59,7 @@ let res= [ {
         name: 'Phonelist_QW',
         component: () => import('@/views/list/UserPhonelist'),
         meta: { title: '通信录', permission: [ 'QW' ] }
-      }
+      }     
     ]
   },
   {

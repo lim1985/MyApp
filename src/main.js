@@ -16,7 +16,8 @@ import '@/utils/filter' // base filter
 
 import {User_ID, ACCESS_TOKEN, DEFAULT_COLOR, DEFAULT_THEME, DEFAULT_LAYOUT_MODE, DEFAULT_COLOR_WEAK, SIDEBAR_TYPE } from "@/store/mutation-types"
 import config from '@/defaultConfig'
-
+import moment from 'moment'//导入文件
+Vue.prototype.$moment = moment;//赋值使用
 Vue.config.productionTip = false
 
 Vue.use(Storage, config.storageOptions)

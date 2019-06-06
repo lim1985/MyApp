@@ -55,8 +55,8 @@
 import STree from '@/components/Tree/Tree'
 import  STable  from '@/components/newTable'
 // import OrgModal from './modules/OrgModal'
-import { DepTreelist,GetByDepIDAndPermissionKey } from '@/api/manage'
-//  getOrgTree,getServiceList,GetALLDep,GetAllPhoneuser
+import { DepTreelist,PostByDepIDPermissionKey } from '@/api/manage'
+//  getOrgTree,getServiceList,GetALLDep,GetAllPhoneuser,GetByDepIDAndPermissionKey
 export default {
   name: 'TreeList',
   components: {
@@ -67,7 +67,6 @@ export default {
   data () {
     return {
       openKeys: ['152'],
-
       // 查询参数
       queryParam: {},
       // 表头
@@ -105,43 +104,92 @@ export default {
         // }
       ],
       // 加载数据方法 必须为 Promise 对象
-      loadData: parameter => {      
-        return GetByDepIDAndPermissionKey(Object.assign(parameter, this.queryParam))
+       loadData: (parameter) => {  
+            if(this.onclick)
+            {  
+             let _obj=new Object()
+             let _arr=[]
+             _arr.push(this.queryParam)
+               _obj.param=_arr;
+
+            
+         return PostByDepIDPermissionKey(Object.assign(parameter,_obj))
+          .then(res => {
+             console.log(res.result)
+            return res.result
+          })
+         }   
+           
+        return DepTreelist()
           .then(res => {
             // console.log(res.result)
             return res.result
+          }).then(r=>{          
+          let _arr=[]
+          r.forEach(v => {
+              for(let x in v.children)
+              {
+             _arr.push( v.children[x])
+           }
+         });
+        const params=_arr.map(item => ({
+          key: item.Permission_Key,      
+          DepID: item.key,      
+          status: 9
           })
-      },
+      );
+            return params
+          }).then(params=>{  
+            console.log(this.onclick) 
+          
+               this.queryParam={
+              param:params,                      
+            } 
+            return PostByDepIDPermissionKey(Object.assign(parameter,this.queryParam))
+          .then(res => {
+            console.log(res)
+            return res.result
+          })
+        })
+     },        
+      DepArrParam:[],
       DepTree:[],
       orgTree: [],
       selectedRowKeys: [],
-      selectedRows: []
+      selectedRows: [],
+      parameter:{
+        pageNo:1,
+        pageSize:10
+      },
+      onclick:false
+   
+    // const pageSize=res.pageSize pageNo       
     }
   },
   created () {
     this.getDepTree();
-    this.initlist();
+    
   },
   methods: {
-    initlist(){
-          this.queryParam = {
-        DepID: 152,
-        key:"QW",
-        status:9
-        }
+    // initlist(){
+    //       this.queryParam = {
+    //     DepID: 152,
+    //     key:"QW",
+    //     status:9
+    //     }
       // this.$refs.table.refresh(true)
         // GetAllPhoneuser().then(res=>{
         //   this.loadData=res.result.data
         //   console.log(res)
         // })
-    },
+
 getDepTree(){
       DepTreelist().then(res=>{
         // this.DepTree=res.result
         res.result.forEach(v => {
           v.OrderID && this.DepTree.push(v)
         });
-        console.log(res.result)
+        // console.log(res.result)
       })  
 },  
 handleEdit(s)
@@ -151,11 +199,11 @@ handleEdit(s)
     auth(e)
     {
       if (e)
-
       return true;
     },
     handleClick (e) {
       console.log('handleClick', e)
+      this.onclick=true;
       this.queryParam = {
         DepID: e.key,
         key:e.keyPath[1],
@@ -178,9 +226,7 @@ handleEdit(s)
         console.log('点中了')
     },
     handleSaveClose () {
-
     },
-
     onSelectChange (selectedRowKeys, selectedRows) {
       this.selectedRowKeys = selectedRowKeys
       this.selectedRows = selectedRows
@@ -191,7 +237,6 @@ handleEdit(s)
 
 <style lang="less">
   .custom-tree {
-
     /deep/ .ant-menu-item-group-title {
       position: relative;
       &:hover {
@@ -200,7 +245,6 @@ handleEdit(s)
         }
       }
     }
-
     /deep/ .ant-menu-item {
       &:hover {
         .btn {
@@ -208,7 +252,6 @@ handleEdit(s)
         }
       }
     }
-
     /deep/ .btn {
       display: none;
       position: absolute;
@@ -218,7 +261,6 @@ handleEdit(s)
       height: 40px;
       line-height: 40px;
       z-index: 1050;
-
       &:hover {
         transform: scale(1.2);
         transition: 0.5s all;
@@ -226,3 +268,4 @@ handleEdit(s)
     }
   }
 </style>
+

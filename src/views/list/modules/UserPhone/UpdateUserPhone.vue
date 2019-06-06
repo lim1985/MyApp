@@ -207,6 +207,7 @@
   import {UpdateUserPhone,Select_PermissionsByRolesID,getUserrolesbyAdminID,AddPhoneUser} from '@/api/manage'
   import { Promise } from 'q';
   import Validate from '@/tools/Validate/index'
+  import { error } from 'util';
   //GetALLByDepID,asyncValidateTel
 export default {
   name: 'AdduserModal',
@@ -269,122 +270,6 @@ export default {
       onChange(date, dateString) {
        console.log(date, dateString);
     },
-    // ValidatePhone(s,id)
-    // {        
-    //   return new Promise(function(resolve){
-    //       setTimeout(async() => {  
-            
-    //             let obj=new Object();
-    //             obj.tel=s;
-    //             obj.ID=id;
-                 
-    //           let res= await asyncValidateTel(obj)
-    //           resolve(res)
-    //       }, 1000);
-    //    })
-    // },
-    // checkNum(rule, value, callback)
-    // {
-    //   let reg=/^[-+]?\d*$/;   
-    //   if(!value)
-    //   {
-    //     callback();
-    //   }
-    //   else if(!reg.test(value))
-    //   {
-    //     callback('QQ只能输入数字')
-    //     return
-    //   }
-    //   callback();
-    // },
-    // checkjob(rule, value, callback)
-    // {
-    //   let reg=/([\u4E00-\u9FA5]|[\uFE30-\uFFA0])+/;
-    //   if(!value)
-    //   {
-    //     callback();
-    //     return 
-    //   }else if(!reg.test(value))
-    //   {
-    //     callback('职务只能输入中文及中文标点符号')
-    //     return
-    //   }
-    //   callback();
-    // },  
-
-    // checkTel(rule, value, callback){
-    //   let reg=/^(\(\d{3,4}\)|\d{3,4}-|\s)?\d{7,14}$/;
-    //   if(!value)
-    //   {
-    //     callback();
-    //     return 
-    //   }else if(!reg.test(value))
-    //   {
-    //     callback('请正确填写座机号码。如：0739-5388888')
-    //     return
-    //   }
-    //     callback();
-    // },
-    // checkUsername(rule,value,callback)
-    // {
-    //   let reg = /^[\u0391-\uFFE5]{0,4}$/;
-    //   if(!reg.test(value))
-    //   {
-    //     callback('姓名只能输入最多4个汉字')
-    //     return
-    //   }
-    //    callback();
-
-    // },
-    // async checkPhoneallowNull(rule, value, callback){
-    //    let reg=/^1(3|4|5|7|8|9)\d{9}$/; 
-    //    if(!value)
-    //    {
-    //      callback();
-    //      return
-    //    }
-    //    else if(!reg.test(value))
-    //    {
-    //      callback('请正确填写手机号')  
-    //      return       
-    //    }
-    //    else
-    //    {
-        
-    //     let s =await this.ValidatePhone(value,this.UserPhoneID)
-    //         console.log(s)   
-    //         if(s.code==-3)
-    //         {
-    //           callback('该手机号已经被其他人使用，请重新填写。')
-    //         } 
-    //         else
-    //         {
-    //           callback();
-    //         }  
-    //    }
-    // },
-    // async checkPhone(rule, value, callback) {  
-    //   var reg = /^1(3|4|5|7|8|9)\d{9}$/;   
-    //   if (!reg.test(value)) {
-    //      callback('请输入正确的手机号');              
-    //      return;
-    //   } 
-    //    else
-    //   {
-    //     console.log(value)
-    //     let s =await this.ValidateTel(value)
-    //         console.log(s)   
-    //         if(s.code==-3)
-    //         {
-    //           callback('该手机号已经被其他人使用，请重新填写。')
-    //         } 
-    //         else
-    //         {
-    //           callback();
-    //         }               
-    //   }            
-    // },
-     
        async GetDepnameAndchild()
     {
       let _arr=[] 
@@ -438,7 +323,7 @@ export default {
          DepKeylist:[s.Permission_Key,s.Department_ID],
          Email:s.Email,
          UJOB:s.UJOB,
-         status:s.status,
+         status:s.Ustatus,
          Sex:s.Sex,
          BirthDay:s.BirthDay,
          UserName: s.UserName,
@@ -456,7 +341,7 @@ export default {
       this.mdl = Object.assign({}, record)
      
       this.PhoneVisible = true
-      console.log(record)
+     
       this.$nextTick(() => {
         setTimeout(() => {
         this.form.setFieldsValue({
@@ -495,16 +380,24 @@ export default {
       this.form.validateFields((err, values) => {
         // 验证表单没错误
         if (!err) {
-          console.log('form values', values)
+      
           _this.confirmLoading = true
           // 模拟后端请求 2000 毫秒延迟
-          new Promise((resolve) => {          
+          new Promise((resolve,reject) => {          
           setTimeout(async () => {
               const res=await UpdateUserPhone(values)             
-                 resolve(res);    
+              if(res)
+              {
+                resolve(res)
+              }
+              else
+              {
+                reject(new error)
+              }
+                 
           }, 1000)          
           }).then(function (r) {
-            console.log(r)
+           
            if(r)
            {
               _this.$message.success('修改人员信息成功'); 
@@ -515,8 +408,8 @@ export default {
            {
                _this.$message.error('修改人员信息失败');  
            }
-          }).catch(function (reject) {
-              console.log(reject)
+          }).catch(function (err) {
+             console.log(err)
           }).finally(() => {
             _this.confirmLoading = false
             // _this.close();
@@ -528,11 +421,11 @@ export default {
       HandleUserPhoneAdd(e)
         {
         // this.Mymdl.Sex=this.Sex
-        console.log(this.Mymdl)
+      
         e.preventDefault()
          this.form.validateFields(async(err, values) => {
 
-           console.log(values)
+        
            if(!err)
            {
              const res=await AddPhoneUser(values)
@@ -551,7 +444,7 @@ export default {
               this.PhoneVisible = false    
             }, 100);                            
           }          
-            console.log('Received values of form: ', values)
+          
           }
           
          })   

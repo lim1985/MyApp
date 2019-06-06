@@ -39,19 +39,75 @@ const api = {
   SelectDepartmentByID:'http://172.20.8.28:3001/api/DepartmentGetByID',
   //通讯录管理接口
   //通讯录人员添加
-
-
   UpdateUserPhone:'http://172.20.8.28:3001/api/UpdatePhoneUser',
   asyncValidateTel:'http://172.20.8.28:3001/api/asyncValidateTel',
   AddPhoneUser:'http://172.20.8.28:3001/api/AddPhoneUser',
   GetAllPhoneUserByPermissionKey:'http://172.20.8.28:3001/api/AllPhoneUserByPermissionkey',
   GetByDepIDAndPermissionKey:'http://172.20.8.28:3001/api/GetDepIDAndPermissionKey',
-  GetAllPhoneuser:'http://172.20.8.28:3001/api/GetAllPhoneuser',
-  GetALLByDepID:'http://172.20.8.28:3001/api/GetAllByDepID'//DepID=70 用于UserPhoneList页面获取通讯录用户数据用
+  PostDepIDAndPermissionKey:'http://172.20.8.28:3001/api/PostDepIDAndPermissionKey',
+
  
+  GetAllPhoneuser:'http://172.20.8.28:3001/api/GetAllPhoneuser',
+  GetALLByDepID:'http://172.20.8.28:3001/api/GetAllByDepID',//DepID=70 用于UserPhoneList页面获取通讯录用户数据用
+ //引用表操作
+  ReferenceAdd:'http://172.20.8.28:3001/api/ReferenceAdd',//用于list/modules/UserPhone/addUserPhone
+ //发短信接口
+   sendsms:'http://info.dxzc.gov.cn:3000/api/sendsms',
+   smsstatus:'http://info.dxzc.gov.cn:3000/api/status',
+   SmsAddRecord:'http://info.dxzc.gov.cn:3000/api/smsAddrecord',
+   smssucceedcount:'http://info.dxzc.gov.cn:3000/api/GetSmsSucceedCount',
+   
+
+   
+//  axios.get('http://info.dxzc.gov.cn:3000/api/sendsms', {
+//   params: {
+//   u:'limannlee',
+//   p:'d8a341b329a63c4f0789511ae8a81fec',
+//   m:phone,
+//   c:'【区政府办】'+`您单位在大祥之窗上有信息未更新，`+contents+`，信息员变更请电话至13973990779`,
+//   i:i,
+//   tokens:params
+//   }
+// })
 }
 
 export default api
+//引用
+export function SmsSucceedcount (parameter) {
+  return axios({
+    url: api.smssucceedcount,
+    method: 'get',
+    params: parameter
+  })
+}
+export function SmsAddrecord (parameter) {
+  return axios({
+    url: api.SmsAddRecord,
+    method: 'get',
+    params: parameter
+  })
+}
+export function SmsStatus (parameter) {
+  return axios({
+    url: api.smsstatus,
+    method: 'get',
+    params: parameter
+  })
+}
+export function SendSMS (parameter) {
+  return axios({
+    url: api.sendsms,
+    method: 'get',
+    params: parameter
+  })
+}
+export function ReferenceAdd (parameter) {
+  return axios({
+    url: api.ReferenceAdd,
+    method: 'get',
+    params: parameter
+  })
+}
 export function UpdateUserPhone (parameter) {
   return axios({
     url: api.UpdateUserPhone,
@@ -71,6 +127,14 @@ export function GetAllPhoneuser (parameter) {
     url: api.GetAllPhoneuser,
     method: 'get',
     params: parameter
+  })
+}
+
+export function PostByDepIDPermissionKey (parameter) {
+  return axios({
+    url: api.PostDepIDAndPermissionKey,
+    method: 'post',
+    data:parameter   
   })
 }
 export function GetByDepIDAndPermissionKey (parameter) {
