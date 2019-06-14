@@ -65,10 +65,10 @@
       <a-button type="primary" @click="addphone()" :style="{ fontSize: '18px' }" icon="user-add">添加联系人</a-button>
       <a-dropdown v-if="selectedRowKeys.length > 0">
         <a-menu slot="overlay">
-          <a-menu-item key="3"><a-icon type="lock" />发短信</a-menu-item>
-          <a-menu-item key="1"><a-icon type="delete" />删除</a-menu-item>
+          <a-menu-item key="3" @click="sendsms(selectedRows)"><a-icon type="lock" />发短信</a-menu-item>
+          <!-- <a-menu-item key="1"><a-icon type="delete" />删除</a-menu-item> -->
           <!-- lock | unlock -->
-          <a-menu-item key="2"><a-icon type="lock" />锁定</a-menu-item>
+          <!-- <a-menu-item key="2"><a-icon type="lock" />锁定</a-menu-item> -->
         </a-menu>
         <a-button style="margin-left: 8px">
           批量操作 <a-icon type="down" />
@@ -85,7 +85,7 @@
       :showAlertInfo="true"
       @onSelect="onChange"
     >
-      <span slot="action" slot-scope="text, record,index">
+      <span slot="action" slot-scope="text, record">
         <a v-show="record.Ustatus==9 || record.Ustatus==7" @click="handleEdit(record)">编辑</a>
         <a-divider type="vertical" />
         <a-dropdown>
@@ -94,7 +94,7 @@
           </a>
           <a-menu slot="overlay">
             <a-menu-item>
-              <a @click="sendsms(index,record)">发短信</a>
+              <a @click="sendsms(record)">发短信</a>
             </a-menu-item>
             <a-menu-item>
               <a href="javascript:;">详情</a>
@@ -342,18 +342,18 @@
                   v.Ustatus=v.Rstatus
                 }
             });
-            console.log('0000000000000')
+          
             console.log(data)
-            
+        
            this.Pupu=data.data.map(item=>{
              return {Phone:item.cellphone,username:item.UserName,DPname:item.DepartmentName,ID:item.ID,UJOB:item.UJOB,checked:false}
-           })
-           
-              return data
-
+           }) 
+             
+           return data
             })           
         },
         options:[],
+        onclick:false,
         selectedRowKeys: [],
         selectedRows: []
       }
@@ -368,11 +368,11 @@
       // this.options=await this.GetDepnameAndchild();
     },
     methods: {
-      sendsms(i,record)
+      sendsms(IDs)
       {
-       
-       this.$refs.SendsmsModal.get(i,record);      
-     
+      // let _arr=[]  
+      // !IDs.length? _arr.push(IDs): _arr=IDs
+      this.$refs.SendsmsModal.get(IDs); 
       },
     handleSaveClose(){
           this.$refs.mytable.refresh()
@@ -446,6 +446,9 @@
     
         this.selectedRowKeys = row.selectedRowKeys
         this.selectedRows = row.selectedRows
+        console.log(this.selectedRowKeys)
+        console.log(this.selectedRows)
+        
 
       },
       toggleAdvanced () {

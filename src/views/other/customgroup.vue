@@ -9,7 +9,7 @@
           :addgroup="true"
           @click="handleClick"
           @add="handleAdd"
-          @titleClick="handleTitleClick"
+          @titleClick="handleTitleClick"          
           @addGroup="addgroup">          
         </s-tree>
          
@@ -18,10 +18,7 @@
         <div class="table-operator">    
           <a-dropdown v-if="selectedRowKeys.length > 0">
             <a-menu slot="overlay">
-              <a-menu-item key="3"><a-icon type="lock" />发短信</a-menu-item>
-              <a-menu-item key="1"><a-icon type="delete" />删除</a-menu-item>
-              <!-- lock | unlock -->
-              <a-menu-item key="2"><a-icon type="lock" />锁定</a-menu-item>
+              <a-menu-item key="1" @click="sendsms(selectedRows)"><a-icon type="lock" />发短信</a-menu-item>
             </a-menu>
             <a-button style="margin-left: 8px">
               批量操作 <a-icon type="down" />
@@ -38,22 +35,23 @@
           :rowSelection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }"
         >
           <span slot="action" slot-scope="text, record">                    
-            <template v-if="auth('table.update')">
-              <a @click="handleEdit(record)">编辑</a>
-              <a-divider type="vertical" />
-            </template>
+            <a v-show="record.Ustatus==9 || record.Ustatus==7" @click="handleEdit(record)">编辑</a>
+            <a-divider type="vertical" />
             <a-dropdown>
               <a class="ant-dropdown-link">
-                更多 <a-icon type="down" />
+                操作 <a-icon type="down" />
               </a>
               <a-menu slot="overlay">
                 <a-menu-item>
+                  <a @click="sendsms(record)">发短信</a>
+                </a-menu-item>
+                <a-menu-item>
                   <a href="javascript:;">详情</a>
                 </a-menu-item>
-                <a-menu-item v-if="auth('table.disable')">
+                <a-menu-item v-show="record.Ustatus==9 || record.Ustatus==7">
                   <a href="javascript:;">禁用</a>
                 </a-menu-item>
-                <a-menu-item v-if="auth('table.delete')">
+                <a-menu-item v-show="record.Ustatus==9 || record.Ustatus==7|| record.Ustatus==6">
                   <a href="javascript:;">删除</a>
                 </a-menu-item>
               </a-menu>
@@ -64,6 +62,7 @@
     </a-row>
     <CustomGroupModal ref="Groupmodal" @ok="handleSaveOk" @close="handleSaveClose" />
     <UserToGroupModal ref="UserToGroupmodal" @ok="handleSaveOk" @close="handleSaveClose" />
+    <SendsmsModal ref="SendsmsModal" :Pupuarr="Pupu" @ok="handleSaveOk" @close="handleSaveClose"/>
     <!-- <org-modal ref="modal" @ok="handleSaveOk" @close="handleSaveClose" /> -->
   </a-card>
 </template>
@@ -73,22 +72,26 @@ import STree from '@/components/Tree/Tree'
 import  STable  from '@/components/newTable'
 import CustomGroupModal from './modules/CustomGroupAdd'
 import UserToGroupModal from './modules/UserToGroupAdd'
+import SendsmsModal from '@/views/list/modules/sendSMS/sendsms'
+
 // import { mapState} from 'vuex'
 // import OrgModal from './modules/OrgModal'
-import { DepTreelist,PostByDepIDPermissionKey,GetCustomGroupByDepID,FindAllUserByGroupID } from '@/api/manage'
-//  getOrgTree,getServiceList,GetALLDep,GetAllPhoneuser,GetByDepIDAndPermissionKey
+import { GetCustomGroupByDepID,FindAllUserByGroupID } from '@/api/manage'
+//  getOrgTree,getServiceList,GetALLDep,GetAllPhoneuser,GetByDepIDAndPermissionKey,DepTreelist,PostByDepIDPermissionKey
 export default {
   name: 'TreeList',
   components: {
     STable,
     STree,
     CustomGroupModal,
-    UserToGroupModal
+    UserToGroupModal,
+    SendsmsModal
     // OrgModal
   },
   data () {
     return {
-      openKeys: ['152'],
+      Pupu:[],
+      openKeys: ['152-QW-CSZ'],
       // 查询参数
       queryParam: {},
       // 表头
@@ -129,65 +132,15 @@ export default {
        UserloadData:(parameter)=>{
          console.log(Object.assign(parameter,this.QueryUserParam))
          return FindAllUserByGroupID(Object.assign(parameter,this.QueryUserParam)).then(res=>{
-           console.log(res.result)
+         
+        
+           this.Pupu=res.result.data.map(item=>{
+            return {Phone:item.cellphone,username:item.UserName,DPname:item.Permission_name,ID:item.ID,UJOB:item.UJOB,checked:false}
+            })  
            return res.result
          
          })
-       },
-       loadData: (parameter) => {  
-                // return FindAllUserByGroupID(Object.assign(parameter))
-                // .then(res=>{
-                //    console.log(res)
-                //   return res 
-                 
-                // })
-            if(this.onclick)
-            {  
-             let _obj=new Object()
-             let _arr=[]
-             _arr.push(this.queryParam)
-             _obj.param=_arr;            
-              return PostByDepIDPermissionKey(Object.assign(parameter,_obj))
-              .then(res => {
-           
-                // console.log(res.result)
-                return res.result
-              })
-            }              
-        return DepTreelist()
-          .then(res => {
-          //  console.log(res.result)
-            return res.result
-          }).then(r=>{          
-          let _arr=[]
-          r.forEach(v => {
-              for(let x in v.children)
-              {
-             _arr.push(v.children[x])
-              }
-          });
-          // console.log(_arr);
-        const params=_arr.map(item => ({
-          key: item.Permission_Key,      
-          DepID: item.key,      
-          status: 9
-          })
-      );
-            return params
-          }).then(params=>{  
-            console.log(this.onclick) 
-          
-               this.queryParam={
-              param:params,                      
-            } 
-            // console.log(this.queryParam);
-            return PostByDepIDPermissionKey(Object.assign(parameter,this.queryParam))
-          .then(res => {
-            // console.log(res)
-            return res.result
-          })
-        })
-     },        
+       },          
       DepArrParam:[],
       DepTree:[],
       orgTree: [],
@@ -205,11 +158,11 @@ export default {
     }
   },
   created () {
-    this.getDepTree();
-    
+    // this.getDepTree();
+     this.getCustomGroup();
   },
   mounted(){
-    this.getCustomGroup();
+   
   },
     computed:{
       
@@ -223,25 +176,29 @@ export default {
     // }
   },
   methods: { 
-
+  sendsms(IDs)
+      {
+      // let _arr=[]  
+      // !IDs.length? _arr.push(IDs): _arr=IDs
+      this.$refs.SendsmsModal.get(IDs); 
+      },
     getCustomGroup()
     {  
+      
         let _depid=this.$route.fullPath.split('/')[3];
         let data={
           DepID:_depid
-        }
-      // console.log(this.queryParam);
-      
-        GetCustomGroupByDepID(data).then(res=>{
-        
-         this.Grouplist= res.data.rows.map(v=>{          
-          return {title:v.GroupName,key:v.GroupID,icon:'null'}
-          })       
-        })
+        }    
+        GetCustomGroupByDepID(data).then(res=>{        
    
-        // this.QueryUserParam={
-        //   GroupID:this.Grouplist[0].key
-        // }
+         this.Grouplist= res.data.rows.map(v=>{    
+         
+          return {title:v.GroupName,key:v.GroupID,icon:'null'}
+          })   
+        console.log(this.Grouplist)
+        })
+      // this.Grouplist=[{key:'001',title:'001'},{key:'002',title:'002'}]
+     
     },
       addgroup(e){
          this.$refs.Groupmodal.add(e); 
@@ -249,15 +206,15 @@ export default {
       // addusertogroup(e){
       //    this.$refs.UserToGroupModal.add(e);  
       // },
-      getDepTree(){
-            DepTreelist().then(res=>{
-              // this.DepTree=res.result
-              res.result.forEach(v => {
-                v.OrderID && this.DepTree.push(v)
-              });
-            // console.log(this.DepTree)
-        })  
-      },  
+      // getDepTree(){
+      //       DepTreelist().then(res=>{
+      //         // this.DepTree=res.result
+      //         res.result.forEach(v => {
+      //           v.OrderID && this.DepTree.push(v)
+      //         });
+      //       // console.log(this.DepTree)
+      //   })  
+      // },  
 handleEdit(s)
 {
   console.log(s)
@@ -307,7 +264,8 @@ handleEdit(s)
       
       this.selectedRowKeys = selectedRowKeys
       this.selectedRows = selectedRows
-    
+      console.log(this.selectedRowKeys)
+    console.log(this.selectedRows)
     }    
   }
 }

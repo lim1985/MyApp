@@ -26,6 +26,7 @@ export default {
   },
   created () {
     this.localOpenKeys = this.openKeys.slice(0)
+    console.log(this.localOpenKeys)
     // DEPID:this.$route.fullPath.split('/')
     // console.log(this.$route.fullPath.split('/'))
   
@@ -135,7 +136,7 @@ export default {
   },
   render () {
     const { dataSource, search, addgroup } = this.$props
-      
+
     // this.localOpenKeys = openKeys.slice(0)
     const list = dataSource.map(item => {
       return this.renderItem(item)

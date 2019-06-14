@@ -23,7 +23,7 @@
     >
       <a-spin :spinning="confirmLoading">
         <a-row type="flex" justify="end">
-          <a-col :xs="20" :sm="20" :md="16" :lg="16" :xl="16"> <a-textarea v-model="smsContent" placeholder="输入短信内容" :rows="18"/></a-col>
+          <a-col :xs="20" :sm="20" :md="16" :lg="16" :xl="16"> <a-textarea v-model="vmodelContent" placeholder="输入短信内容" :rows="18"/></a-col>
           <a-col :span="1"> </a-col>
           <a-col :xs="20" :sm="20" :md="6" :lg="6" :xl="6">
             <div class="demo-infinite-container">
@@ -61,7 +61,7 @@
   import { mapState} from 'vuex'
   import {SendSMS ,SmsAddrecord,SmsSucceedcount} from '@/api/manage' 
   import { User_ID } from "@/store/mutation-types" 
-import { clearInterval, setInterval } from 'timers';
+  import { clearInterval, setInterval } from 'timers';
   
 
 
@@ -79,8 +79,9 @@ export default {
     return {     
       sending:false,
       smsContent:'',
+      vmodelContent:'',
       // Mydata:data,
-     
+      sendText:null,
       processvisible:false,
       indeterminate: true,
       checkAll: false,     
@@ -144,53 +145,32 @@ export default {
     },
   
       sendsmsstatus(){
-        if(this.sending)
-        {
-          return '短信发送中...'
-        }
-        else
-        {
-          return '发送完毕'
-        }
+
+        return !this.sending? '发送成功。':'短信发送中...'          
       },
       onChange (e,checkedList) { 
-        if(e.target.checked)
-        {
-           this.Barr.push(checkedList)  
-        }
-        else
-        {
-          this.Barr.splice(0, 1); 
-        }          
+        e.target.checked?this.Barr.push(checkedList):this.Barr.splice(0, 1);                 
         this.indeterminate = !! this.Barr.length && ( this.Barr.length < this.Pupuarr.length)
         this.checkAll =  this.Barr.length === this.Pupuarr.length            
-        this.countSms=this.Barr.length
+        this.countSms=this.Barr.length    
     },
-
      onCheckAllChange (e) {   
+        this.Barr=[]       
         this.Pupuarr.forEach(v=>{
-          if(!e.target.checked)
-          {         
-            v.checked=false;
-            this.Barr=[]            
-          }
-          else
-          {           
-            v.checked=true           
-          }           
+          !e.target.checked? v.checked=false:v.checked=true   
+          // if(!e.target.checked)
+          // {         
+          //   v.checked=false;
+                
+          // }
+          // else
+          // {           
+          //   v.checked=true           
+          // }           
           })      
           for(let y in this.Pupuarr)
           {
-            if(this.Pupuarr[y].checked==true)
-            {
-              this.countSms=this.Pupuarr.length;
-              console.log(this.countSms)
-            }
-            else
-            {
-               this.countSms=0
-              console.log(this.countSms)
-            }            
+           this.Pupuarr[y].checked==true?this.countSms=this.Pupuarr.length: this.countSms=0                 
           }
       Object.assign(this, {
         // all: e.target.checked ? data:[],
@@ -198,36 +178,38 @@ export default {
         indeterminate: false,
         // checkAll: e.target.checked,     
       })
+      console.log(this)
     },   
-    get(i,record)
+    get(i)
     {     
      setTimeout(() => {
-        this.send(i,record);
+      let _arr=[]  
+      !i.length? _arr.push(i): _arr=i
+        this.initSms(i);
      }, 100);
     },
     
     genID(length){//生成唯一组ID
       return Number(Math.random().toString().substr(3,length) + Date.now()).toString(36);
-    },
-   
-   
-  
+    },  
    async sendsms()
-   {       
+   {    
+       if(this.countSms==0)
+       {
+         alert('请选择联系人')
+         return 
+       }   
        this.sendedCount=0
        this.sending=true
        this.ClearInterval();
        this.AdminID= {AdminID:Vue.ls.get(User_ID)} 
        this.processvisible=true;
        this.GuID=this.genID(1);     
-       let params={}    
+       let params={}  
+       
         for(let x in this.Pupuarr)
       {
-        if(this.Pupuarr[x].checked==false)
-        {
-          console.log('不发送'+x)
-        }
-        else
+        if(!this.Pupuarr[x].checked==false)      
       {      
         params={     
         c:this.smsContent,
@@ -245,152 +227,42 @@ export default {
         //  console.log(r)
          let _arr= r.code.split(/[\s\n]/)
         //  console.log(_arr)
-       let data={
-                GuID:this.GuID,
-                TID:_arr[1],
-                UID:r.uid,
-                AdminID:this.AdminID.AdminID,
-                time:this.$moment().format("YYYY-MM-DD HH:mm:ss"),
-                status:_arr[0],
-                SMSContent:this.smsContent,
-                UserName:r.u,
+       let data={//组成一条发送记录插入数据库
+                GuID:this.GuID,//唯一组ID 
+                TID:_arr[1],//短信宝返回的唯一发送ID
+                UID:r.uid,//发送的用户ID
+                AdminID:this.AdminID.AdminID,//发送的 管理员ID
+                time:this.$moment().format("YYYY-MM-DD HH:mm:ss"),//发送的时间
+                status:_arr[0],//发送的状态短信宝返回的状态
+                SMSContent:this.smsContent,//发送的内容
+                UserName:r.u,//接收短信的人
               }
               return data
          })
         .then(data=>{                 
-             SmsAddrecord(data).then(res=>{ 
+             SmsAddrecord(data).then(res=>{//写入本地数据库以后记录 返回 GUID 
                 let _GUID=res.result.GuID
                 let _Data={
                     GUID:_GUID
                   }            
                return _Data
              }).then(r=>{
-                this.ClearInterval();              
-                this.InervalTime=setInterval(() => {
-                     SmsSucceedcount(r).then(count=>{
-                       console.log(count);
-                       this.sendedCount=count.result.count
-                       if(this.sendedCount===this.countSms)
+                this.ClearInterval();     //清空计时器         
+                this.InervalTime=setInterval(() => {//开启计时器
+                     SmsSucceedcount(r).then(count=>{//根据唯一的GUID 查询短信发送的状态返回成功的条数
+                       console.log(count);//打印条数
+                       this.sendedCount=count.result.count//将发送成功的条数绑定模板显示
+                       if(this.sendedCount===this.countSms)//如果需要发送的条数等于发送成功的条数
                        {
-                         this.sending=false   
-                         this.ClearInterval(); 
+                         this.sending=false   //发送窗口关闭并且提示显示发送成功
+                         this.ClearInterval(); //清除计时器，计时器不清除会不断消耗内存
                        }                                         
                      })                 
-                }, 4000);              
+                }, 4000);      //4秒执行一次查询        
              })
        })      
       }
       } 
-       console.log(`1`)
-       console.log(params)
-      //  SendSMS(params).then(res=>{
-      //    return res
-      //  }).then(r=>{
-      //     console.log(`2`)
-      //     console.log(r)
-      //    let _arr= r.code.split(/[\s\n]/)
-      //       let data={
-      //           GuID:this.GuID,
-      //           TID:_arr[1],
-      //           UID:r.uid,
-      //           AdminID:this.AdminID.AdminID,
-      //           time:this.$moment().format("YYYY-MM-DD HH:mm:ss"),
-      //           status:_arr[0],
-      //           SMSContent:this.smsContent,
-      //           UserName:r.u,
-      //         }
-      //         return data
-      //  }).then(s=>{
-      //     console.log(`3`)
-      //    console.log(s)
-      //  })
-            // SendSMS(params).then(res=>{             
-            //   return res
-            // }).then(r=>{
-            // //let TID=r.code.replace(/[\r\n]/g,""); 
-            // let _arr=  r.code.split(/[\s\n]/)
-            //   console.log(_arr)
-            //   console.log(r);               
-            //   let data={
-            //     GuID:this.GuID,
-            //     TID:_arr[1],
-            //     UID:this.Pupuarr[x].ID,
-            //     AdminID:this.AdminID.AdminID,
-            //     time:this.$moment().format("YYYY-MM-DD HH:mm:ss"),
-            //     status:_arr[0],
-            //     SMSContent:this.smsContent,
-            //     UserName:this.Pupuarr[x].username
-            //   }
-            //   setTimeout(() => {
-            //     SmsAddrecord(data).then(res=>{
-                 
-            //       let _GUID=res.result.GuID
-            //       let _Data={
-            //         GUID:_GUID
-            //       }
-            //    return _Data             
-            //   }).then(r=>{                
-            //     if(r)
-            //     {
-               
-                
-                  // this.InervalTime=setInterval(() => {
-                  
-                        // SmsSucceedcount(r).then(ss=>{
-                      //     console.log(ss)
-                      //     console.log(this.InervalTime)
-                      //   this.sendedCount=ss.result.count;
-                      //   if(this.sendedCount==this.countSms)
-                      //   {
-                      //     window.clearInterval(this.InervalTime);                        
-                      //     this.InervalTime=null
-                      //  console.log(this.InervalTime)
-                      //     this.sending=false
-                      //     return 
-                      //   }        
-                                  
-                      //   return ss.result.count                                          
-                      //  }).then(count=>{
-                      //     this.sendedCount=count
-                      //     console.log(this.sendedCount)
-                      //     if(this.sendedCount==this.countSms)
-                      //     {
-                      //     window.clearInterval(this.InervalTime);     
-                      //     this.InervalTime=null
-                      //     return false
-                      //     }
-                         
-                      //  })
-                  // }, 3000);  
-                     
-                // }
-              
-                // this.InervalTime=setInterval(() => {
-                //     SmsSucceedcount(_gid).then(ss=>{
-                //       this.sendedCount=ss.result.count  
-                //       if(this.sendedCount=this.countSms)
-                //       {
-                //          window.clearInterval(this.InervalTime);     
-                //          this.InervalTime=null
-                //          this.sending=false
-                //          return false
-                //       }                     
-                //     })
-                // }, 3000);
-            
-              // })
-              // }, 1000);
-             
-              // console.log("TID:"+_arr[1])
-              // console.log("TIME:"+this.NowTime)
-              // console.log("GUID:"+this.GuID)              
-              // console.log("SMScontent:"+this.smsContent)
-              // console.log("PhoneNUM:"+this.Pupuarr[x].Phone)
-              // console.log("UID:"+this.Pupuarr[x].ID)
-              // console.log("UserName:"+this.Pupuarr[x].username)
-              // console.log("status:"+_arr[0])
-            // })
-      
     },
     SendSMShandleCancel()
     {
@@ -402,25 +274,33 @@ export default {
       console.log('计时器关闭')  
        
     },
-   async send(i,record){
+   async initSms(IDs){
+   
+    
+     console.log(IDs)
      let _this=this
-     console.log(_this.Pupuarr);
-    _this.smsContent=`【${record.DepartmentName}】`
-    for(let x in _this.Pupuarr)
-    {
-      if(x==i)
-      {
-          _this.Pupuarr[i].checked=true;
+     IDs[0].DepartmentName?_this.vmodelContent=IDs[0].DepartmentName:_this.vmodelContent=IDs[0].Permission_name
+    //  _this.vmodelContent=IDs[0].DepartmentName?true:false
+    //   _this.vmodelContent=IDs[0].Permission_name?true:false
+      //  _this.vmodelContent=`【${IDs[0].DepartmentName}】`
+     _this.Barr=[]
+     for(let x in _this.Pupuarr)
+     {
+      _this.Pupuarr[x].checked=false
+      for(let y in IDs)
+      {       
+        if(_this.Pupuarr[x].ID==IDs[y].ID)
+        {     
+          _this.Barr.push(_this.Pupuarr[x])
+          _this.Pupuarr[x].checked=true
+        }      
       }
-      else
-      {
-          _this.Pupuarr[x].checked=false;
-      }
-    }
-    _this.Barr.push(_this.Pupuarr[i])
-    _this.Sendvisible=true;
-    _this.Barr.length=1;
-    _this.countSms=_this.Barr.length; 
+     }
+      _this.indeterminate = !! _this.Barr.length && ( _this.Barr.length < _this.Pupuarr.length)
+      _this.checkAll =  _this.Barr.length === _this.Pupuarr.length  
+      _this.countSms=_this.Barr.length;  
+      _this.Sendvisible=true;
+      _this.smsContent=`【${IDs[0].DepartmentName}】`
     },
   
     
@@ -429,13 +309,6 @@ export default {
        
       return (path.some(option => (option.label).toLowerCase().indexOf(inputValue.toLowerCase()) > -1));
     },
-    onChangeDeplist(value) {
-      this.mdl=value;
-     
-      return value;
-    },
-   
-  
     close () {
          this.$emit('close')
          this.PhoneVisible = false    
