@@ -16,8 +16,8 @@ const user = {
     DEPKEY:'',
     UserPhoneID:'',
     ReferenceStatus:false,
-    ReferenceUserId:''
- 
+    ReferenceUserId:'',
+    DepId:''
   },
 
   mutations: {
@@ -54,6 +54,9 @@ const user = {
     },
     SET_ReferenceUserId:(state,key)=>{
       state.ReferenceUserId=key
+    },
+    SET_DepId:(state,key)=>{
+      state.DepId=key
     }
   },
 

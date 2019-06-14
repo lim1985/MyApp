@@ -140,7 +140,7 @@ export default {
     ClearInterval(){
       clearInterval(this.InervalTime);
       this.InervalTime=null;
-      console.log('计时器关闭')
+      console.log('计时器清空')
     },
   
       sendsmsstatus(){
@@ -162,13 +162,12 @@ export default {
         {
           this.Barr.splice(0, 1); 
         }          
-      this.indeterminate = !! this.Barr.length && ( this.Barr.length < this.Pupuarr.length)
-      this.checkAll =  this.Barr.length === this.Pupuarr.length            
-      this.countSms=this.Barr.length
+        this.indeterminate = !! this.Barr.length && ( this.Barr.length < this.Pupuarr.length)
+        this.checkAll =  this.Barr.length === this.Pupuarr.length            
+        this.countSms=this.Barr.length
     },
 
-     onCheckAllChange (e) {
-   
+     onCheckAllChange (e) {   
         this.Pupuarr.forEach(v=>{
           if(!e.target.checked)
           {         
@@ -199,8 +198,6 @@ export default {
         indeterminate: false,
         // checkAll: e.target.checked,     
       })
-      
-    
     },   
     get(i,record)
     {     
@@ -215,19 +212,15 @@ export default {
    
    
   
-   async sendsms(){
-       
+   async sendsms()
+   {       
        this.sendedCount=0
        this.sending=true
        this.ClearInterval();
        this.AdminID= {AdminID:Vue.ls.get(User_ID)} 
        this.processvisible=true;
-       this.GuID=this.genID(1);
-      //  let PhoneNums=''
-      //  let PhoneUNames=''
-      //  let PhoneUIDs=''
-       let params={}
-      //  console.log(this.GuID);
+       this.GuID=this.genID(1);     
+       let params={}    
         for(let x in this.Pupuarr)
       {
         if(this.Pupuarr[x].checked==false)
@@ -252,7 +245,7 @@ export default {
         //  console.log(r)
          let _arr= r.code.split(/[\s\n]/)
         //  console.log(_arr)
-     let data={
+       let data={
                 GuID:this.GuID,
                 TID:_arr[1],
                 UID:r.uid,
@@ -263,7 +256,7 @@ export default {
                 UserName:r.u,
               }
               return data
-       })
+         })
         .then(data=>{                 
              SmsAddrecord(data).then(res=>{ 
                 let _GUID=res.result.GuID

@@ -58,7 +58,20 @@ checkjob(rule, value, callback)
   }
   callback();
 },  
-
+checkGroupName(rule, value, callback)
+{
+  let reg=/([\u4E00-\u9FA5]|[\uFE30-\uFFA0])+/;
+  if(!value)
+  {
+    callback();
+    return 
+  }else if(!reg.test(value))
+  {
+    callback('组名称只能输入中文')
+    return
+  }
+  callback();
+}, 
 checkTel(rule, value, callback){
   let reg=/^(\(\d{3,4}\)|\d{3,4}-|\s)?\d{7,14}$/;
   if(!value)

@@ -110,7 +110,7 @@
       </span>
     </s-table>
 
-    <a-modal
+    <!-- <a-modal
       title="操作"
       :width="800"
       v-model="visible"
@@ -180,7 +180,7 @@
 
       </a-form>
 
-    </a-modal>  
+    </a-modal>   -->
     <!-- <a-form-item
          :labelCol="{lg: {span: 5}, sm: {span:5}}"
          :wrapperCol="{lg: {span:6}, sm: {span:6} }"
@@ -327,9 +327,9 @@
         let path=this.$route.path
         let arr=path.split("/")                   
         let s=arr[3]
-        if(typeof parameter == "string"){
-          parameter = {pageNo:1,pageSize:10};
-        }        
+        // if(typeof parameter == "string"){
+        //   parameter = {pageNo:1,pageSize:10};
+        // }        
         this.queryParam.DepID=s  
     
         return GetALLByDepID(Object.assign(parameter,this.queryParam))
@@ -342,6 +342,7 @@
                   v.Ustatus=v.Rstatus
                 }
             });
+            console.log('0000000000000')
             console.log(data)
             
            this.Pupu=data.data.map(item=>{
@@ -453,8 +454,7 @@
     },
   watch: {
     '$route'()
-    {
-        
+    {        
       this.$store.commit('SET_DEPKEY',this.$route.meta.permission[0]);     
       this.$refs.mytable.refresh()     
     }

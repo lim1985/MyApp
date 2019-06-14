@@ -1,5 +1,6 @@
 import { Menu, Icon, Input } from 'ant-design-vue'
 
+
 const { Item, ItemGroup, SubMenu } = Menu
 const { Search } = Input
 
@@ -17,18 +18,37 @@ export default {
     search: {
       type: Boolean,
       default: false
+    },
+    addgroup: {
+      type: Boolean,
+      default: false
     }
   },
   created () {
     this.localOpenKeys = this.openKeys.slice(0)
+    // DEPID:this.$route.fullPath.split('/')
+    // console.log(this.$route.fullPath.split('/'))
+  
   },
   data () {
     return {
-      localOpenKeys: []
+      localOpenKeys: [],
+     
+     
     }
   },
   methods: {
+    handleAddGroup(){
+     let _depid=this.$route.fullPath.split('/')[3];
+     let _key=this.$route.meta.permission[0];  
+     let _obj={
+       DepID:_depid,
+       Key:_key
+     }
+      this.$emit('addGroup',_obj);
+    },
     handlePlus (item) {
+      item.depid=this.$route.fullPath.split('/')[3]
       this.$emit('add', item)
     },
     handleTitleClick (...args) {
@@ -43,18 +63,27 @@ export default {
         />
       )
     },
+    renderAddGroup() {
+      return (
+        <div><a-button {...{on:{click:()=>this.handleAddGroup()}}} type="primary" block>添加自定义组</a-button><br/></div>     
+      )
+    },
     renderIcon (icon) {
       return icon && (<Icon type={icon} />) || null
     },
+   
     renderMenuItem (item) {
       return (
         <Item key={item.key}>
           { this.renderIcon(item.icon) }
           { item.title }
-          <a class="btn" style="width: 20px;z-index:1300" {...{ on: { click: () => this.handlePlus(item) } }}><a-icon type="plus"/></a>
+          <a class="btn" style="width: 20px;z-index:1300" {...{ on: { click: () => this.handlePlus(item) } }}>
+          <a-icon type="plus"/>         
+            </a>
         </Item>
       )
     },
+    // <a-icon type="plus"/>
     renderItem (item) {
       return item.children ? this.renderSubItem(item, item.key) : this.renderMenuItem(item, item.key)
     },
@@ -105,8 +134,8 @@ export default {
     }
   },
   render () {
-    const { dataSource, search } = this.$props
-
+    const { dataSource, search, addgroup } = this.$props
+      
     // this.localOpenKeys = openKeys.slice(0)
     const list = dataSource.map(item => {
       return this.renderItem(item)
@@ -114,6 +143,7 @@ export default {
 
     return (
       <div class="tree-wrapper">
+        { addgroup ? this.renderAddGroup():null}
         { search ? this.renderSearch() : null }
         <Menu mode="inline" class="custom-tree" {...{ on: { click: item => this.$emit('click', item), 'update:openKeys': val => { this.localOpenKeys = val } } }} openKeys={this.localOpenKeys}>
           { list }
@@ -121,4 +151,5 @@ export default {
       </div>
     )
   }
+  
 }

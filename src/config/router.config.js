@@ -59,7 +59,13 @@ let res= [ {
         name: 'Phonelist_QW',
         component: () => import('@/views/list/UserPhonelist'),
         meta: { title: '通信录', permission: [ 'QW' ] }
-      }     
+      },
+      {
+        path: '/list/CustomGroup/152',          
+        name: 'CustomGroup_QW',
+        component: () => import('@/views/other/customgroup'),
+        meta: { title: '自定义组', permission: [ 'QW' ] }
+      }      
     ]
   },
   {
@@ -74,7 +80,13 @@ let res= [ {
         name: 'Phonelist_QRD',
         component: () => import('@/views/list/UserPhonelist'),
         meta: { title: '通信录', permission: [ 'QRD' ] }
-      }
+      },
+      {
+        path: '/list/CustomGroup/153',          
+        name: 'CustomGroup_QRD',
+        component: () => import('@/views/other/customgroup'),
+        meta: { title: '自定义组', permission: [ 'QRD' ] }
+      }  
     ]
   },
   {
@@ -161,7 +173,13 @@ let res= [ {
             name: 'Phonelist_QWBGS',
             component: () => import('@/views/list/UserPhonelist'),
             meta: { title: '通信录', permission: [ 'QWBGS' ] }
-          }
+          },
+          {
+            path: '/list/CustomGroup/84',          
+            name: 'CustomGroup_QWBGS',
+            component: () => import('@/views/other/customgroup'),
+            meta: { title: '自定义组', permission: [ 'QWBGS' ] }
+          } 
         ]
       },  
       {

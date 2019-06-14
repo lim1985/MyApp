@@ -56,7 +56,13 @@ const api = {
    smsstatus:'http://info.dxzc.gov.cn:3000/api/status',
    SmsAddRecord:'http://info.dxzc.gov.cn:3000/api/smsAddrecord',
    smssucceedcount:'http://info.dxzc.gov.cn:3000/api/GetSmsSucceedCount',
-   
+   //添加自定义组
+   CreateCustomGroup:'http://172.20.8.28:3001/api/createGroup',
+   GetCustomGroup:'http://172.20.8.28:3001/api/GetGroup',
+   GetAllDepUser:'http://172.20.8.28:3001/api/GetAllDepUser',
+   AddUserToGroup:'http://172.20.8.28:3001/api/adduserTogroup',
+   InGroupUsersID:'http://172.20.8.28:3001/api/InGroupUsersID',
+   FindAllUserByGroupID:'http://172.20.8.28:3001/api/FindAllUserByGroupID',
 
    
 //  axios.get('http://info.dxzc.gov.cn:3000/api/sendsms', {
@@ -72,6 +78,48 @@ const api = {
 }
 
 export default api
+export function FindAllUserByGroupID (parameter) {
+  return axios({
+    url: api.FindAllUserByGroupID,
+    method: 'get',
+    params: parameter
+  })
+}
+export function InGroupUsersID (parameter) {
+  return axios({
+    url: api.InGroupUsersID,
+    method: 'get',
+    params: parameter
+  })
+}
+export function AddUserToGroup (parameter) {
+  return axios({
+    url: api.AddUserToGroup,
+    method: 'post',
+    data:parameter  
+  })
+}
+export function GetAllDepUser (parameter) {
+  return axios({
+    url: api.GetAllDepUser,
+    method: 'get',
+    params: parameter
+  })
+}
+export function GetCustomGroupByDepID (parameter) {
+  return axios({
+    url: api.GetCustomGroup,
+    method: 'get',
+    params: parameter
+  })
+}
+export function CreateCustomGroup (parameter) {
+  return axios({
+    url: api.CreateCustomGroup,
+    method: 'get',
+    params: parameter
+  })
+}
 //引用
 export function SmsSucceedcount (parameter) {
   return axios({
