@@ -170,9 +170,9 @@ export default {
     async GetAllDepAndUser()
     {
        let  userid= {AdminID:Vue.ls.get(User_ID)} 
-       console.log(userid)
+      //  console.log(userid)
        this.AllDepUsers=await GetAllDepUser(userid)
-        console.log(this.AllDepUsers.data)
+        // console.log(this.AllDepUsers.data)
        
     },
     //   async GetDepnameAndchild()

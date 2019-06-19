@@ -9,6 +9,8 @@
           :addgroup="true"
           @click="handleClick"
           @add="handleAdd"
+          @minu="handleMinu"
+        
           @titleClick="handleTitleClick"          
           @addGroup="addgroup">          
         </s-tree>
@@ -18,12 +20,13 @@
         <div class="table-operator">    
           <a-dropdown v-if="selectedRowKeys.length > 0">
             <a-menu slot="overlay">
-              <a-menu-item key="1" @click="sendsms(selectedRows)"><a-icon type="lock" />发短信</a-menu-item>
+              <a-menu-item key="1" @click="sendsms(selectedRows)"><a-icon type="mobile" />发短信</a-menu-item>
             </a-menu>
             <a-button style="margin-left: 8px">
               批量操作 <a-icon type="down" />
             </a-button>
           </a-dropdown>
+          
         </div>
         <s-table
           ref="mytable"
@@ -34,6 +37,9 @@
           :alert="false"
           :rowSelection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }"
         >
+          <template slot="cellphone" slot-scope="text">
+            <a @click="GetUboxToTel(text)">{{ text }}</a>
+          </template>
           <span slot="action" slot-scope="text, record">                    
             <a v-show="record.Ustatus==9 || record.Ustatus==7" @click="handleEdit(record)">编辑</a>
             <a-divider type="vertical" />
@@ -46,8 +52,11 @@
                   <a @click="sendsms(record)">发短信</a>
                 </a-menu-item>
                 <a-menu-item>
-                  <a href="javascript:;">详情</a>
+                  <a @click="DeleteUser(record)">删除</a>
                 </a-menu-item>
+                <!-- <a-menu-item>
+                  <a href="javascript:;">详情</a>
+                </a-menu-item> -->
                 <a-menu-item v-show="record.Ustatus==9 || record.Ustatus==7">
                   <a href="javascript:;">禁用</a>
                 </a-menu-item>
@@ -60,9 +69,11 @@
         </s-table>
       </a-col>
     </a-row>
+  
     <CustomGroupModal ref="Groupmodal" @ok="handleSaveOk" @close="handleSaveClose" />
     <UserToGroupModal ref="UserToGroupmodal" @ok="handleSaveOk" @close="handleSaveClose" />
     <SendsmsModal ref="SendsmsModal" :Pupuarr="Pupu" @ok="handleSaveOk" @close="handleSaveClose"/>
+    <!-- <ConfirmModal ref="ConfirmModal" @ok="handleSaveOk" @close="handleSaveClose"/> -->
     <!-- <org-modal ref="modal" @ok="handleSaveOk" @close="handleSaveClose" /> -->
   </a-card>
 </template>
@@ -73,10 +84,12 @@ import  STable  from '@/components/newTable'
 import CustomGroupModal from './modules/CustomGroupAdd'
 import UserToGroupModal from './modules/UserToGroupAdd'
 import SendsmsModal from '@/views/list/modules/sendSMS/sendsms'
+// import ConfirmModal from './modules/ConfirmModal'
 
 // import { mapState} from 'vuex'
 // import OrgModal from './modules/OrgModal'
-import { GetCustomGroupByDepID,FindAllUserByGroupID } from '@/api/manage'
+import { GetCustomGroupByDepID,FindAllUserByGroupID ,DeleteGroupUser,DeleteGroup} from '@/api/manage'
+
 //  getOrgTree,getServiceList,GetALLDep,GetAllPhoneuser,GetByDepIDAndPermissionKey,DepTreelist,PostByDepIDPermissionKey
 export default {
   name: 'TreeList',
@@ -85,7 +98,8 @@ export default {
     STree,
     CustomGroupModal,
     UserToGroupModal,
-    SendsmsModal
+    SendsmsModal,
+    // ConfirmModal
     // OrgModal
   },
   data () {
@@ -106,7 +120,8 @@ export default {
         },
         {
           title: '手机',
-          dataIndex: 'cellphone'
+          dataIndex: 'cellphone',
+          scopedSlots: { customRender: 'cellphone' },
           // sorter: true,
           // needTotal: true,
           // customRender: (text) => text + ' 次'
@@ -114,11 +129,12 @@ export default {
         {
           title: '座机',
           dataIndex: 'Tel',
+          scopedSlots: { customRender: 'ToTel' },
           // needTotal: true
         },
         {
           title: '所属部门',
-          dataIndex: 'Permission_Key',
+          dataIndex: 'DepartmentName',
           // sorter: true
         },
         {
@@ -130,13 +146,13 @@ export default {
       ],
       // 加载数据方法 必须为 Promise 对象
        UserloadData:(parameter)=>{
-         console.log(Object.assign(parameter,this.QueryUserParam))
-         return FindAllUserByGroupID(Object.assign(parameter,this.QueryUserParam)).then(res=>{
-         
-        
+        //  console.log(Object.assign(parameter,this.QueryUserParam))
+         return FindAllUserByGroupID(Object.assign(parameter,this.QueryUserParam)).then(res=>{         
+
            this.Pupu=res.result.data.map(item=>{
             return {Phone:item.cellphone,username:item.UserName,DPname:item.Permission_name,ID:item.ID,UJOB:item.UJOB,checked:false}
             })  
+           console.log(res.result)
            return res.result
          
          })
@@ -159,23 +175,62 @@ export default {
   },
   created () {
     // this.getDepTree();
+  
      this.getCustomGroup();
   },
   mounted(){
-   
+     
   },
     computed:{
       
     },
   watch:{
-      "$route": "getCustomGroup"
-    // '$route'()
-    // {        
-    //   this.$store.commit('SET_DepId',this.$route.fullPath.split('/')[3]);     
-    //   // this.$refs.mytable.refresh()     
-    // }
+      "$route": "getCustomGroup",
   },
   methods: { 
+   
+    DeleteUser(data)
+    {
+      let _data={
+        GroupID:this.QueryUserParam.GroupID,
+        UserPhoneID:data.ID
+      }
+      console.log(_data)
+      // console.log(this.QueryUserParam.GroupID)
+      DeleteGroupUser(_data).then(res=>{
+        if(res.code==1)
+        {
+          this.$message.info('删除成功！')
+           this.$refs.mytable.refresh(true)
+        }
+      })
+    
+    },
+    async handleMinu(e)
+    {
+    
+  
+       this.$confirm({
+          title:'此操作将删除该分组及组里所有联系人，是否继续?',
+          okText: '确定',
+          cancelText: '取消',
+          type: 'warning',
+          onOk:()=>{
+          let _data={
+           GroupID:e.key
+           }
+           DeleteGroup(_data).then(res=>{              
+                res.code==1?this.$message.info(res.msg):this.$message.info('操作失败')
+                this.getCustomGroup();
+                this.$refs.mytable.refresh(true)
+           })              
+          },
+          onCancel:()=>{
+            console.log('quxiao ')
+          }
+        })  
+    },
+
   sendsms(IDs)
       {
       // let _arr=[]  
@@ -184,60 +239,62 @@ export default {
       },
     getCustomGroup()
     {  
-      
+     
         let _depid=this.$route.fullPath.split('/')[3];
         let data={
           DepID:_depid
         }    
+      
         GetCustomGroupByDepID(data).then(res=>{        
-   
+          console.log(res)
          this.Grouplist= res.data.rows.map(v=>{    
          
           return {title:v.GroupName,key:v.GroupID,icon:'null'}
           })   
-        console.log(this.Grouplist)
+          if(this.Grouplist.length>0)
+          {
+         this.QueryUserParam ={
+           GroupID:this.Grouplist[0].key
+          }
+           this.$refs.mytable.refresh(true)
+          }
+          console.log(this.Grouplist);
+      //     if(this.Grouplist)
+      //     {
+      //         this.QueryUserParam ={
+      //   GroupID:this.Grouplist[0].key
+      // }
+      //  this.$refs.mytable.refresh(true)
+      //     }
+      
+      
+      //  console.log(this.QueryUserParam)
         })
       // this.Grouplist=[{key:'001',title:'001'},{key:'002',title:'002'}]
      
     },
+    GetUboxToTel(e)
+    {
+      alert(e);
+    },
       addgroup(e){
          this.$refs.Groupmodal.add(e); 
       },
-      // addusertogroup(e){
-      //    this.$refs.UserToGroupModal.add(e);  
-      // },
-      // getDepTree(){
-      //       DepTreelist().then(res=>{
-      //         // this.DepTree=res.result
-      //         res.result.forEach(v => {
-      //           v.OrderID && this.DepTree.push(v)
-      //         });
-      //       // console.log(this.DepTree)
-      //   })  
-      // },  
-handleEdit(s)
-{
-  console.log(s)
-},
+    
+      handleEdit(s)
+      {
+        console.log(s)
+      },
     auth(e)
     {
       if (e)
       return true;
     },
-    handleClick (e) {
-      console.log('handleClick', e)
-      this.onclick=true;
-     this.QueryUserParam ={
+   handleClick (e) {
+        this.onclick=true;
+        this.QueryUserParam ={
         GroupID:e.key
-      }
-      //  FindAllUserByGroupID(this.QueryUserParam).then(res=>{
-      //     console.log(res)
-      //   })
-      // this.queryParam = {
-      //   DepID: e.key,
-      //   key:e.keyPath[1],
-      //   status:9
-      //   }
+        }
       this.$refs.mytable.refresh(true)
     },
     handleAdd (item) {

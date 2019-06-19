@@ -140,12 +140,7 @@ export default {
     // this.v();
   },
     computed:{
-      ...mapState({
-        S_DEPKEY:state=>state.user.DEPKEY,
-        V_name:state=>state.user.name,
-        UserPhoneID:state=>state.user.UserPhoneID 
-               
-      })    
+    
     },
    watch: {
    

@@ -89,7 +89,7 @@
 </template>
 <script>
   import Vue from 'vue'  
-  import { mapState} from 'vuex'
+
   import { User_ID } from "@/store/mutation-types" 
   import { UpdatePartment,getUserrolesbyAdminID,Select_PermissionsByRolesID} from '@/api/manage'
   import { Promise } from 'q';
@@ -139,11 +139,7 @@ export default {
     // this.v();
   },
     computed:{
-      ...mapState({
-        S_DEPKEY:state=>state.user.DEPKEY,
-        V_name:state=>state.user.name,
-        UserPhoneID:state=>state.user.UserPhoneID        
-      })    
+     
     },
    watch: {
    

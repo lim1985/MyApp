@@ -2,14 +2,20 @@
   <a-locale-provider :locale="locale">
     <div id="app">
       <router-view/>
+      <PhoneModal ref="PhoneModal"/>
     </div>
+   
   </a-locale-provider>
+ 
 </template>
 <script>
+
   import zhCN from 'ant-design-vue/lib/locale-provider/zh_CN'
   import enquireScreen from '@/utils/device'
   import { AppDeviceEnquire } from '@/utils/mixin'
-
+  import PhoneModal from '@/views/list/modules/PhoneMsg/Phone'
+  // import Vue from 'vue'  
+  import { mapState} from 'vuex'
   export default {
     mixins: [AppDeviceEnquire],
     data () {
@@ -17,7 +23,33 @@
         locale: zhCN,
       }
     },
+    components: {
+    PhoneModal      
+    },
+     computed:{
+      ...mapState({
+         handleID:state=>state.L_Ubox.HandleID,
+         event:state=>state.L_Ubox.Event
+      }),
+    
+    },
+   
+    mounted(){
+     this.initWS();
+    
+        // if(event=='hookoff')
+        // {
+        //   console.log(`999-999`)
+        //   this.show();
+        // }
+        // else
+        // {
+        //   console.log(`77777`)
+        // }
+    },
     created () {
+     
+     
       let that = this
       enquireScreen(deviceType => {
         // tablet
@@ -36,6 +68,15 @@
         }
 
       })
+    },
+    methods:{
+   
+       initWS()
+        {
+      this.$LUBOX.InitWS()
+    //    console.log(`00000000`)
+    //  console.log(this.Myevent)
+        }
     }
   }
 </script>

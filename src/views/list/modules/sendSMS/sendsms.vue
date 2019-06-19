@@ -185,7 +185,7 @@ export default {
      setTimeout(() => {
       let _arr=[]  
       !i.length? _arr.push(i): _arr=i
-        this.initSms(i);
+        this.initSms(_arr);
      }, 100);
     },
     
@@ -279,7 +279,8 @@ export default {
     
      console.log(IDs)
      let _this=this
-     IDs[0].DepartmentName?_this.vmodelContent=IDs[0].DepartmentName:_this.vmodelContent=IDs[0].Permission_name
+     console.log(_this.Pupuarr)
+    //  IDs[0].DepartmentName?_this.vmodelContent=IDs[0].DepartmentName:_this.vmodelContent=IDs[0].Permission_name
     //  _this.vmodelContent=IDs[0].DepartmentName?true:false
     //   _this.vmodelContent=IDs[0].Permission_name?true:false
       //  _this.vmodelContent=`【${IDs[0].DepartmentName}】`

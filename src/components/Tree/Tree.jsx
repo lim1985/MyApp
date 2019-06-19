@@ -55,6 +55,12 @@ export default {
     handleTitleClick (...args) {
       this.$emit('titleClick', { args })
     },
+   
+    handleMinu(item)
+    {    
+      item.depid=this.$route.fullPath.split('/')[3]
+      this.$emit('minu', item)
+    },
 
     renderSearch () {
       return (
@@ -69,14 +75,22 @@ export default {
         <div><a-button {...{on:{click:()=>this.handleAddGroup()}}} type="primary" block>添加自定义组</a-button><br/></div>     
       )
     },
+    renderminusGroup(item){
+      return (   
+     <a class="btn" style="left: 0px !important;"><a-button {...{on:{click:()=>this.handleMinu(item)}}}  type="danger" size="small">删除</a-button></a>
+     
+         )
+    },//删除组操作
     renderIcon (icon) {
       return icon && (<Icon type={icon} />) || null
     },
    
     renderMenuItem (item) {
       return (
-        <Item key={item.key}>
+        <Item style="padding-left:35px;" key={item.key}>
+     
           { this.renderIcon(item.icon) }
+          { this.renderminusGroup(item) }
           { item.title }
           <a class="btn" style="width: 20px;z-index:1300" {...{ on: { click: () => this.handlePlus(item) } }}>
           <a-icon type="plus"/>         
@@ -152,5 +166,5 @@ export default {
       </div>
     )
   }
-  
+
 }

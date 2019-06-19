@@ -63,6 +63,8 @@ const api = {
    AddUserToGroup:'http://172.20.8.28:3001/api/adduserTogroup',
    InGroupUsersID:'http://172.20.8.28:3001/api/InGroupUsersID',
    FindAllUserByGroupID:'http://172.20.8.28:3001/api/FindAllUserByGroupID',
+   DeleteGroupUser:'http://172.20.8.28:3001/api/DeleteGroupUser',
+   DeleteGroup:'http://172.20.8.28:3001/api/DeleteGroup',
 
    
 //  axios.get('http://info.dxzc.gov.cn:3000/api/sendsms', {
@@ -78,6 +80,20 @@ const api = {
 }
 
 export default api
+export function DeleteGroup (parameter) {
+  return axios({
+    url: api.DeleteGroup,
+    method: 'get',
+    params: parameter
+  })
+}
+export function DeleteGroupUser (parameter) {
+  return axios({
+    url: api.DeleteGroupUser,
+    method: 'get',
+    params: parameter
+  })
+}
 export function FindAllUserByGroupID (parameter) {
   return axios({
     url: api.FindAllUserByGroupID,
