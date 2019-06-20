@@ -44,38 +44,59 @@ class LUbox {
 						//console.log(ev);					
 					let msg = eval('(' + ev.data + ')');	
 					console.log(msg)			
-						if(msg.type || msg.handle)
-						{					
-						store.commit('SET_TYPE',msg.type)	
-						store.commit('SET_HANDLEID',msg.handle)
-						}
-						// if(msg.handle)
-						// {
+					if(msg.type || msg.handle)
+					{
+					store.commit('SET_TYPE',msg.type)	
+					store.commit('SET_HANDLEID',msg.handle)
+					}
+					if(msg.handle)
+					{
+					store.commit('SET_HANDLEID',msg.handle)	
+					}
+					if(msg.event)//任何操作都返回
+					{
+					store.commit('SET_EVENT',msg.event)		
+					}
+					if(msg.event=='callerId')//发现来电号码
+					{
+					store.commit('SET_PHONENUMER',msg.callernumber)			
+					}
+					if(msg.event=='hookup' || msg.event=='ringCancel')//挂机或者取消拨打
+					{
+					store.commit('SET_PHONENUMER','')		
+					}
+						// if(msg.type || msg.handle)
+						// {					
+						// store.commit('SET_TYPE',msg.type)	
 						// store.commit('SET_HANDLEID',msg.handle)
 						// }
-						if (msg.event=='hookoff')
-						{
-						console.log('电话拿起了')
-						console.log(msg.event)
-						store.commit('SET_EVENT',msg.event)	
-						}
-						else if(msg.event=="hookup")
-						{
-						console.log('电话放下了')
-						console.log(msg.event)
-						store.commit('SET_EVENT',msg.event)		
-						}
-						else if(msg.event=='ring')
-						{
-						store.commit('SET_EVENT',msg.event)														
-						}else if(msg.event=='callerId')
-						{
-						store.commit('SET_PHONENUMER',msg.callernumber)			
-						}
-						else if(msg.event=='ringCancel')
-						{
-						store.commit('SET_EVENT',msg.event)			
-						}
+						// // if(msg.handle)
+						// // {
+						// // store.commit('SET_HANDLEID',msg.handle)
+						// // }
+						// if (msg.event=='hookoff')
+						// {
+						// console.log('电话拿起了')
+						// console.log(msg.event)						
+						// store.commit('SET_EVENT',msg.event)	
+						// }
+						// else if(msg.event=="hookup")
+						// {
+						// console.log('电话放下了')
+						// console.log(msg.event)
+						// store.commit('SET_EVENT',msg.event)		
+						// }
+						// else if(msg.event=='ring')
+						// {
+						// store.commit('SET_EVENT',msg.event)														
+						// }else if(msg.event=='callerId')
+						// {
+						// store.commit('SET_PHONENUMER',msg.callernumber)			
+						// }
+						// else if(msg.event=='ringCancel')
+						// {
+						// store.commit('SET_EVENT',msg.event)			
+						// }
 			
 					}
 

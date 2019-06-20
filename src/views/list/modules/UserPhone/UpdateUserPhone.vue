@@ -260,9 +260,28 @@ export default {
   async mounted(){   
       console.log(this.mdl)
       this.options=await this.GetDepnameAndchild()
-      // console.log(this.options)    
+     console.log(this.options)    
     },
   methods:  {
+     deteleObject(arr,attr,value) {
+            var uniques = [];
+            var _arrs=[]   
+            for(let x in arr)
+            {       
+                if(arr[x].IsView==value)
+                {   
+                _arrs.push(arr[x])           
+                }    
+            }
+            var obj = {};
+                for(var i =0; i<_arrs.length; i++){
+                    if(!obj[_arrs[i].value]){
+                        uniques.push(_arrs[i]);
+                        obj[_arrs[i].value] = true;
+                    }
+                }  
+                    return uniques
+        },
       v(){
       // console.log(Validate)
       return Validate 
@@ -280,7 +299,7 @@ export default {
              let result=await  Select_PermissionsByRolesID({ID:roleslist.roles[x]})//根据rolesID 拿到Permissionlist 返回字符串类型  
              _arr.push(result.res)          
           }
-          // console.log(_arr)
+           console.log(_arr)
          let arr=[]       
           _arr.forEach(v => {
             for(let x in v)
@@ -289,7 +308,8 @@ export default {
                {
                  let obj=new Object();               
                   obj.label=v[x].label
-                  obj.value=v[x].value                
+                  obj.value=v[x].value 
+                  obj.IsView=v[x].IsView                 
                   let DepArr=[]                     
                   v[x].actionOptions.forEach(s=>{
                       let childObj=new Object();
@@ -306,8 +326,10 @@ export default {
                }               
             }
           });
+          let newarr=this.deteleObject(arr,'IsView',true)
+          console.log(newarr)
             // console.log(arr);
-          return arr        
+          return newarr        
       },
      filter(inputValue, path) {
       return (path.some(option => (option.label).toLowerCase().indexOf(inputValue.toLowerCase()) > -1));
@@ -382,6 +404,7 @@ export default {
         if (!err) {
       
           _this.confirmLoading = true
+          console.log(values)
           // 模拟后端请求 2000 毫秒延迟
           new Promise((resolve,reject) => {          
           setTimeout(async () => {

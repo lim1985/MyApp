@@ -6,6 +6,7 @@
           :dataSource="DepTree"         
           :openKeys.sync="openKeys"
           :search="true"
+          :addgroup="false"
           @click="handleClick"
           @add="handleAdd"
           @titleClick="handleTitleClick"></s-tree>

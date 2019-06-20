@@ -47,7 +47,7 @@ export default {
    
   },
   created () {
-    console.log('createl')
+      console.log('createl')
       console.log(Event)
     // this.v();
   },
@@ -91,9 +91,9 @@ export default {
       if(val=='ring' || val=='hookoff')
       {
         this.Phonevisible=true;           
-      }   
-      if(val=='hookup' || val=='ringCancel')
+      }else if(val=='hookup' || val=='ringCancel')
       {
+        this.PhoneNumber=''
         this.Phonevisible=false
       } 
       

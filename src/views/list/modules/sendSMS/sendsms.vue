@@ -283,7 +283,7 @@ export default {
     //  IDs[0].DepartmentName?_this.vmodelContent=IDs[0].DepartmentName:_this.vmodelContent=IDs[0].Permission_name
     //  _this.vmodelContent=IDs[0].DepartmentName?true:false
     //   _this.vmodelContent=IDs[0].Permission_name?true:false
-      //  _this.vmodelContent=`【${IDs[0].DepartmentName}】`
+       _this.vmodelContent=`【${IDs[0].DepartmentName}】`
      _this.Barr=[]
      for(let x in _this.Pupuarr)
      {
@@ -301,7 +301,7 @@ export default {
       _this.checkAll =  _this.Barr.length === _this.Pupuarr.length  
       _this.countSms=_this.Barr.length;  
       _this.Sendvisible=true;
-      _this.smsContent=`【${IDs[0].DepartmentName}】`
+      _this.smsContent= _this.vmodelContent
     },
   
     

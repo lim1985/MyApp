@@ -24,8 +24,7 @@ const UBOX = {
     },
     SET_PHONENUMER: (state, PhoneNumber) => {
       state.PhoneNumber = PhoneNumber
-    },
-    
+    },    
   },
 
   actions: {

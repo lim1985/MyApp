@@ -22,7 +22,8 @@ export default {
     addgroup: {
       type: Boolean,
       default: false
-    }
+    },
+  
   },
   created () {
     this.localOpenKeys = this.openKeys.slice(0)
@@ -75,6 +76,13 @@ export default {
         <div><a-button {...{on:{click:()=>this.handleAddGroup()}}} type="primary" block>添加自定义组</a-button><br/></div>     
       )
     },
+    renderAddUsers(item) {
+      return (
+        <a class="btn" style="width: 20px;z-index:1300" {...{ on: { click: () => this.handlePlus(item) } }}>
+        <a-icon type="plus"/>         
+          </a>    
+      )
+    },
     renderminusGroup(item){
       return (   
      <a class="btn" style="left: 0px !important;"><a-button {...{on:{click:()=>this.handleMinu(item)}}}  type="danger" size="small">删除</a-button></a>
@@ -86,15 +94,16 @@ export default {
     },
    
     renderMenuItem (item) {
+      const { addgroup } = this.$props
+
       return (
         <Item style="padding-left:35px;" key={item.key}>
      
           { this.renderIcon(item.icon) }
-          { this.renderminusGroup(item) }
+          { addgroup ? this.renderminusGroup(item):null}        
           { item.title }
-          <a class="btn" style="width: 20px;z-index:1300" {...{ on: { click: () => this.handlePlus(item) } }}>
-          <a-icon type="plus"/>         
-            </a>
+          { addgroup ? this.renderAddUsers(item):null}        
+          
         </Item>
       )
     },
