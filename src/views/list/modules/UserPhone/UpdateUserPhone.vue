@@ -233,8 +233,7 @@ export default {
       },
       visible: false,
       confirmLoading: false,
-      mdl: {}
-     
+      mdl: {}     
     }
   },
   beforeCreate () {
@@ -258,9 +257,9 @@ export default {
         
       },
   async mounted(){   
-      console.log(this.mdl)
+      // console.log(this.mdl)
       this.options=await this.GetDepnameAndchild()
-     console.log(this.options)    
+    //  console.log(this.options)    
     },
   methods:  {
      deteleObject(arr,attr,value) {
@@ -282,7 +281,7 @@ export default {
                 }  
                     return uniques
         },
-      v(){
+    v(){
       // console.log(Validate)
       return Validate 
     },
@@ -420,16 +419,16 @@ export default {
                  
           }, 1000)          
           }).then(function (r) {
-           
-           if(r)
+            console.log(r)
+           if(r.code==-1)
            {
               _this.$message.success('修改人员信息成功'); 
               _this.PhoneVisible = false   
               _this.$emit('ok')        
            }
-           else
+           else if(r.code==-4)
            {
-               _this.$message.error('修改人员信息失败');  
+               _this.$message.error(r.msg);  
            }
           }).catch(function (err) {
              console.log(err)

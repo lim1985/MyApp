@@ -73,6 +73,7 @@
     <CustomGroupModal ref="Groupmodal" @ok="handleSaveOk" @close="handleSaveClose" />
     <UserToGroupModal ref="UserToGroupmodal" @ok="handleSaveOk" @close="handleSaveClose" />
     <SendsmsModal ref="SendsmsModal" :Pupuarr="Pupu" @ok="handleSaveOk" @close="handleSaveClose"/>
+    <PhoneModal ref="PhoneModal"/>
     <!-- <ConfirmModal ref="ConfirmModal" @ok="handleSaveOk" @close="handleSaveClose"/> -->
     <!-- <org-modal ref="modal" @ok="handleSaveOk" @close="handleSaveClose" /> -->
   </a-card>
@@ -85,6 +86,7 @@ import CustomGroupModal from './modules/CustomGroupAdd'
 import UserToGroupModal from './modules/UserToGroupAdd'
 import SendsmsModal from '@/views/list/modules/sendSMS/sendsms'
 // import ConfirmModal from './modules/ConfirmModal'
+import PhoneModal from '@/views/list/modules/PhoneMsg/Phone'
 
 // import { mapState} from 'vuex'
 // import OrgModal from './modules/OrgModal'
@@ -92,8 +94,9 @@ import { GetCustomGroupByDepID,FindAllUserByGroupID ,DeleteGroupUser,DeleteGroup
 
 //  getOrgTree,getServiceList,GetALLDep,GetAllPhoneuser,GetByDepIDAndPermissionKey,DepTreelist,PostByDepIDPermissionKey
 export default {
-  name: 'TreeList',
+  name: 'TreeList',  
   components: {
+    PhoneModal,
     STable,
     STree,
     CustomGroupModal,
@@ -208,8 +211,6 @@ export default {
     },
     async handleMinu(e)
     {
-    
-  
        this.$confirm({
           title:'此操作将删除该分组及组里所有联系人，是否继续?',
           okText: '确定',
@@ -259,23 +260,14 @@ export default {
            this.$refs.mytable.refresh(true)
           }
           console.log(this.Grouplist);
-      //     if(this.Grouplist)
-      //     {
-      //         this.QueryUserParam ={
-      //   GroupID:this.Grouplist[0].key
-      // }
-      //  this.$refs.mytable.refresh(true)
-      //     }
-      
-      
-      //  console.log(this.QueryUserParam)
+   
         })
-      // this.Grouplist=[{key:'001',title:'001'},{key:'002',title:'002'}]
+   
      
     },
     GetUboxToTel(e)
     {
-      alert(e);
+      this.$refs.PhoneModal.get(e)          
     },
       addgroup(e){
          this.$refs.Groupmodal.add(e); 

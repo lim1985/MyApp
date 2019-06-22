@@ -45,12 +45,18 @@ const api = {
   GetAllPhoneUserByPermissionKey:'http://172.20.8.28:3001/api/AllPhoneUserByPermissionkey',
   GetByDepIDAndPermissionKey:'http://172.20.8.28:3001/api/GetDepIDAndPermissionKey',
   PostDepIDAndPermissionKey:'http://172.20.8.28:3001/api/PostDepIDAndPermissionKey',
+  DeleteUserByUID:'http://172.20.8.28:3001/api/DeleteUser',
 
+  
  
   GetAllPhoneuser:'http://172.20.8.28:3001/api/GetAllPhoneuser',
   GetALLByDepID:'http://172.20.8.28:3001/api/GetAllByDepID',//DepID=70 用于UserPhoneList页面获取通讯录用户数据用
  //引用表操作
   ReferenceAdd:'http://172.20.8.28:3001/api/ReferenceAdd',//用于list/modules/UserPhone/addUserPhone
+  ReferenceDelete:'http://172.20.8.28:3001/api/ReferenceDelete',//用于list/modules/UserPhone/addUserPhone
+
+
+  
  //发短信接口
    sendsms:'http://info.dxzc.gov.cn:3000/api/sendsms',
    smsstatus:'http://info.dxzc.gov.cn:3000/api/status',
@@ -80,6 +86,22 @@ const api = {
 }
 
 export default api
+
+export function ReferenceDelete (parameter) {
+  return axios({
+    url: api.ReferenceDelete,
+    method: 'get',
+    params: parameter
+  })
+}
+export function DeleteUser (parameter) {
+  return axios({
+    url: api.DeleteUserByUID,
+    method: 'get',
+    params: parameter
+  })
+}
+
 export function DeleteGroup (parameter) {
   return axios({
     url: api.DeleteGroup,

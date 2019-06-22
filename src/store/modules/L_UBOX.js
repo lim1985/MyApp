@@ -8,11 +8,14 @@ const UBOX = {
     HandleID: '',
     Event:'',
     Type:'',
-    PhoneNumber:''
-   
+    PhoneNumber:'',
+    NumKey:'',
+    Numkeys:'',
+  
   },
 
   mutations: {
+   
     SET_HANDLEID: (state, HandleID) => {
       state.HandleID = HandleID
     },
@@ -24,7 +27,13 @@ const UBOX = {
     },
     SET_PHONENUMER: (state, PhoneNumber) => {
       state.PhoneNumber = PhoneNumber
-    },    
+    },
+    SET_NUMKEY: (state, NumKey) => {
+      state.Numkeys+= NumKey
+    }, 
+    SET_NUMKEYS: (state, key) => {
+      state.Numkeys= key
+    },        
   },
 
   actions: {

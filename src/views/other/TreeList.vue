@@ -93,7 +93,7 @@ export default {
         },
         {
           title: '所属部门',
-          dataIndex: 'Permission_Key',
+          dataIndex: 'Abbreviation',
           // sorter: true
         },
         // {
@@ -107,18 +107,17 @@ export default {
        loadData: (parameter) => {  
             if(this.onclick)
             {  
-             let _obj=new Object()
-             let _arr=[]
-             _arr.push(this.queryParam)
-               _obj.param=_arr;
-
+            let _obj=new Object()
+            let _arr=[]
+            _arr.push(this.queryParam)
+            _obj.param=_arr;
             
-         return PostByDepIDPermissionKey(Object.assign(parameter,_obj))
-          .then(res => {
-             console.log(res.result)
-            return res.result
-          })
-         }   
+          return PostByDepIDPermissionKey(Object.assign(parameter,_obj))
+            .then(res => {
+              console.log(res.result)
+              return res.result
+            })
+          }   
            
         return DepTreelist()
           .then(res => {

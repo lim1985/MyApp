@@ -19,6 +19,7 @@ const Validate={
   checkNum1to100(rule, value, callback)
   {
     let reg=/^(100|[1-9]\d|\d)$/
+    
     if(!value)
     {
       callback();

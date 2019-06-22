@@ -295,30 +295,42 @@ export default {
         new Promise ((resolve)=>{
              setTimeout(async () => {
                  const res=await ReferenceAdd({UserPhoneID:_this.ReferenceUserId,DepID:_this.mdl[1]})             
-                 resolve(res);              
-          
-            console.log('referenceok')
+                 resolve(res);     
             // this.Referencevisible=false;
             // this.PhoneVisible=false;
             // this.$emit('ok') 
         }, 100);         
-        }).then(function(r){
-        
-          if(r.code==1)
+        }).then(r=>{
+              if(r.code==1)
           {
-             console.log('referenceok')
+            console.log('referenceok')
             this.Referencevisible=false;
             this.PhoneVisible=false;
-            this.$emit('ok') 
-            
+            this.$emit('ok')             
           }
           else if (r.code==-4)
           {
             _this.$message.error(r.msg);  
 
           }
-           
         })
+          
+        //   function(r){
+        //   console.log(r);
+        //   if(r.code==1)
+        //   {
+        //     console.log('referenceok')
+        //     this.Referencevisible=false;
+        //     this.PhoneVisible=false;
+        //     this.$emit('ok')             
+        //   }
+        //   else if (r.code==-4)
+        //   {
+        //     _this.$message.error(r.msg);  
+
+        //   }
+           
+        // })
      
            
     },

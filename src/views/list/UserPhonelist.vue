@@ -75,16 +75,20 @@
         </a-button>
       </a-dropdown>
     </div>
-
+  
     <s-table
       ref="mytable"
       size="default"
+      :loading="loading"
       :columns="columns"
       :rowKey="loadData=>loadData.ID"
       :data="loadData"
       :showAlertInfo="true"
       @onSelect="onChange"
     >
+      <template slot="cellphone" slot-scope="text">
+        <a @click="GetUboxToTel(text)">{{ text }}</a>
+      </template>
       <span slot="action" slot-scope="text, record">
         <a v-show="record.Ustatus==9 || record.Ustatus==7" @click="handleEdit(record)">编辑</a>
         <a-divider type="vertical" />
@@ -97,107 +101,27 @@
               <a @click="sendsms(record)">发短信</a>
             </a-menu-item>
             <a-menu-item>
-              <a href="javascript:;">详情</a>
+              <a href="javascript:alert('该功能尚未完成');">详情</a>
             </a-menu-item>
             <a-menu-item v-show="record.Ustatus==9 || record.Ustatus==7">
-              <a href="javascript:;">禁用</a>
+              <a href="javascript:alert('该功能尚未完成');">禁用</a>
             </a-menu-item>
             <a-menu-item v-show="record.Ustatus==9 || record.Ustatus==7|| record.Ustatus==6">
-              <a href="javascript:;">删除</a>
+              <a-popconfirm
+                v-if="loadData.length"
+                title="确定删除该联系人么?"
+                @confirm="() => onDelete(record)">
+                <a href="javascript:;">删除</a>
+              </a-popconfirm>
             </a-menu-item>
           </a-menu>
         </a-dropdown>
       </span>
     </s-table>
-
-    <!-- <a-modal
-      title="操作"
-      :width="800"
-      v-model="visible"
-      @ok="handleOk"
-    >
-      <a-form :autoFormCreate="(form)=>{this.form = form}">
-
-        <a-form-item
-          :labelCol="labelCol"
-          :wrapperCol="wrapperCol"
-          label='规则编号'
-          hasFeedback
-          validateStatus='success'
-        >
-          <a-input placeholder='规则编号' v-model="mdl.no" id='no' />
-        </a-form-item>
-
-        <a-form-item
-          :labelCol="labelCol"
-          :wrapperCol="wrapperCol"
-          label='服务调用次数'
-          hasFeedback
-          validateStatus='success'
-        >
-          <a-input-number :min="1" id="callNo" v-model="mdl.callNo" style="width: 100%" />
-        </a-form-item>
-
-        <a-form-item
-          :labelCol="labelCol"
-          :wrapperCol="wrapperCol"
-          label='状态'
-          hasFeedback
-          validateStatus='warning'
-        >
-          <a-select defaultValue='1' id="status" v-model="mdl.status">
-            <a-select-option value='1'>Option 1</a-select-option>
-            <a-select-option value='2'>Option 2</a-select-option>
-            <a-select-option value='3'>Option 3</a-select-option>
-            <a-select-option value='9'>Option 9</a-select-option>
-          </a-select>
-        </a-form-item>
-
-        <a-form-item
-          :labelCol="labelCol"
-          :wrapperCol="wrapperCol"
-          label='描述'
-          hasFeedback
-          help='请填写一段描述'
-        >
-          <a-textarea :rows="5" v-model="mdl.description" placeholder="..." id='description'/>
-        </a-form-item>
-
-        <a-form-item
-          :labelCol="labelCol"
-          :wrapperCol="wrapperCol"
-          label='更新时间'
-          hasFeedback
-          validateStatus='error'
-        >
-          <a-date-picker
-            style="width: 100%"
-            showTime
-            format="YYYY-MM-DD HH:mm:ss"
-            placeholder="Select Time"
-          />
-        </a-form-item>
-
-      </a-form>
-
-    </a-modal>   -->
-    <!-- <a-form-item
-         :labelCol="{lg: {span: 5}, sm: {span:5}}"
-         :wrapperCol="{lg: {span:6}, sm: {span:6} }"
-          label='生日'
-          hasFeedback
-         
-        >
-          <a-date-picker
-            style="width: 100%"
-            showTime
-            format="YYYY-MM-DD HH:mm:ss"
-            placeholder="Select Time"
-          />
-        </a-form-item> -->  
     <user-modal ref="UserPhonemodal" @ok="handleSaveOk" @close="handleSaveClose"/>
     <UpdateUserModal ref="UpdateUserPhonemodal" @ok="handleSaveOk" @close="handleSaveClose"/>
     <SendsmsModal ref="SendsmsModal" :Pupuarr="Pupu" @ok="handleSaveOk" @close="handleSaveClose"/>
+    <PhoneModal ref="PhoneModal"/>
   </a-card>
 </template>
 
@@ -207,14 +131,16 @@
   import ATextarea from "ant-design-vue/es/input/TextArea"
   import AInput from "ant-design-vue/es/input/Input"
   import { mapState} from 'vuex'
-  import {GetALLByDepID,AddPhoneUser} from '@/api/manage'
+  import {GetALLByDepID,AddPhoneUser,DeleteUser,ReferenceDelete} from '@/api/manage'
   import UserModal from './modules/UserPhone/addUserPhone'
   import UpdateUserModal from './modules/UserPhone/UpdateUserPhone'
   import SendsmsModal from './modules/sendSMS/sendsms'
+  import PhoneModal from '@/views/list/modules/PhoneMsg/Phone'
 
   export default {
     name: "TableList",
     components: {
+      PhoneModal,
       AInput,
       ATextarea,
       STable,
@@ -229,6 +155,7 @@
     },
     data () {
       return {    
+        loading:false,
         sDepID:'',
         initLoaddata:[],
         key:'',
@@ -290,39 +217,21 @@
            
           },
           {
-            title: '工作手机',
-            dataIndex: 'cellphone',
-            sorter: true
-          },
-          //  {
-          //   title: '移动手机1',
-          //   dataIndex: 'updatedAt',
-          //   sorter: true
-          // },
-          //  {
-          //   title: '移动手机2',
-          //   dataIndex: 'updatedAt',
-          //   sorter: true
-          // },
+          title: '手机',
+          dataIndex: 'cellphone',
+          scopedSlots: { customRender: 'cellphone' },
+          // sorter: true,
+          // needTotal: true,
+          // customRender: (text) => text + ' 次'
+          },       
           {
             table: '操作',
             dataIndex: 'action',
             width: '150px',
             scopedSlots: { customRender: 'action' },
           }
-        ],
-         
-        // 加载数据方法 必须为 Promise 对象
-      //    loadData: parameter => {
-      //     if(typeof parameter == "string"){
-      //     parameter = {pageNo:1,pageSize:10};
-      //   }        
-      //   return GetByDepIDAndPermissionKey(Object.assign(parameter, this.queryParam))
-      //     .then(res => {
-      //       console.log(res.result)
-      //       return res.result
-      //     })
-      // },
+        ],         
+    
         loadData: parameter => {                 
         let path=this.$route.path
         let arr=path.split("/")                   
@@ -368,19 +277,76 @@
       // this.options=await this.GetDepnameAndchild();
     },
     methods: {
+       GetUboxToTel(e)
+    {
+      this.$refs.PhoneModal.get(e)          
+    },
+      onDelete (data) {
+        console.log(data)
+        if(data.Rstatus==6)
+        {
+          this.loading=true;
+          let params={
+            Department_ID:this.queryParam.DepID,
+            ID:data.ID
+          }
+          ReferenceDelete(params)
+          .then(res=>{
+            return res
+          }).then((r)=>{
+            if(r.code==1)
+            {
+              setTimeout(() => {
+                this.loading=false
+                this.$message.success(r.msg)
+              }, 1000);
+            }
+            else
+            {
+             setTimeout(() => {            
+              this.$message.error('删除失败'); 
+            }, 1000);    
+            }
+          })
+          console.log('删除引用的人')
+        }
+        else
+        {
+          console.log('删除本单位的人')
+          this.loading=true;
+          DeleteUser(data).then(res=>{
+            if(res.code==1)
+            {
+              setTimeout(() => {
+              this.loading=false;
+              this.$message.success(res.msg); 
+            }, 1000);    
+            }
+            else
+            {
+              setTimeout(() => {            
+              this.$message.error(res.msg); 
+            }, 1000);  
+            }
+            console.log(res)
+          })
+            
+        }
+        this.$refs.mytable.refresh()
+    },
       sendsms(IDs)
       {
       // let _arr=[]  
       // !IDs.length? _arr.push(IDs): _arr=IDs
       this.$refs.SendsmsModal.get(IDs); 
       },
-    handleSaveClose(){
-          this.$refs.mytable.refresh()
-    },
-    handleSaveOk(){
-      console.log('AddOK')
-          this.$refs.mytable.refresh()
+      handleSaveClose(){
+            this.$refs.mytable.refresh()
       },
+      handleSaveOk(){
+        console.log('AddOK')
+            this.$refs.mytable.refresh()
+        },
     filter(inputValue, path) {
       return (path.some(option => (option.label).toLowerCase().indexOf(inputValue.toLowerCase()) > -1));
     },

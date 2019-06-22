@@ -226,11 +226,11 @@ export default {
     },
     handleOk () {
       const _this = this 
-      console.log(_this.Mymdl)   
+      // console.log(_this.Mymdl)   
       let _data=new Object();
       _data.UIDS=_this.Mymdl,
       _data.GroupID=_this.mdl.key    
-       console.log(_data);
+      //  console.log(_data);
         _this.confirmLoading = true
         new Promise((resolve)=>{
           setTimeout(() => {
@@ -241,15 +241,15 @@ export default {
       }).then(result=>{
         if(result.code==1)
         {
-            _this.$message.success('添加成功')
+            _this.$message.success('修改成功')
             _this.confirmLoading = false
             _this.ok();
         }
         else
         {
-           _this.$message.error('添加失败')
+           _this.$message.error('修改成功')
         }
-        console.log(result)
+        // console.log(result)
       })
          
      
