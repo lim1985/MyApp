@@ -26,109 +26,13 @@
           </a-col>
         </a-row>
       </a-form>
-    </div>
-    <a-modal
-      title="添加部门类别"
-      style="top:80px;"
-      :width="800"
-      v-model="addPre_model"
-      @ok="handleSubmit">
-      <a-form ref="myform" :autoFormCreate="(form)=>{this.form = form}">      
-        <a-form-item
-          label="标识"
-          :labelCol="{lg: {span: 7}, sm: {span: 7}}"
-          :wrapperCol="{lg: {span: 10}, sm: {span: 17} }"          
-          fieldDecoratorId="Permissionskey"
-          :fieldDecoratorOptions="{rules: [{ required: true, message: '请输入部门类别标识' }]}">
-          <a-input name="Permissionskey" placeholder="请输入部门类别标识" />
-        </a-form-item> 
-        <a-form-item
-          label="权重"
-          :labelCol="{lg: {span: 7}, sm: {span: 7}}"
-          :wrapperCol="{lg: {span: 10}, sm: {span: 17} }"          
-          fieldDecoratorId="OrderID"
-          :fieldDecoratorOptions="{rules: [{ required: true, message: '请输入部门类别权限权重' }]}">
-          <a-input name="OrderID" placeholder="请输入部门类别权重" />
-        </a-form-item> 
-        <a-form-item
-          label="部门类别名"
-          :labelCol="{lg: {span: 7}, sm: {span: 7}}"
-          :wrapperCol="{lg: {span: 10}, sm: {span: 17} }"
-          fieldDecoratorId="Permissionvalue"
-          :fieldDecoratorOptions="{rules: [{ required: true, message: '请输入部门类别名' }]}">
-          <a-input name="Permissionvalue" placeholder="请输入部门类别名" />
-        </a-form-item>   
-        <a-form-item
-          label="部门类别描述"
-          :labelCol="{lg: {span: 7}, sm: {span: 7}}"
-          :wrapperCol="{lg: {span: 10}, sm: {span: 17} }"
-          fieldDecoratorId="description"
-          :fieldDecoratorOptions="{rules: [{ required: false, message: '部门类别描述' }]}">
-          <a-textarea rows="4" name="description" placeholder="部门类别描述"/>
-        </a-form-item>
-      </a-form>
-    </a-modal>
-    <a-modal
-      title="修改"
-      style="top:80px;"
-      :width="800"
-      v-model="UpdatePre_model"
-      @ok="handleUPDATE">
-      <a-form ref="Updateform" :autoFormCreate="(form)=>{this.Updateform = form}">
-        <!-- <a-form-item
-          label="权限标识"
-          hasFeedback
-          validateStatus='success'
-          :labelCol="{lg: {span: 7}, sm: {span: 7}}"
-          :wrapperCol="{lg: {span: 10}, sm: {span: 17} }"
-          fieldDecoratorId="Permissionskey"
-          :fieldDecoratorOptions="{rules: [{ required: true, message: '请输入权限标识' }]}">
-          <a-input name="Permissionskey"  v-model="mdl" disabled="disabled"  placeholder="请输入权限标识" />
-        </a-form-item>  -->
-        <a-form-item  
-          :labelCol="{lg: {span: 7}, sm: {span: 7}}"
-          :wrapperCol="{lg: {span: 10}, sm: {span: 17} }"
-          label='ID'              
-          hasFeedback  
-          fieldDecoratorId="ID"
-        >
-          <a-input disabled />
-        </a-form-item>
-        <a-form-item         
-          :labelCol="{lg: {span: 7}, sm: {span: 7}}"
-          :wrapperCol="{lg: {span: 10}, sm: {span: 17} }"
-          label='标识'      
-          fieldDecoratorId="Permission_key"
-          hasFeedback>
-          <a-input name="Permissionskey" placeholder='标识' id='Permissionskey' />
-        </a-form-item>
-        <a-form-item         
-          :labelCol="{lg: {span: 7}, sm: {span: 7}}"
-          :wrapperCol="{lg: {span: 10}, sm: {span: 17} }"
-          label='权重'      
-          fieldDecoratorId="OrderID"
-          hasFeedback>
-          <a-input name="OrderID" placeholder='权重' id='OrderID' />
-        </a-form-item>
-        <a-form-item
-          label="部门类别名"      
-          fieldDecoratorId="Permission_name"
-          :labelCol="{lg: {span: 7}, sm: {span: 7}}"
-          :wrapperCol="{lg: {span: 10}, sm: {span: 17} }"
-          :fieldDecoratorOptions="{rules: [{ required: true, message: '请输入部门类别名' }]}">
-          <a-input name="Permissionvalue" placeholder="请输入部门类别名" />
-        </a-form-item>   
-        <a-form-item
-          label="部门类别描述"      
-          :labelCol="{lg: {span: 7}, sm: {span: 7}}"
-          :wrapperCol="{lg: {span: 10}, sm: {span: 17} }"  
-          fieldDecoratorId="description"   
-          :fieldDecoratorOptions="{rules: [{ required: false, message: '部门类别描述' }]}">
-          <a-textarea rows="4" name="description" placeholder="部门类别描述" />
-        </a-form-item>
-      </a-form>
-    </a-modal>
-    <s-table ref="mytable" :columns="columns" :data="myloaddata">
+    </div>  
+    <s-table
+      ref="mytable"
+      :columns="columns"
+      :data="myloaddata"
+      :rowKey="myloaddata=>myloaddata.ID"
+    >
 
       <span slot="actions" slot-scope="text, record">
         <a-tag v-for="(action, index) in record.actionList" :key="index">{{ action.describe }}</a-tag>
@@ -139,7 +43,7 @@
       </span>
 
       <span slot="action" slot-scope="text, record">
-        <a @click="handleEdit(record)">编辑</a>
+        <a @click="ToEdit(record)">编辑</a>
         <a-divider type="vertical" />
         <a-dropdown>
           <a class="ant-dropdown-link">
@@ -153,91 +57,28 @@
               <a href="javascript:;">禁用</a>
             </a-menu-item>
             <a-menu-item>
-              <a @click="delPremissionaction(record.ID)">删除</a>
+              <a @click="delPremissionaction(record)">删除</a>
             </a-menu-item>
           </a-menu>
         </a-dropdown>
       </span>
     </s-table>
-
-    <!-- <a-modal
-      title="操作"
-      :width="800"
-      v-model="visible"
-      @ok="handleOk">
-      <a-form :autoFormCreate="(form)=>{this.form = form}">
-
-        <a-form-item
-          :labelCol="labelCol"
-          :wrapperCol="wrapperCol"
-          label='权限列表'
-          hasFeedback
-          validateStatus='success'
-        >
-          <a-input placeholder='权限识别码' v-model="mdl.Permission_key" id='no' disabled="disabled" />
-        </a-form-item>
-
-        <a-form-item
-          :labelCol="labelCol"
-          :wrapperCol="wrapperCol"
-          label='权限名称'
-          hasFeedback
-          validateStatus='success'
-        >
-          <a-input placeholder='起一个名字' v-model="mdl.name" id='permission_name' />
-        </a-form-item>
-
-        <a-form-item
-          :labelCol="labelCol"
-          :wrapperCol="wrapperCol"
-          label='状态'
-          hasFeedback
-          validateStatus='warning'
-        >
-          <a-select v-model="mdl.status">
-            <a-select-option value='1'>正常</a-select-option>
-            <a-select-option value='2'>禁用</a-select-option>
-          </a-select>
-        </a-form-item>
-
-        <a-form-item
-          :labelCol="labelCol"
-          :wrapperCol="wrapperCol"
-          label='描述'
-          hasFeedback
-        >
-          <a-textarea :rows="5" v-model="mdl.describe" placeholder="..." id='describe'/>
-        </a-form-item>
-
-        <a-divider />
-
-        <a-form-item
-          :labelCol="labelCol"
-          :wrapperCol="wrapperCol"
-          label='赋予权限'
-          hasFeedback
-        >
-          <a-select
-            style="width: 100%"
-            mode="multiple"
-            v-model="mdl.actions"
-            :allowClear="true"          >
-            <a-select-option v-for="(action, index) in permissionList" :key="index" :value="action.value">{{ action.label }}</a-select-option>
-          </a-select>
-        </a-form-item>
-      </a-form>
-    </a-modal> -->
-
+    <PermissionAddModal ref="PermissionAdd"  @ok="handleSaveOk" @close="handleSaveClose"/>
+    <PermissionUpdateModal ref="PermissionUpdate"  @ok="handleSaveOk" @close="handleSaveClose"/>
   </a-card>
 </template>
 
 <script>
-  import STable from '@/components/table/'
- import { AddPermission ,UpdataPermission ,DelPermission } from '@/api/manage'
+ import STable from '@/components/table/'
+ import { DelPermission } from '@/api/manage'
+ import PermissionAddModal from '@/views/list/modules/Permission/Add'
+ import PermissionUpdateModal from '@/views/list/modules/Permission/Update'
   export default {
     name: "TableList",
     components: {
-      STable
+      STable,
+      PermissionAddModal,
+      PermissionUpdateModal
     },
     data () {
       return {
@@ -278,9 +119,9 @@
             // scopedSlots: { customRender: 'actions' },
           },
           {
-            title: '角色名',
-            dataIndex: 'status',
-            scopedSlots: { customRender: 'status' },
+            title: '说明',
+            dataIndex: 'description',
+            scopedSlots: { customRender: 'description' },
           },
           {
             title: '操作',
@@ -312,7 +153,7 @@
 			// }
           }).then(res => {
 
-            // console.log(res.code)
+           console.log(res)
             if(res.code==-1)
             {
                 this.$router.push('/login')
@@ -342,16 +183,25 @@
       this.loadPermissionList()
     },
     methods: {
-    
+  handleSaveClose(){
+          this.$refs.mytable.refresh()
+    },
+    handleSaveOk(){
+          this.$refs.mytable.refresh()
+      },
+      handleChange(val){
+        console.log(val);
+      },
        showsuccess(res) {
         this.$message.success(res);
       },
        showerror(res) {
         this.$message.error(res);
       },
-      delPremissionaction(id)
+      delPremissionaction(record)
       {         
-        let _this=this
+        let _this=this      
+        console.log(record);
         this.$confirm({
           title: '警告',
           content: '记录删除将无法找回，真的要删除吗?',
@@ -361,9 +211,10 @@
           onOk() {           
           console.log('OKclick');
             // 在这里调用删除接口
-          console.log(id)
+       
      
-           DelPermission({ID:id}).then(res=>{
+           DelPermission({ID:record.ID,key:record.Permission_key}).then(res=>{
+             console.log(res)
             if(res.code==1)
             {
             _this.showsuccess(res.message)
@@ -384,58 +235,40 @@
         });
      
       },
-  handleSubmit (e) {
-      e.preventDefault()     
-      this.form.validateFields((err, values) => {
-        if (!err) {
-          // console.log('Received values of form: ', values)
-        //  console.log(values)
-          AddPermission(values).then(res=>{
-            if(res.code===1)
-            {
-                this.$message.success(res.message)
-                this.addPre_model=false
-                this.form.resetFields()
-                this.$refs.mytable.refresh()
-            }
-            else
-            {              
-                this.$message.error(res.message);  
-                this.form.resetFields()   
+  // handleSubmit (e) {
+  //     e.preventDefault()     
+  //     this.form.validateFields((err, values) => {
+  //       if (!err) {
+  //         // console.log('Received values of form: ', values)
+  //       //  console.log(values)
+  //         AddPermission(values).then(res=>{
+  //           if(res.code===1)
+  //           {
+  //               this.$message.success(res.message)
+  //               this.addPre_model=false
+  //               this.form.resetFields()
+  //               this.$refs.mytable.refresh()
+  //           }
+  //           else
+  //           {              
+  //               this.$message.error(res.message);  
+  //               this.form.resetFields()   
                
-            }
-                console.log(res)
-          })
-        }
-      })
-    },
-      handleUPDATE (e) {
-      e.preventDefault()              
-      this.Updateform.validateFields((err, values) => {
-        if (!err) {
-        UpdataPermission(values).then(res=>{
-          if(res.code===1)
-            {
-                this.$message.success(res.message)
-                this.UpdatePre_model=false
-                this.Updateform.resetFields()
-                this.$refs.mytable.refresh()
-            }
-            else
-            {              
-                this.$message.error(res.message);  
-                //this.Updateform.resetFields()   
-               
-            }
-        })  
-          // console.log('Received values of form: ', values)
-        }
-      })
-  
-    },     
+  //           }
+  //               console.log(res)
+  //         })
+  //       }
+  //     })
+  //   },
+    
+      ToEdit(record)
+      {
+        this.$refs.PermissionUpdate.get(record)
+      },
       showPermissionModel()
       {
-        this.addPre_model=true
+        this.$refs.PermissionAdd.get();
+        // this.addPre_model=true
       },
       loadPermissionList () {
         // permissionList
@@ -461,6 +294,9 @@
       //  console.log(this.Updateform)
         setTimeout(() => {
           this.Updateform.setFieldsValue({
+
+       
+          areakey:this.mdl.areakey,
           Permission_key:this.mdl.Permission_key,
           Permission_name:this.mdl.Permission_name,
           description:this.mdl.description,

@@ -46,7 +46,7 @@
               hasFeedback         
             >
               <a-input 
-                disabled
+               
                 placeholder='联系人姓名' 
                 v-decorator="['UserName',{rules: [{ required: true },{ validator:v().checkUsername }]}]"
               /> 
@@ -59,8 +59,7 @@
               v-bind="formItemLayout"      
               label="性别"            
             >
-              <a-radio-group 
-                disabled
+              <a-radio-group                
                 v-decorator="['Sex',{ rules: [{ required: true}]}]">
                 <a-radio value='1'>男</a-radio>
                 <a-radio value='2'>女</a-radio>    
@@ -88,8 +87,8 @@
               hasFeedback                              
             >
               <a-select style="width: 120px" v-decorator="['status',{rules: [{ required: false }]}]">
-                <a-select-option value="9">正常</a-select-option>
-                <a-select-option value="7">停用</a-select-option>               
+                <a-select-option value="9">前台显示</a-select-option>
+                <a-select-option value="7">前台不显示</a-select-option>               
               </a-select>
               <!-- :help="Tips"  
               :validateStatus="status"     -->
@@ -140,7 +139,7 @@
             >
               <!-- :help="Tips"  
               :validateStatus="status"     -->
-              <a-input placeholder='填写联系人的办公手机' v-decorator="['cellphone',{rules: [{ required: false },{ validator:v().checkPhoneallowNull }]}]"/> 
+              <a-input disabled placeholder='填写联系人的办公手机' v-decorator="['cellphone',{rules: [{ required: false },{ validator:v().checkPhoneallowNull }]}]"/> 
               <!-- <a-input placeholder='填写联系人的办公手机' v-model="Mymdl.cellphone" id='cellphone' /> -->
             </a-form-item>   
           </a-col>          

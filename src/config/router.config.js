@@ -65,7 +65,8 @@ let res= [ {
         name: 'CustomGroup_QW',
         component: () => import('@/views/other/customgroup'),
         meta: { title: '自定义组', permission: [ 'QW' ] }
-      }      
+      },
+      
     ]
   },
   {
@@ -102,7 +103,14 @@ let res= [ {
         name: 'Phonelist_QRMZF',
         component: () => import('@/views/list/UserPhonelist'),
         meta: { title: '通信录', permission: [ 'QRMZF' ] }
-      }
+      },
+      {
+        path: '/list/CustomGroup/154',          
+        name: 'CustomGroup_QRMZF',
+        component: () => import('@/views/other/customgroup'),
+        meta: { title: '自定义组', permission: [ 'QRMZF' ] }
+      } 
+      
     ]
   }, 
   {
@@ -681,7 +689,13 @@ let res= [ {
             name: 'Phonelist_ZFBGS',
             component: () => import('@/views/list/UserPhonelist'),
             meta: { title: '通信录', permission: [ 'ZFBGS' ] }
-          }
+          },
+          {
+            path: '/list/CustomGroup/112',          
+            name: 'CustomGroup_ZFBGS',
+            component: () => import('@/views/other/customgroup'),
+            meta: { title: '自定义组', permission: [ 'ZFBGS' ] }
+          } 
         ]
       },  
       {
@@ -767,7 +781,7 @@ let res= [ {
         path: '/list/ZWFWZX',
         name: 'ZWFWZX',
         redirect: {name:'Phonelist_ZWFWZX'},
-        meta: { title: '政务服务中心', permission: [ 'ZWFWZX' ] },
+        meta: { title: '行政审批服务局', permission: [ 'ZWFWZX' ] },
         children:[
           {
          
@@ -775,7 +789,14 @@ let res= [ {
             name: 'Phonelist_ZWFWZX',
             component: () => import('@/views/list/UserPhonelist'),
             meta: { title: '通信录', permission: [ 'ZWFWZX' ] }
-          }
+          },
+          {
+            path: '/list/CustomGroup/118',          
+            name: 'CustomGroup_ZWFWZX',
+            component: () => import('@/views/other/customgroup'),
+            meta: { title: '自定义组', permission: [ 'ZWFWZX' ] }
+          } 
+        
         ]
       }, 
       {
@@ -1602,6 +1623,23 @@ let res= [ {
     }            
   ]
 },
+{
+  path: '/list/QT',
+  name: 'QT',   
+  redirect: {name:'Phonelist_QT'},
+  component: PageView,
+  meta: { title: '其他', icon: 'dashboard',  permission: [ 'QT' ]},
+  children: [
+    {
+      path: '/list/UserPhonelist/163',          
+      name: 'Phonelist_QT',
+      component: () => import('@/views/list/UserPhonelist'),
+      meta: { title: '无分类联系人', permission: [ 'QT' ]}
+    },
+  ]
+},
+
+
   {
     path: '/DepartmentManager',
     name: 'DepartmentManager',
@@ -1857,7 +1895,7 @@ export const asyncRouterMap = [
         name: 'list',
         component: PageView,
         redirect: '/list/query-list',
-        meta: { title: 'guanli2', icon: 'table', permission: [ 'Admin' ] },
+        meta: { title: 'guanli2', icon: 'table', },
         children: [
           {
             path: '/list/query-list',

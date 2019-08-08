@@ -399,7 +399,7 @@
         this.Userinfo.Roles=this.mdl.RolesID
         this.roleslist_visible=true
         this.loadRoleslist(this.Userinfo.ID).then(res=>{  
-          console.log(res.rolelist)           
+          console.log(res)           
                     this.roleslist=res.rolelist
                     this.targetkeys=res.targetKeys
                     

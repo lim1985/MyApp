@@ -167,15 +167,17 @@ export default {
    
       },
   async mounted(){   
-      let _arr=await this.GetDepnameAndchild()     
+      let _arr=await this.GetDepnameAndchild()    
+      console.log("777777777777777")
+      console.log(_arr) 
       this.options=this.QuChongFuObject(_arr);  
+      console.log( this.options) 
       this.setDepkey();
 
     },
   methods:  {
     AddReference(){
-      this.Referencevisible=true; 
-    
+      this.Referencevisible=true;     
     },
     setDepkey(){
 
@@ -219,13 +221,17 @@ export default {
     {
       let _arr=[] 
       let  userid= {AdminID:Vue.ls.get(User_ID)} //在本地localStorage里拿到登陆后的管理员ID（AdminID）   
-      const roleslist= await getUserrolesbyAdminID({AdminID:userid.AdminID})//根据管理员ID 获取到RolesID 可能是一个也可以能是多个      
+      const roleslist= await getUserrolesbyAdminID({AdminID:userid.AdminID})//根据管理员ID 获取到RolesID 可能是一个也可以能是多个
+      console.log("6666666")
+        console.log(roleslist)
+           
           for (let x in roleslist.roles)
           {
-             let result=await  Select_PermissionsByRolesID({ID:roleslist.roles[x]})//根据rolesID 拿到Permissionlist 返回字符串类型  
+             let result=await Select_PermissionsByRolesID({ID:roleslist.roles[x]})//根据rolesID 拿到Permissionlist 返回字符串类型  
              _arr.push(result.res)          
           }
-          // console.log(_arr)
+        console.log("5555555")
+        console.log(_arr)
          let arr=[]       
           _arr.forEach(v => {
             for(let x in v)
@@ -251,7 +257,9 @@ export default {
                }               
             }
           });
-            // console.log(arr);
+          //返回结果
+            console.log("返回结果")
+            console.log(arr);
           return arr        
       },
      filter(inputValue, path) {

@@ -121,7 +121,8 @@ export default {
            
         return DepTreelist()
           .then(res => {
-            // console.log(res.result)
+            console.log("7777777777777777")
+            console.log(res.result)
             return res.result
           }).then(r=>{          
           let _arr=[]
@@ -187,9 +188,12 @@ export default {
 getDepTree(){
       DepTreelist().then(res=>{
         // this.DepTree=res.result
+        
         res.result.forEach(v => {
           v.OrderID && this.DepTree.push(v)
         });
+        console.log("-----------------000000000000000000000----------------");
+        console.log(res.result);
         // console.log(res.result)
       })  
 },  

@@ -17,10 +17,14 @@ const user = {
     UserPhoneID:'',
     ReferenceStatus:false,
     ReferenceUserId:'',
-    DepId:''
+    DepId:'',
+    UserInformation:''
   },
 
   mutations: {
+    SET_PhoneUSERINFO: (state, UserInformation) => {
+      state.UserInformation = UserInformation
+    },
     SET_TOKEN: (state, token) => {
       state.token = token
     },

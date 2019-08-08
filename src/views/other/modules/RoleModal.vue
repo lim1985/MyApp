@@ -73,7 +73,7 @@ export default {
       this.$nextTick(() => {
         this.form.setFieldsValue(pick(this.mdl, 'id', 'name', 'status', 'describe'))
       })
-      console.log('this.mdl', this.mdl)
+      //console.log('this.mdl', this.mdl)
     },
     close () {
       this.$emit('close')

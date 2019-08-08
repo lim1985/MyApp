@@ -5,11 +5,11 @@
         <div class="header">
           <a href="/">
             <img src="~@/assets/logo.svg" class="logo" alt="logo">
-            <span class="title">Ant Design</span>
+            <span class="title">智能通讯录系统</span>
           </a>
         </div>
         <div class="desc">
-          Ant Design 是西湖区最具影响力的 Web 设计规范
+          Ant Design 是大祥区最具影响力的 Web 设计规范
         </div>
       </div>
 
@@ -22,7 +22,7 @@
           <a href="_self">条款</a>
         </div>
         <div class="copyright">
-          Copyright &copy; 2018 白鹭学园技术组出品
+          Copyright &copy; 2019 大祥区技术组出品
         </div>
       </div>
     </div>
@@ -50,7 +50,6 @@
 <style lang="scss" scoped>
   #userLayout.user-layout-wrapper {
     height: 100%;
-
     .container {
       width: 100%;
       min-height: 100%;

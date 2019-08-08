@@ -168,7 +168,8 @@ export default {
         this.result=''   
       if(val=='hookoff' || this.Types==0)
       {            
-          this.Phonevisible=true  
+          // this.Phonevisible=false  
+        
           this.result='请输入号码'           
       }
       if(val=='callerId')

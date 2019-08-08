@@ -6,16 +6,52 @@
     :confirmLoading="confirmLoading"
     @ok="handleOk"
     @cancel="handleCancel"
-  >
- 
-       
+    
+  >       
     <template>
       <div style="width: 100%">
         <a-radio-group v-model="mode" :style="{ marginBottom: '8px' }">
           <a-radio-button value="top">横排</a-radio-button>
           <a-radio-button value="left">竖排</a-radio-button>
         </a-radio-group>
-        <a-tabs defaultActiveKey="sysdxqrmzf" :tabPosition="mode" :style="{ height: '100%'}" @prevClick="callback" @nextClick="callback">
+        <a-form :form="form">
+        <a-form-item
+          label="搜索"    
+          hasFeedback              
+        >
+        <a-input-search style="width: 400px" placeholder="输入手机号或者姓名" v-decorator="['search', {rules: [{validator:v().CheckNameAndTelNum}]}]"/>
+        </a-form-item>
+
+        <!-- <a-form-item
+          label="搜索"             
+        >
+      <a-auto-complete
+      
+      style="width: 200px"
+      @change="onSearch"
+      placeholder="Email"
+    />
+     </a-form-item> -->
+      </a-form>
+      <div v-show="vuex_UserINFO.code==1" style="background-color: #ececec; padding: 10px;">
+    <a-row :gutter="16">
+      <a-col :span="8">
+        <a-card hoverable title="" :bordered=false>
+          <p>ID:{{vuex_UserINFO.id}}</p>
+          <p>姓名：{{vuex_UserINFO.username}}</p>
+          <p>电话：{{vuex_UserINFO.tel}}</p>
+        </a-card>
+      </a-col>    
+    </a-row>
+  </div>
+        <!-- <div>
+          <a-input-search
+          placeholder="输入手机号或者姓名"
+          style="width: 200px"
+          @change="onSearch"
+        />
+        </div> -->
+        <!-- <a-tabs defaultActiveKey="sysdxqrmzf" :tabPosition="mode" :style="{ height: '100%'}" @prevClick="callback" @nextClick="callback">
           <template v-for="(item) in AllDepUsers.data">
             <a-tab-pane :tab="item.areaname" :key="item.areakey">
               <template v-for="(Permission,index) in item.Permission" >
@@ -31,12 +67,12 @@
                         :gutter="24" 
                         :style="{padding:'40px 10px 0px 20px',marginBottom: '12px' }">
                    
-                        <!-- <a-checkbox-group @change="onChangeCheck"> -->
+                     
                         <a-col v-for="(Users,index) in DEP.Users" :key="index" :span="6">         
                           <a-checkbox @change="onChangeCheck" :checked="checkGroup(Users.ID)" :value="Users.ID"></a-checkbox>
                           <span :style="{padding:'10px'}" :span="12">{{ Users.UserName }}</span>  
                         </a-col>
-                        <!-- </a-checkbox-group> -->
+                      
                       </a-row>              
                     </a-col>
                   </a-row>
@@ -44,7 +80,7 @@
               </template>
             </a-tab-pane>
           </template>       
-        </a-tabs>
+        </a-tabs> -->
       </div>
 
     </template>
@@ -78,15 +114,18 @@
 
 <script>
   import { GetAllDepUser,AddUserToGroup ,InGroupUsersID} from '@/api/manage'
+  import Validate from '@/tools/Validate/index'
+ 
   //CreateCustomGroup//
   import Vue from 'vue'  
   import { User_ID } from "@/store/mutation-types" 
   import { Promise } from 'q'
-
+  import { mapState} from 'vuex'
 export default {
   name: 'UserToGroupAddModal',
   data () {
     return {
+
       vmodelList:null,
       checkModel:[50,39,1159],
       mode: 'top',
@@ -107,6 +146,11 @@ export default {
       Mymdl:[]
     }
   },
+    computed:{
+      ...mapState({
+        vuex_UserINFO:state=>state.user.UserInformation
+      })    
+    },
   created () {
     // this.loadPermissions()
   },
@@ -115,12 +159,31 @@ export default {
    
   },
   methods: {
+     v(){     
+        return Validate;
+    }, 
+    //   TelError () {
+    //   const { getFieldError, isFieldTouched } = this.form;
+    //   console.log(isFieldTouched('search'));
+    //   console.log(getFieldError('search'));
+    //   return isFieldTouched('search') && getFieldError('search');
+    // },
+      // onSearch(val){
+      //   let vals="";      
+     
+      //   this.form.validateFields((err, values) => {
+      //   if (!err) {
+      //       console.log(val);
+      //   }
+      // });
+       
+      // },
     FindAllUserInGroup(s){
       console.log(s);
       let data={
        GroupID:s
        }
-       InGroupUsersID(data).then(res=>{
+       InGroupUsersID(data).then(res=>{//读取组里的用户
          res.data.forEach(v => {          
           this.Mymdl.push(v.UserPhoneID);
          });
@@ -138,11 +201,13 @@ export default {
       this.edit(s)
     },
     edit (record) {
-      console.log(record)
+     
       this.mdl = Object.assign({}, record)
+      // console.log("AAAAAAAAAA")
+      // console.log(this.mdl.key);
       this.visible = true
       this.Mymdl=[];
-      this.FindAllUserInGroup(this.mdl.key)
+     // this.FindAllUserInGroup(this.mdl.key)
       // 有权限表，处理勾选
       // if (this.mdl.permissions && this.permissions) {
       //   // 先处理要勾选的权限结构
@@ -216,6 +281,8 @@ export default {
     //       return arr        
     //   },
     close () {
+      
+      this.$store.commit('SET_PhoneUSERINFO',''); 
       this.$emit('close')
       this.visible = false
     },
@@ -226,10 +293,13 @@ export default {
     },
     handleOk () {
       const _this = this 
+      console.log(this.mdl.key);
+   
       // console.log(_this.Mymdl)   
-      let _data=new Object();
-      _data.UIDS=_this.Mymdl,
-      _data.GroupID=_this.mdl.key    
+       let _data=new Object();
+       _data.UIDS=""
+       _data.UID=_this.vuex_UserINFO.id
+       _data.GroupID=_this.mdl.key    
       //  console.log(_data);
         _this.confirmLoading = true
         new Promise((resolve)=>{
@@ -237,17 +307,19 @@ export default {
            AddUserToGroup(_data).then(res=>{
               resolve(res)
         })  
-          }, 2000);
+          }, 1000);
       }).then(result=>{
         if(result.code==1)
         {
             _this.$message.success('修改成功')
             _this.confirmLoading = false
             _this.ok();
+            _this.handleCancel();
         }
         else
         {
            _this.$message.error('修改成功')
+           _this.confirmLoading = false
         }
         // console.log(result)
       })

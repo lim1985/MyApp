@@ -17,7 +17,7 @@
             @select="DepOnChange"     
             showSearch
             placeholder="选择部门类别" 
-            v-decorator="['PermissionList',{rules: [{ required: true, message: '部门不能为空！' }]}]"
+            v-decorator="['Permissionkey',{rules: [{ required: true, message: '部门不能为空！' }]}]"
           >
             <!-- <a-select-option value="-1">请选择部门</a-select-option> -->
             <template v-for="(item,index) in DepName">
@@ -82,7 +82,6 @@
 </template>
 <script>
   import Vue from 'vue'  
-  import { mapState} from 'vuex'
   import { User_ID } from "@/store/mutation-types" 
   import { getUserrolesbyAdminID,GetPermissionByroleID,GetPermissioninfobyKey,AddParment,Select_PermissionsByRolesID} from '@/api/manage'
   import { Promise } from 'q';
@@ -202,19 +201,24 @@ export default {
         async GetPermissionList(){
               let  userid= {AdminID:Vue.ls.get(User_ID)} //在本地localStorage里拿到登陆后的管理员ID（AdminID）
               let _temp=[]            
-              let DepArr=[]           
+              let DepArr=[]        
+              console.log(userid);   
             //   const roleslist= await getUserrolesbyAdminID({AdminID:userid.AdminID})//根据管理员ID 获取到RolesID 可能是一个也可以能是多个
             let P=new Promise(resolve=>{
-               setTimeout(() => {
-               getUserrolesbyAdminID({AdminID:userid.AdminID})
-              .then(res=>res.roles)
-              .then(res=>res)
-              .then(async ress=>{
+              setTimeout(() => {
+              getUserrolesbyAdminID({AdminID:userid.AdminID})
+             .then(res=>res.roles)
+             .then(res=>res)
+             .then(async ress=>{//获得管理员所拥有的 RoleID 返回数组 如：['83','69']
+                
+               
                   for(let x in ress)
                   {  
                       let _ar=await  Select_PermissionsByRolesID({ID:ress[x]})
                       _temp.push(_ar.res)
                   }
+                 console.log('1111111111111111')
+                  console.log(_temp)
                   _temp.forEach(vx => {
                       for(let x in vx)
                       {
@@ -222,7 +226,8 @@ export default {
                       }                     
                   });
                   let _permissionlist=this.deteleObject(DepArr,'IsView',true);
-                
+                console.log("7777777777")
+                console.log(_permissionlist)
                 //   DepArr.forEach(A=>{
                       
                 //   })
@@ -268,24 +273,25 @@ export default {
    },
         async MyhandleOk(e)
         {
-          
-        e.preventDefault()
-        this.form.validateFields(async(err, values) => {
+         e.preventDefault()
+        let _this=this
+          _this.form.validateFields(async(err, values) => {
           if (!err) {
-          const res=await AddParment(this.Mymdl)
+            console.log(values)
+          const res=await AddParment(values)
           if(res.code==-1)
           {
              this.$message.error(res.message);   
           }
           else
           {
-             this.$refs.mytable.refresh()
+            //  this.$refs.mytable.refresh()
              this.$message.success('添加单位成功。'); 
             
              this.AddDEPVisible = false        
           }
         
-          console.log(this.Mymdl)
+          // console.log(this.Mymdl)
             // eslint-disable-next-line no-console
             console.log('Received values of form: ', values)
           }

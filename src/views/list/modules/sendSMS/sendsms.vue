@@ -212,13 +212,15 @@ export default {
         if(!this.Pupuarr[x].checked==false)      
       {      
         params={     
-        c:this.smsContent,
+        c:this.vmodelContent,
         m:this.Pupuarr[x].Phone,
         i:x,      
         tokens:{username:'limannlee'},
         U:this.Pupuarr[x].username,
         UID:this.Pupuarr[x].ID
        } 
+       console.log('打印短信内容')
+       console.log(params)
        SendSMS(params)
        .then(res=>{    
          return res
@@ -234,9 +236,10 @@ export default {
                 AdminID:this.AdminID.AdminID,//发送的 管理员ID
                 time:this.$moment().format("YYYY-MM-DD HH:mm:ss"),//发送的时间
                 status:_arr[0],//发送的状态短信宝返回的状态
-                SMSContent:this.smsContent,//发送的内容
+                SMSContent:this.vmodelContent,//发送的内容
                 UserName:r.u,//接收短信的人
               }
+
               return data
          })
         .then(data=>{                 
@@ -302,6 +305,8 @@ export default {
       _this.countSms=_this.Barr.length;  
       _this.Sendvisible=true;
       _this.smsContent= _this.vmodelContent
+      // console.log(_this.vmodelContent)
+      // console.log(_this.smsContent)
     },
   
     

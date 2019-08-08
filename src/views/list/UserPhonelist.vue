@@ -63,6 +63,7 @@
 
     <div class="table-operator">
       <a-button type="primary" @click="addphone()" :style="{ fontSize: '18px' }" icon="user-add">添加联系人</a-button>
+    
       <a-dropdown v-if="selectedRowKeys.length > 0">
         <a-menu slot="overlay">
           <a-menu-item key="3" @click="sendsms(selectedRows)"><a-icon type="lock" />发短信</a-menu-item>
@@ -74,7 +75,19 @@
           批量操作 <a-icon type="down" />
         </a-button>
       </a-dropdown>
+      <div>
+    
+        <a-row type="flex" justify="center" align="middle">
+          <a-col :span="24">       
+            <p class="height-50"><span>温馨提示：本单位通讯录里的联系人将会出现在对应的主通讯录的单位目录里。</span></p>
+          </a-col>
+          <!-- <a-col :span="24"><p class="height-50"><span>温馨提示：通讯录里添加的联系人将会出现在通讯录的主目录。</span></p></a-col> -->
+     
+        </a-row>
+      </div>
+     
     </div>
+    
   
     <s-table
       ref="mytable"
@@ -250,14 +263,12 @@
                 {
                   v.Ustatus=v.Rstatus
                 }
-            });
-          
+            });          
             console.log(data)
         
            this.Pupu=data.data.map(item=>{
              return {Phone:item.cellphone,username:item.UserName,DPname:item.DepartmentName,ID:item.ID,UJOB:item.UJOB,checked:false}
-           }) 
-             
+           })              
            return data
             })           
         },
@@ -329,8 +340,7 @@
             }, 1000);  
             }
             console.log(res)
-          })
-            
+          })            
         }
         this.$refs.mytable.refresh()
     },
@@ -382,9 +392,7 @@
           
             console.log('Received values of form: ', values)
           }
-        })  
-
-           
+        })             
         },
       async addphone()
         { 
@@ -424,6 +432,7 @@
   watch: {
     '$route'()
     {        
+      console.log(this.$route.meta)
       this.$store.commit('SET_DEPKEY',this.$route.meta.permission[0]);     
       this.$refs.mytable.refresh()     
     }
@@ -465,3 +474,15 @@
 
   }
 </script>
+<style scoped>
+.content .table-operator
+{
+  margin-bottom:0px;
+}
+p
+{
+  margin-top:10px;
+}
+</style>
+
+  

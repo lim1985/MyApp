@@ -6,54 +6,56 @@ const api = {
   orgTree: '/org/tree',
   permission: '/permission',
   //权限接口
-  addPermission: 'http://172.20.8.28:3001/api/PermissionAdd',//添加权限//src\views\list\PermissionList.vue页面使用了该接口
-  UpdataPermission: 'http://172.20.8.28:3001/api/PermissionUpdata',//修改权限//src\views\list\PermissionList.vue页面使用了该接口
-  DelPermission: 'http://172.20.8.28:3001/api/PermissionDel',//修改权限//src\views\list\PermissionList.vue页面使用了该接口
-  GetAllPermissionList:'http://172.20.8.28:3001/api/PermissionList',//未找到使用页面
-  GetPermissionInfo:'http://172.20.8.28:3001/api/Permissionbykey',//使用页面src\views\list\Department.vue
-  GetPermissionAll:'http://172.20.8.28:3001/api/getAllPermissAndDeplist',//返回所有权限和部门DepCardList.vue RoleList.vue 使用该接口
-  GetDepTreelist:'http://172.20.8.28:3001/api/getAllDepTreeList',//返回部门树//src\views\other\TreeList.vue页面使用了该接口
-  UpdataPermissionInformation:'http://172.20.8.28:3001/api/UpdataPermissionInformation',
+  addPermission: 'http://59.230.230.40:3001/api/PermissionAdd',//添加权限//src\views\list\PermissionList.vue页面使用了该接口
+  UpdataPermission: 'http://59.230.230.40:3001/api/PermissionUpdata',//修改权限//src\views\list\PermissionList.vue页面使用了该接口
+  DelPermission: 'http://59.230.230.40:3001/api/PermissionDel',//修改权限//src\views\list\PermissionList.vue页面使用了该接口
+  GetAllPermissionList:'http://59.230.230.40:3001/api/PermissionList',//未找到使用页面
+  GetPermissionInfo:'http://59.230.230.40:3001/api/Permissionbykey',//使用页面src\views\list\Department.vue
+  GetPermissionAll:'http://59.230.230.40:3001/api/getAllPermissAndDeplist',//返回所有权限和部门DepCardList.vue RoleList.vue 使用该接口
+  GetDepTreelist:'http://59.230.230.40:3001/api/getAllDepTreeList',//返回部门树//src\views\other\TreeList.vue页面使用了该接口
+  UpdataPermissionInformation:'http://59.230.230.40:3001/api/UpdataPermissionInformation',
 
   
 
   //角色接口
-  addRole: 'http://172.20.8.28:3001/api/rolesAdd',
-  getrolelist:'http://172.20.8.28:3001/api/roleslist',
+  addRole: 'http://59.230.230.40:3001/api/rolesAdd',
+  getrolelist:'http://59.230.230.40:3001/api/roleslist',
 
   //管理员用户接口
-  UpdataAdminRoles:'http://172.20.8.28:3001/api/ActionUpdataAdmin',  //修改管理员角色
-  GetAdmininfo:'http://172.20.8.28:3001/api/userInfo', //查询管理员信息
-  Delrole:'http://172.20.8.28:3001/api/rolesdel',//删除角色
-  addrolePermission:'http://172.20.8.28:3001/api/rolesAddPermission',//添加管理员角色
-  GetPermissionByroleID:'http://172.20.8.28:3001/api/getPermissionbyroleID',//获取权限
-  GetrolesbyAdminID:'http://172.20.8.28:3001/api/GetrolesbyAdminID',//获取管理员权限
-  GetAllPermissionInformationByRoleId:'http://172.20.8.28:3001/api/GetAllPermissionInformationByRolesID',
-  //'http://172.20.8.28:3001/api/rolesAdd?RoleValue=1&Description=111'
+  UpdataAdminRoles:'http://59.230.230.40:3001/api/ActionUpdataAdmin',  //修改管理员角色
+  GetAdmininfo:'http://59.230.230.40:3001/api/userInfo', //查询管理员信息
+  Delrole:'http://59.230.230.40:3001/api/rolesdel',//删除角色
+  addrolePermission:'http://59.230.230.40:3001/api/rolesAddPermission',//添加管理员角色
+  GetPermissionByroleID:'http://59.230.230.40:3001/api/getPermissionbyroleID',//获取权限
+  GetrolesbyAdminID:'http://59.230.230.40:3001/api/GetrolesbyAdminID',//获取管理员权限
+  GetAllPermissionInformationByRoleId:'http://59.230.230.40:3001/api/GetAllPermissionInformationByRolesID',
+  //'http://59.230.230.40:3001/api/rolesAdd?RoleValue=1&Description=111'
   //部门管理接口列表
-  AddParment:'http://172.20.8.28:3001/api/AddParment',
-  UpdatePartment:'http://172.20.8.28:3001/api/UpdateDEPartment',  
-  DeleteDEPartment:'http://172.20.8.28:3001/api/DeleteDEPartment',  
-  QueryAllDeplist:'http://172.20.8.28:3001/api/DepartmentQueryALL',
-  SelectAllDepchild:'http://172.20.8.28:3001/api/selectAlldepartmentBykey',
-  SelectDepartmentByID:'http://172.20.8.28:3001/api/DepartmentGetByID',
+  AddParment:'http://59.230.230.40:3001/api/AddParment',
+  UpdatePartment:'http://59.230.230.40:3001/api/UpdateDEPartment',  
+  DeleteDEPartment:'http://59.230.230.40:3001/api/DeleteDEPartment',  
+  QueryAllDeplist:'http://59.230.230.40:3001/api/DepartmentQueryALL',
+  SelectAllDepchild:'http://59.230.230.40:3001/api/selectAlldepartmentBykey',
+  SelectDepartmentByID:'http://59.230.230.40:3001/api/DepartmentGetByID',
   //通讯录管理接口
   //通讯录人员添加
-  UpdateUserPhone:'http://172.20.8.28:3001/api/UpdatePhoneUser',
-  asyncValidateTel:'http://172.20.8.28:3001/api/asyncValidateTel',
-  AddPhoneUser:'http://172.20.8.28:3001/api/AddPhoneUser',
-  GetAllPhoneUserByPermissionKey:'http://172.20.8.28:3001/api/AllPhoneUserByPermissionkey',
-  GetByDepIDAndPermissionKey:'http://172.20.8.28:3001/api/GetDepIDAndPermissionKey',
-  PostDepIDAndPermissionKey:'http://172.20.8.28:3001/api/PostDepIDAndPermissionKey',
-  DeleteUserByUID:'http://172.20.8.28:3001/api/DeleteUser',
+  UpdateUserPhone:'http://59.230.230.40:3001/api/UpdatePhoneUser',
+  asyncValidateTel:'http://59.230.230.40:3001/api/asyncValidateTel',
+  AddPhoneUser:'http://59.230.230.40:3001/api/AddPhoneUser',
+  GetAllPhoneUserByPermissionKey:'http://59.230.230.40:3001/api/AllPhoneUserByPermissionkey',
+  GetByDepIDAndPermissionKey:'http://59.230.230.40:3001/api/GetDepIDAndPermissionKey',
+  PostDepIDAndPermissionKey:'http://59.230.230.40:3001/api/PostDepIDAndPermissionKey',
+  DeleteUserByUID:'http://59.230.230.40:3001/api/DeleteUser',
+  GetuserInformationByTelNum:'http://59.230.230.40:3001/api/GetuserInformationbyTelNum',
+  GetuserInformationbyname:'http://59.230.230.40:3001/api/GetuserInformationbyname',
 
   
  
-  GetAllPhoneuser:'http://172.20.8.28:3001/api/GetAllPhoneuser',
-  GetALLByDepID:'http://172.20.8.28:3001/api/GetAllByDepID',//DepID=70 用于UserPhoneList页面获取通讯录用户数据用
+  GetAllPhoneuser:'http://59.230.230.40:3001/api/GetAllPhoneuser',
+  GetALLByDepID:'http://59.230.230.40:3001/api/GetAllByDepID',//DepID=70 用于UserPhoneList页面获取通讯录用户数据用
  //引用表操作
-  ReferenceAdd:'http://172.20.8.28:3001/api/ReferenceAdd',//用于list/modules/UserPhone/addUserPhone
-  ReferenceDelete:'http://172.20.8.28:3001/api/ReferenceDelete',//用于list/modules/UserPhone/addUserPhone
+  ReferenceAdd:'http://59.230.230.40:3001/api/ReferenceAdd',//用于list/modules/UserPhone/addUserPhone
+  ReferenceDelete:'http://59.230.230.40:3001/api/ReferenceDelete',//用于list/modules/UserPhone/addUserPhone
 
 
   
@@ -63,14 +65,14 @@ const api = {
    SmsAddRecord:'http://info.dxzc.gov.cn:3000/api/smsAddrecord',
    smssucceedcount:'http://info.dxzc.gov.cn:3000/api/GetSmsSucceedCount',
    //添加自定义组
-   CreateCustomGroup:'http://172.20.8.28:3001/api/createGroup',
-   GetCustomGroup:'http://172.20.8.28:3001/api/GetGroup',
-   GetAllDepUser:'http://172.20.8.28:3001/api/GetAllDepUser',
-   AddUserToGroup:'http://172.20.8.28:3001/api/adduserTogroup',
-   InGroupUsersID:'http://172.20.8.28:3001/api/InGroupUsersID',
-   FindAllUserByGroupID:'http://172.20.8.28:3001/api/FindAllUserByGroupID',
-   DeleteGroupUser:'http://172.20.8.28:3001/api/DeleteGroupUser',
-   DeleteGroup:'http://172.20.8.28:3001/api/DeleteGroup',
+   CreateCustomGroup:'http://59.230.230.40:3001/api/createGroup',
+   GetCustomGroup:'http://59.230.230.40:3001/api/GetGroup',
+   GetAllDepUser:'http://59.230.230.40:3001/api/GetAllDepUser',
+   AddUserToGroup:'http://59.230.230.40:3001/api/adduserTogroup',
+   InGroupUsersID:'http://59.230.230.40:3001/api/InGroupUsersID',
+   FindAllUserByGroupID:'http://59.230.230.40:3001/api/FindAllUserByGroupID',
+   DeleteGroupUser:'http://59.230.230.40:3001/api/DeleteGroupUser',
+   DeleteGroup:'http://59.230.230.40:3001/api/DeleteGroup',
 
    
 //  axios.get('http://info.dxzc.gov.cn:3000/api/sendsms', {
@@ -87,6 +89,20 @@ const api = {
 
 export default api
 
+export function GetuserInformationbyName (parameter) {
+  return axios({
+    url: api.GetuserInformationbyname,
+    method: 'get',
+    params: parameter
+  })
+}
+export function GetUserInformationByTelnum (parameter) {
+  return axios({
+    url: api.GetuserInformationByTelNum,
+    method: 'get',
+    params: parameter
+  })
+}
 export function ReferenceDelete (parameter) {
   return axios({
     url: api.ReferenceDelete,

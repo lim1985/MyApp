@@ -87,7 +87,7 @@
         </a-row>
       </div> -->
       <span slot="action" slot-scope="text, record">
-        <a @click="handleEdit(record)">编辑权限</a>
+        <a @click="ToUpdate(record)">编辑权限</a>
         <a-divider type="vertical" />
         <a-dropdown>
           <a class="ant-dropdown-link">
@@ -108,7 +108,7 @@
       </span>
     </s-table>
 
-    <a-modal
+    <!-- <a-modal
       title="权限设置"
       style="top: 220px;"
       :width="800"
@@ -141,14 +141,14 @@
               修改
             </a-col>
           </a-row>
-          <!-- 正常模板开始 -->
+      
           <a-row :gutter="24" :key="index" v-for="(item,index) in Mymdl.permissions">
             <a-col :span="16"> 
               <h2>{{ item.label }}</h2>              
             </a-col>              
             <a-col :span="4"> 
               <a-checkbox v-model="Mymdl.permissions[index].IsView" @change="v=>changeBox(v,1,item,index)" /> 
-              <!-- <a-checkbox  @change="v=>changeBox(v,1,item,index)"  /> -->
+          
             </a-col>
             <a-col :span="4"> 
               <a-checkbox :disabled="!item.IsView" v-model="Mymdl.permissions[index].IsEdit" @change="v=>changeBox(v,2,item,index)" :value="item.IsView" ></a-checkbox>
@@ -166,94 +166,25 @@
             </a-row>
             <a-divider />
           </a-row>
-        <!-- 正常模板结束 -->
-        <!-- 正常能使用版本 <a-row :gutter="24" :key="index" v-for="(item,index) in Mymdl.permissions">
-        <a-checkbox-group @change="F_onChanges(item.value)" v-model="PremissionList"> 
-          
-            <a-col :span="24">                        
-              <a-checkbox :value="item.value" >{{item.label}}(大类)</a-checkbox> 
-                 
-              <a-row :gutter="24" :key="indexs" v-for="(items,indexs) in item.actionOptions">
-                <a-col :span="24">  
-                <a-checkbox-group @change="C_onchanges(items)">           
-                   <a-checkbox  :value="items.value" >{{items.label}}</a-checkbox> 
-                </a-checkbox-group>
-                </a-col>
-              </a-row>             
-              <a-divider />
-            </a-col>     
-              </a-checkbox-group>         
-            </a-row> -->
-      
-          <!-- <a-checkbox-group @change="F_onChanges" >
-            <a-row :gutter="16">
-              <a-col :span="20">
-                <div :key="index" v-for="(item,index) in Mymdl.permissions">              
-                  <a-checkbox :value="item.value" :v-model="item.value">{{item.label}}(大类)</a-checkbox> 
-                    <a-row :gutter="24">
-                  <a-col :span="24">
-                   <a-checkbox-group @change="C_onchanges"  :options="item.actionOptions"/>
-                 </a-col>
-               </a-row>
-              </div>
-              </a-col>            
-            </a-row>
-          </a-checkbox-group>  -->
-        <!--正常可用       
-        <a-checkbox-group>
-        <div :key="index" v-for="(item,index) in Mymdl.permissions">
-            <a-checkbox  :value="item.PermissionKey" :v-model="item.PermissionKey">{{item.DepName}}</a-checkbox>            
-        </div>
-        </a-checkbox-group> -->
-        
-          <!-- <a-checkbox v-for="(item,index) in PermissionInfoDep"
-              :key="index"       
-              :value="item.Permission_key"     
-              :v-model="item.Permission_key"    
-            >
-            <template v-if="item.children!=''">
-              <a-checkbox v-for="(items,indexs) in item.children"
-              :key="indexs"       
-              :value="items.DepartmentId"     
-              :v-model="items.DepartmentId"    
-            >
-            {{items.DepartmentName}}
-              </a-checkbox>
-            </template>
-              {{item.Permission_name}}
-            </a-checkbox> -->
-     
-          <!-- <template v-for="(item,index) in PermissionInfoDep">
-            <a-checkbox        
-            
-              :key="index"       
-              :value="item.Permission_key"     
-              :v-model="item.Permission_key"    
-            >
-            {{item.Permission_name}}
-            </a-checkbox>
-          </template> -->
-                  
-      
         </a-form-item> 
-
-
-         
       </a-form>   
-    </a-modal>
-
+    </a-modal> -->
+    <PermissionInformationUpdateModal ref="PermissioninforUpdateModal" @ok="handleSaveOk" @close="handleSaveClose" />
   </a-card>
 </template>
 
 <script>
   import STable from '@/components/table/'
   import {Select_PermissionsByRolesID,Updata_Permissioninfomation, Addroles , Delroles ,GetALLDep} from '@/api/manage'//getRolesList
+  import PermissionInformationUpdateModal from '@/views/list/modules/Permission/UpdateInformation'
+
 //GetPermissionByroleID
 
   export default {
     name: "TableList",
     components: {
-      STable
+      STable,
+      PermissionInformationUpdateModal
     },
     data () {
       return {
@@ -356,6 +287,8 @@
     //  console.log(this.myloadData)
     },
     methods: {
+      handleSaveOk(){},
+      handleSaveClose(){},
       childbox(ev,v,item){
       
         if(v==1)
@@ -371,7 +304,7 @@
           item['IsParent']=false
         }
        
-        console.log(this.Mymdl)
+        // console.log(this.Mymdl)
         this.$forceUpdate();
       
       },
@@ -443,7 +376,7 @@
       this.form.validateFields((err, values) => {
         if (!err) {
           // console.log('Received values of form: ', values)
-        //  console.log(values)
+         console.log(values)
           Addroles(values).then(res=>{
             if(res.code===1)
             {
@@ -468,6 +401,11 @@
       this.Rolesvisible=true;
       },
       //点击编辑时拉取所有的权限列表然后灌到一个数组里
+      ToUpdate(record)
+      {
+        console.log(record)
+        this.$refs.PermissioninforUpdateModal.get(record)
+      },
    async handleEdit (record) {
         let _this=this   
         let _PermissionInformation=await Select_PermissionsByRolesID({ID:record.roleid})
@@ -511,29 +449,30 @@
         console.log('----------------------')
         console.log(_this.Mymdl)  
         console.log('----------------------')
-          _this.visible = true
+       
        
              
        setTimeout(() => {         
          _this.Permissionform.setFieldsValue({
            ID:record.roleid,
-          PremissionValue:_this.Mymdl.permissions                         
+          PremissionValue:_this.Mymdl.permissions,
+                             
          })            
        }, 100);
-         
+            _this.visible = true    
      
       },
-      handleOk () {
-        this.Permissionform.validateFields((err, values) => {  
-        if (!err) {
-              // console.log(this.Mymdl)
-               console.log('---------------------')
-           console.log(values)
-           console.log('++++++++++++++++++++')
+      // handleOk () {
+      //   this.Permissionform.validateFields((err, values) => {  
+      //   if (!err) {
+      //         // console.log(this.Mymdl)
+      //          console.log('---------------------')
+      //      console.log(values)
+      //      console.log('++++++++++++++++++++')
 
-             Updata_Permissioninfomation(values).then(res=>{
-               console.log(res)
-             })
+      //        Updata_Permissioninfomation(values).then(res=>{
+      //          console.log(res)
+      //        })
               // AddrolesPermission(values).then(res=>{
               // if(res.code==1)
               // {
@@ -545,11 +484,11 @@
               // }
               // })
           
-           this.visible = false
-        }
-      })
+      //      this.visible = false
+      //   }
+      // })
 
-      },
+      // },
       onChange (selectedRowKeys, selectedRows) {
         this.selectedRowKeys = selectedRowKeys
         this.selectedRows = selectedRows

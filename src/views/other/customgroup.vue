@@ -9,8 +9,7 @@
           :addgroup="true"
           @click="handleClick"
           @add="handleAdd"
-          @minu="handleMinu"
-        
+          @minu="handleMinu"        
           @titleClick="handleTitleClick"          
           @addGroup="addgroup">          
         </s-tree>
@@ -88,7 +87,7 @@ import SendsmsModal from '@/views/list/modules/sendSMS/sendsms'
 // import ConfirmModal from './modules/ConfirmModal'
 import PhoneModal from '@/views/list/modules/PhoneMsg/Phone'
 
-// import { mapState} from 'vuex'
+import { mapState} from 'vuex'
 // import OrgModal from './modules/OrgModal'
 import { GetCustomGroupByDepID,FindAllUserByGroupID ,DeleteGroupUser,DeleteGroup} from '@/api/manage'
 
@@ -105,6 +104,11 @@ export default {
     // ConfirmModal
     // OrgModal
   },
+   computed:{
+      ...mapState({
+        S_DEPKEY:state=>state.user.DEPKEY
+      })    
+    },
   data () {
     return {
       Pupu:[],

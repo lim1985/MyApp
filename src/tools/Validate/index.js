@@ -1,7 +1,26 @@
-import {asyncValidateTel} from '@/api/manage'
+import {asyncValidateTel,GetUserInformationByTelnum,GetuserInformationbyName} from '@/api/manage'
 import store from '../../store/'
 
-const Validate={ 
+const Validate={
+  findbyUserInformation(val)
+  {
+    var reg = /^1(3|4|5|7|8|9)\d{9}$/;   
+    return new Promise(function(resolve){
+      setTimeout(async() => {
+        let obj=new Object();
+        obj.data=val;
+        if(reg.test(obj.data)){
+          let res = await GetUserInformationByTelnum(obj);
+          resolve(res)
+        }
+        else
+        {
+          let res = await GetuserInformationbyName(obj)
+          resolve(res)
+        }
+      }, 1000);
+    })
+  }, 
   ValidatePhone(s,id)
   {        
     return new Promise(function(resolve){
@@ -16,6 +35,40 @@ const Validate={
         }, 1000);
     })
   },
+///^[a-zA-Z\u4e00-\u9fa5]+$/
+checkZHZM(rule, value, callback)
+{
+  let reg=/^[a-zA-Z\u4e00-\u9fa5]+$/
+  
+  if(!value)
+  {
+    callback();
+  }
+  else if(!reg.test(value))
+  {
+    callback('只能输入字幕或中文')
+    return
+  }
+  callback();
+},
+
+  // /^[A-Z]+$/
+  checkA_Z(rule, value, callback)
+  {
+    let reg=/^[A-Z]+$/
+    
+    if(!value)
+    {
+      callback();
+    }
+    else if(!reg.test(value))
+    {
+      callback('标识只能输入大写字母')
+      return
+    }
+    callback();
+  },
+  
   checkNum1to100(rule, value, callback)
   {
     let reg=/^(100|[1-9]\d|\d)$/
@@ -45,6 +98,20 @@ checkNum(rule, value, callback)
   }
   callback();
 },
+checkcharacter (rule, value, callback)
+{
+  let reg=/([\u4E00-\u9FA5]|[\uFE30-\uFFA0])+/;
+  if(!value)
+  {
+    callback();
+    return 
+  }else if(!reg.test(value))
+  {
+    callback('只能输入中文及中文标点符号')
+    return
+  }
+  callback();
+},  
 checkjob(rule, value, callback)
 {
   let reg=/([\u4E00-\u9FA5]|[\uFE30-\uFFA0])+/;
@@ -147,5 +214,30 @@ async checkPhone(rule, value, callback) {
           }               
     }            
   },
+  async CheckNameAndTelNum(rule,value,callback)
+  {
+    var reg = /^1(3|4|5|7|8|9)\d{9}$/;   
+    let reg2 = /^[\u0391-\uFFE5]{0,4}$/;
+  // if(!reg.test(value))
+  // {
+  //   callback('姓名只能输入最多4个汉字')
+  //   return
+  // }
+    if (!reg.test(value) && !reg2.test(value)) {
+      callback('请输入正确的手机号或者姓名不得包含符号');              
+      return;
+    }
+    else
+    {
+      let s =await Validate.findbyUserInformation(value) 
+      console.log(s)
+      let obj=new Object();
+      obj.username=s.res.UserName,
+      obj.code=s.code         
+      obj.id=s.res.ID,      
+      obj.tel=s.res.cellphone,      
+      store.commit('SET_PhoneUSERINFO',obj); 
+    }   
+  }
 }
 export default Validate
