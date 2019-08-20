@@ -206,10 +206,10 @@
             customRender: (text=>{
               if(text==9)
               {
-                return '正常'
+                return '前台显示'
               }else if(text==7)
               {
-                return '停用'
+                return '前台不显示'
               }else if(text==6)
               {
                 return '引用'

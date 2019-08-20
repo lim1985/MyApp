@@ -172,7 +172,7 @@
 
 <script>
   import STable from '@/components/table/'
-  import { getRolesList ,GetAdmininfobyID ,UpdataAdminBYID} from '@/api/manage'
+  import { getRolesList ,GetAdmininfobyID ,UpdataAdminBYID,GetAllUserList} from '@/api/manage'
 //getRoleList, getServiceList,
   export default {
     name: "TableList",
@@ -215,7 +215,7 @@
             needTotal: true,
             key:'IsLock',
             customRender: text=>{
-              return text ?'锁定':'正常'           
+              return text ?'锁定':'显示'           
             } 
           },
           {
@@ -238,18 +238,29 @@
         // },
          // 加载数据方法 必须为 Promise 对象
         myloadData: parameter => {
-         // console.log(parameter)
-          return this.$http.get('http://172.20.8.28:3001/api/userlist', {
-            params: Object.assign(parameter, this.queryParam),
-           }).then(res => {     
-          //   console.log(res)      
-            if(res.code==-1)
+          let params= Object.assign(parameter, this.queryParam)
+        
+          return GetAllUserList(params).then(res=>{
+   
+          if(res.code==-1)
             {
                 this.$router.push('/login')
             }
-            return  res.result
+            return res.result
           })
         },
+         // console.log(parameter)
+        //   return this.$http.get('http://172.20.8.28:3001/api/userlist', {
+        //     params: Object.assign(parameter, this.queryParam),
+        //    }).then(res => {     
+        //   //   console.log(res)      
+        //     if(res.code==-1)
+        //     {
+        //         this.$router.push('/login')
+        //     }
+        //     return  res.result
+        //   })
+        // },
 
         selectedRowKeys: [],
         selectedRows: [],

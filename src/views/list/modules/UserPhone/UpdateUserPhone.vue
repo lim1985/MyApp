@@ -89,11 +89,7 @@
               <a-select style="width: 120px" v-decorator="['status',{rules: [{ required: false }]}]">
                 <a-select-option value="9">前台显示</a-select-option>
                 <a-select-option value="7">前台不显示</a-select-option>               
-              </a-select>
-              <!-- :help="Tips"  
-              :validateStatus="status"     -->
-              <!-- <a-input placeholder='填写联系人的状态' v-decorator="['status',{rules: [{ validator: checkPhone }]}]"/>  -->
-              <!-- <a-input placeholder='填写联系人的办公手机' v-model="Mymdl.cellphone" id='cellphone' /> -->
+              </a-select>            
             </a-form-item>   
           </a-col>          
         </a-row>

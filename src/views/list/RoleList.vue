@@ -175,10 +175,10 @@
 
 <script>
   import STable from '@/components/table/'
-  import {Select_PermissionsByRolesID,Updata_Permissioninfomation, Addroles , Delroles ,GetALLDep} from '@/api/manage'//getRolesList
+  import {Select_PermissionsByRolesID, Addroles , Delroles ,GetALLDep,getRolesList} from '@/api/manage'//getRolesList
   import PermissionInformationUpdateModal from '@/views/list/modules/Permission/UpdateInformation'
 
-//GetPermissionByroleID
+//GetPermissionByroleID,Updata_Permissioninfomation,
 
   export default {
     name: "TableList",
@@ -243,16 +243,10 @@
       
       // 加载数据方法 必须为 Promise 对象
         myloadData: parameter => {
-          // console.log('准备调用')
-          // console.log(parameter)
-          return this.$http.get('http://172.20.8.28:3001/api/roleslist', {
-            params: Object.assign(parameter, this.queryParam),
-            headers:{
-				'Content-Type':'application/x-www-form-urlencoded'
-			}
-          }).then(res => {
-          //
-
+   
+      let myparams=Object.assign(parameter, this.queryParam);
+          return getRolesList(myparams)
+          .then(res => {
             if(res.code==-1)
             {
                 this.$router.push('/login')

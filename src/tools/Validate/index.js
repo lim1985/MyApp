@@ -2,6 +2,7 @@ import {asyncValidateTel,GetUserInformationByTelnum,GetuserInformationbyName} fr
 import store from '../../store/'
 
 const Validate={
+  
   findbyUserInformation(val)
   {
     var reg = /^1(3|4|5|7|8|9)\d{9}$/;   
@@ -223,21 +224,51 @@ async checkPhone(rule, value, callback) {
   //   callback('姓名只能输入最多4个汉字')
   //   return
   // }
+  
     if (!reg.test(value) && !reg2.test(value)) {
       callback('请输入正确的手机号或者姓名不得包含符号');              
       return;
     }
-    else
+    else 
     {
-      let s =await Validate.findbyUserInformation(value) 
-      console.log(s)
+      let _s =await Validate.findbyUserInformation(value) 
       let obj=new Object();
-      obj.username=s.res.UserName,
-      obj.code=s.code         
-      obj.id=s.res.ID,      
-      obj.tel=s.res.cellphone,      
-      store.commit('SET_PhoneUSERINFO',obj); 
+      if(_s.code==-1)
+      {
+        console.log(_s);
+        obj.showAdd=true
+        obj.code=-1
+        store.commit('SET_PhoneUSERINFO',obj)
+        callback('该手机号或姓名不存在，请直接添加');                 
+        return;
+      }         
+        obj.username=_s.res.UserName,
+        obj.code=_s.code         
+        obj.id=_s.res.ID,      
+        obj.tel=_s.res.cellphone,   
+        obj.showAdd=false   
+        store.commit('SET_PhoneUSERINFO',obj); 
     }   
-  }
+  },
+  async Vuex_findByUserInformation(value)
+  {
+    let _s =await Validate.findbyUserInformation(value) 
+      let obj=new Object();
+      if(_s.code==-1)
+      {
+        console.log(_s);
+        obj.showAdd=true
+        obj.code=-1
+        store.commit('SET_PhoneUSERINFO',obj)
+        // callback('该手机号或姓名不存在，请直接添加');                 
+        return;
+      }         
+        obj.username=_s.res.UserName,
+        obj.code=_s.code         
+        obj.id=_s.res.ID,      
+        obj.tel=_s.res.cellphone,   
+        obj.showAdd=false   
+        store.commit('SET_PhoneUSERINFO',obj); 
+  } 
 }
 export default Validate

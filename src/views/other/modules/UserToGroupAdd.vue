@@ -14,13 +14,15 @@
           <a-radio-button value="top">横排</a-radio-button>
           <a-radio-button value="left">竖排</a-radio-button>
         </a-radio-group>
+     
         <a-form :form="form">
-        <a-form-item
-          label="搜索"    
-          hasFeedback              
-        >
-        <a-input-search style="width: 400px" placeholder="输入手机号或者姓名" v-decorator="['search', {rules: [{validator:v().CheckNameAndTelNum}]}]"/>
-        </a-form-item>
+          <a-form-item
+            label="搜索"    
+            hasFeedback              
+          >
+            <a-input-search style="width: 400px" placeholder="输入手机号或者姓名" v-decorator="['search', {rules: [{validator:v().CheckNameAndTelNum}]}]"/>
+          
+          </a-form-item>
 
         <!-- <a-form-item
           label="搜索"             
@@ -32,18 +34,19 @@
       placeholder="Email"
     />
      </a-form-item> -->
-      </a-form>
-      <div v-show="vuex_UserINFO.code==1" style="background-color: #ececec; padding: 10px;">
-    <a-row :gutter="16">
-      <a-col :span="8">
-        <a-card hoverable title="" :bordered=false>
-          <p>ID:{{vuex_UserINFO.id}}</p>
-          <p>姓名：{{vuex_UserINFO.username}}</p>
-          <p>电话：{{vuex_UserINFO.tel}}</p>
-        </a-card>
-      </a-col>    
-    </a-row>
-  </div>
+        </a-form>
+        <button v-show="vuex_UserINFO.showAdd" @click="AddPhoneUser()" type="button" class="ant-btn ant-btn-primary"><span>添加联系人</span></button>
+        <div v-show="vuex_UserINFO.code==1" style="background-color: #ececec; padding: 10px;">
+          <a-row :gutter="16">
+            <a-col :span="8">
+              <a-card hoverable title="" :bordered=false>
+                <p>ID:{{ vuex_UserINFO.id }}</p>
+                <p>姓名：{{ vuex_UserINFO.username }}</p>
+                <p>电话：{{ vuex_UserINFO.tel }}</p>
+              </a-card>
+            </a-col>    
+          </a-row>
+        </div>
         <!-- <div>
           <a-input-search
           placeholder="输入手机号或者姓名"
@@ -82,7 +85,7 @@
           </template>       
         </a-tabs> -->
       </div>
-
+      <user-modal ref="UserPhonemodal" @ok="handleSaveOk" @close="handleSaveClose"/>
     </template>
    
     <!-- <a-spin :spinning="confirmLoading">
@@ -110,9 +113,11 @@
       </a-form>
     </a-spin> -->
   </a-modal>
+   
 </template>
 
 <script>
+  import UserModal from '../../list/modules/UserPhone/addUserPhone'
   import { GetAllDepUser,AddUserToGroup ,InGroupUsersID} from '@/api/manage'
   import Validate from '@/tools/Validate/index'
  
@@ -123,6 +128,9 @@
   import { mapState} from 'vuex'
 export default {
   name: 'UserToGroupAddModal',
+    components: {     
+      UserModal  
+    },
   data () {
     return {
 
@@ -159,6 +167,22 @@ export default {
    
   },
   methods: {
+    AddPhoneUser(){
+       this.$refs.UserPhonemodal.add();              
+    },
+       handleSaveClose(){
+            // this.$refs.mytable.refresh()
+      },
+      handleSaveOk(){
+         this.form.validateFields(async(err,values)=>{
+         
+          let num=values.search;
+          let res=await Validate.Vuex_findByUserInformation(num);
+           console.log(res);
+         })
+        console.log('AddOK')
+            // this.$refs.mytable.refresh()
+        },
      v(){     
         return Validate;
     }, 
@@ -240,46 +264,7 @@ export default {
         // console.log(this.AllDepUsers.data)
        
     },
-    //   async GetDepnameAndchild()
-    // {
-    //   let _arr=[] 
-    //   let  userid= {AdminID:Vue.ls.get(User_ID)} //在本地localStorage里拿到登陆后的管理员ID（AdminID）   
-    //   const roleslist= await getUserrolesbyAdminID({AdminID:userid.AdminID})//根据管理员ID 获取到RolesID 可能是一个也可以能是多个 
-    //   console.log(roleslist)     
-    //       for (let x in roleslist.roles)
-    //       {
-    //          let result=await Select_PermissionsByRolesID({ID:roleslist.roles[x]})//根据rolesID 拿到Permissionlist 返回字符串类型  
-    //          _arr.push(result.res)          
-    //       }
-    //       console.log(_arr)
-    //      let arr=[]       
-    //       _arr.forEach(v => {
-    //         for(let x in v)
-    //         {
-    //            if(v[x].IsView && v[x].IsParent)
-    //            {
-    //              let obj=new Object();               
-    //               obj.label=v[x].label
-    //               obj.value=v[x].value                
-    //               let DepArr=[]                     
-    //               v[x].actionOptions.forEach(s=>{
-    //                   let childObj=new Object();
-    //                 if(s.IsView && s.Permission_Key==obj.value ) 
-    //                 {                       
-    //                     // console.log(s)
-    //                      childObj.label=s.Abbreviation
-    //                      childObj.value=s.DepartmentId
-    //                      DepArr.push(childObj)                                        
-    //                 }
-    //                    obj.children=DepArr
-    //               })                 
-    //                 arr.push(obj)
-    //            }               
-    //         }
-    //       });
-    //         console.log(arr);
-    //       return arr        
-    //   },
+  
     close () {
       
       this.$store.commit('SET_PhoneUSERINFO',''); 

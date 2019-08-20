@@ -63,14 +63,14 @@
         </a-dropdown>
       </span>
     </s-table>
-    <PermissionAddModal ref="PermissionAdd"  @ok="handleSaveOk" @close="handleSaveClose"/>
-    <PermissionUpdateModal ref="PermissionUpdate"  @ok="handleSaveOk" @close="handleSaveClose"/>
+    <PermissionAddModal ref="PermissionAdd" @ok="handleSaveOk" @close="handleSaveClose"/>
+    <PermissionUpdateModal ref="PermissionUpdate" @ok="handleSaveOk" @close="handleSaveClose"/>
   </a-card>
 </template>
 
 <script>
  import STable from '@/components/table/'
- import { DelPermission } from '@/api/manage'
+ import { DelPermission ,GetAllPermissionList} from '@/api/manage'
  import PermissionAddModal from '@/views/list/modules/Permission/Add'
  import PermissionUpdateModal from '@/views/list/modules/Permission/Update'
   export default {
@@ -146,23 +146,32 @@
         //   })
         // },
         myloaddata:parameter=>{
-          return this.$http.get('http://172.20.8.28:3001/api/PermissionList', {
-            params: Object.assign(parameter, this.queryParam),
-      //       headers:{
-			// 	'Content-Type':'application/x-www-form-urlencoded'
-			// }
-          }).then(res => {
-
-           console.log(res)
-            if(res.code==-1)
+           
+            let params=  Object.assign(parameter, this.queryParam)  
+            console.log(params)
+          return GetAllPermissionList(params).then(res=>{
+          if(res.code==-1)
             {
                 this.$router.push('/login')
             }
+            console.log(res.result);
+             return  res.result
+          })
+          // return this.$http.get('http://172.20.8.28:3001/api/PermissionList', {
+          //   params: Object.assign(parameter, this.queryParam),
+     
+          // }).then(res => {
+
+          //  console.log(res)
+          //   if(res.code==-1)
+          //   {
+          //       this.$router.push('/login')
+          //   }
               // let times=res.result.data[0].addtime
           //  console.log(this.filter('dayjs',times))
             // console.log(res.result.data[0].addtime)//Vue.filter('dayjs',
-            return  res.result
-          })
+          //   return  res.result
+          // })
         },
 
         selectedRowKeys: [],

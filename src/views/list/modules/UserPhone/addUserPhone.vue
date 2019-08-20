@@ -37,6 +37,17 @@
             <!-- <a-input placeholder='联系人姓名' v-model="Mymdl.UserName" id='UserName' /> -->
           </a-form-item>
           <a-form-item
+            :colon="false"
+            v-bind="formItemLayout"     
+            label='状态'   
+            hasFeedback                              
+          >
+            <a-select v-decorator="['status',{initialValue:'7',rules: [{ required: false }]}]">
+              <a-select-option value="9">前台显示</a-select-option>
+              <a-select-option value="7">前台不显示</a-select-option>               
+            </a-select>           
+          </a-form-item> 
+          <a-form-item
             v-bind="formItemLayout"      
             label="性  别"            
           >
@@ -64,7 +75,6 @@
             <a-col :span="8"></a-col>
             <a-col :span="8"> <a-button type="primary" html-type="submit" v-show="true" @click="AddReference" :style="{ fontSize: '18px' }" icon="usergroup-add">添加引用</a-button></a-col>
             <a-col :span="8"></a-col>
-
             <!-- ReferenceStatus -->
           </a-row>
           <a-row>
@@ -77,6 +87,14 @@
               </a-form-item>            
             </a-col>
             <a-col :span="24">
+              <a-form-item 
+                label='单位备注'
+                hasFeedback
+                v-bind="formItemLayout">
+                <a-input placeholder='如无对应单位请自行填写单位名称' v-decorator="['beizhu',{rules: [{ required: false},{validator:v().checkcharacter}]}]"/> 
+              </a-form-item>            
+            </a-col>
+            <a-col :span="24">
               <a-form-item               
                 label="职务"
                 hasFeedback  
@@ -85,7 +103,7 @@
                 <a-input placeholder='填写联系人的职务信息' v-decorator="['UJOB',{rules: [{ required: false},{validator:v().checkjob}]}]"/> 
                 <!-- <a-input placeholder='填写联系人的职务信息' v-model="Mymdl.UJOB" id='UJOB' />  -->
               </a-form-item>
-            </a-col>
+            </a-col>         
           </a-row>
           <a-row>
             <a-col :span="24">
@@ -222,9 +240,7 @@ export default {
       let _arr=[] 
       let  userid= {AdminID:Vue.ls.get(User_ID)} //在本地localStorage里拿到登陆后的管理员ID（AdminID）   
       const roleslist= await getUserrolesbyAdminID({AdminID:userid.AdminID})//根据管理员ID 获取到RolesID 可能是一个也可以能是多个
-      console.log("6666666")
-        console.log(roleslist)
-           
+     
           for (let x in roleslist.roles)
           {
              let result=await Select_PermissionsByRolesID({ID:roleslist.roles[x]})//根据rolesID 拿到Permissionlist 返回字符串类型  
@@ -321,26 +337,7 @@ export default {
             _this.$message.error(r.msg);  
 
           }
-        })
-          
-        //   function(r){
-        //   console.log(r);
-        //   if(r.code==1)
-        //   {
-        //     console.log('referenceok')
-        //     this.Referencevisible=false;
-        //     this.PhoneVisible=false;
-        //     this.$emit('ok')             
-        //   }
-        //   else if (r.code==-4)
-        //   {
-        //     _this.$message.error(r.msg);  
-
-        //   }
-           
-        // })
-     
-           
+        })           
     },
      handleOk () {
       const _this = this
@@ -353,7 +350,7 @@ export default {
           // 模拟后端请求 2000 毫秒延迟
           new Promise((resolve,reject) => {          
           setTimeout(async () => {
-            
+              console.log(values);
               const res=await AddPhoneUser(values)             
               if(res)
               {
@@ -384,7 +381,7 @@ export default {
                            
               _this.$message.success('添加人员成功。');             
               _this.PhoneVisible = false   
-              _this.$emit('ok')                                      
+              _this.$emit('ok');                                      
           }}).catch(function (err) {
                 console.log(err)
           }).finally(() => {
@@ -397,14 +394,11 @@ export default {
     },
       HandleUserPhoneAdd(e)
         {
-        // this.Mymdl.Sex=this.Sex
-     
+        // this.Mymdl.Sex=this.Sex     
         e.preventDefault()
-         this.form.validateFields(async(err, values) => {
-
-          
+         this.form.validateFields(async(err, values) => {          
            if(!err)
-           {
+           {          
              const res=await AddPhoneUser(values)
               if(res.code==-1)
           {            
@@ -422,8 +416,7 @@ export default {
             }, 100);                            
           }          
             // console.log('Received values of form: ', values)
-          }
-          
+          }          
          })   
         },
 
