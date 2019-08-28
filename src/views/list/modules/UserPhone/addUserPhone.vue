@@ -121,7 +121,6 @@
     </a-modal> 
   </div>  
 </template>
-
 <script>
   import Vue from 'vue'  
   import { mapState} from 'vuex'
@@ -129,8 +128,9 @@
   import {Select_PermissionsByRolesID,getUserrolesbyAdminID,AddPhoneUser,ReferenceAdd} from '@/api/manage'
   import { Promise } from 'q';
   import Validate from '@/tools/Validate/index'
-import { error } from 'util';
-
+  import { error } from 'util';
+   //状态说明 [LIM_UsersPhone] 9 前台显示 7 前台不现实   
+   //[LIM_ResferenceAndDep] 6 引用状态 -1 默认
 
   //GetALLByDepID,asyncValidateTel
 

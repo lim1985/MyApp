@@ -1654,12 +1654,17 @@ let res= [ {
         meta: { title: '部门管理', permission: [ 'Admin' ] }
       },
       {
-        path: '/list/old-permission',
-        name: 'old-permission',
-        component: () => import('@/views/list/oldPermissionList'),
-        meta: { title: '原版权限管理', permission: [ 'Admin' ] }
+        path: '/list/uploadUserlist',
+        name: 'UploadUserlist',
+        component: () => import('@/views/list/UploadUserlist'),
+        meta: { title: '联系人批量导入', permission: [ 'Admin' ] }
       },
-     
+      // {
+      //   path: '/list/old-permission',
+      //   name: 'old-permission',
+      //   component: () => import('@/views/list/oldPermissionList'),
+      //   meta: { title: '原版权限管理', permission: [ 'Admin' ] }
+      // },
       {
         path: '/list/user-list',
         name: 'UserList',

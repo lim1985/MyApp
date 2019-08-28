@@ -1,4 +1,4 @@
-import {asyncValidateTel,GetUserInformationByTelnum,GetuserInformationbyName} from '@/api/manage'
+import {asyncValidateTel,GetUserInformationByTelnum,GetuserInformationbyName,IsReference} from '@/api/manage'
 import store from '../../store/'
 
 const Validate={
@@ -29,8 +29,7 @@ const Validate={
           
               let obj=new Object();
               obj.tel=s;
-              obj.ID=id;
-              
+              obj.ID=id;              
             let res= await asyncValidateTel(obj)
             resolve(res)
         }, 1000);
@@ -166,7 +165,7 @@ checkUsername(rule,value,callback)
 
 },
 async checkPhoneallowNull(rule, value, callback){
-   let reg=/^1(3|4|5|7|8|9)\d{9}$/; 
+   let reg=/^0?1(3|4|5|7|8|9)\d{9}$/;   
    if(!value)
    {
      callback();
@@ -185,6 +184,7 @@ async checkPhoneallowNull(rule, value, callback){
         if(s.code==-3)
         {
           callback('该手机号已经被其他人使用，请重新填写。')
+          return 
         } 
         else
         {
@@ -193,7 +193,7 @@ async checkPhoneallowNull(rule, value, callback){
    }
 },
 async checkPhone(rule, value, callback) {  
-    var reg = /^1(3|4|5|7|8|9)\d{9}$/;   
+    var reg = /^0?1(3|4|5|7|8|9)\d{9}$/;   
     if (!reg.test(value)) {
        callback('请输入正确的手机号');              
        return;
@@ -210,10 +210,66 @@ async checkPhone(rule, value, callback) {
             callback('该手机号已经被其他人使用，只能添加引用，不可重复添加。')
           } 
           else
-          { store.commit('SET_ReferenceStatus',false);  
+          { 
+            store.commit('SET_ReferenceStatus',false);  
             callback();
           }               
     }            
+  },
+  async checkListPhone(value)
+  {
+    var reg = /^0?1(3|4|5|7|8|9)\d{9}$/;   
+    if (!reg.test(value.cellphone)) {      
+        let data={
+          U:value,
+          code:'-3',
+          msg:'请输入正确手机号'
+        }   
+      return data
+     }
+    else 
+    {
+      let s =await Validate.ValidatePhone(value.cellphone,"-1")
+      // const res=await ReferenceAdd({UserPhoneID:value.ID,DepID:value.Department_ID})          
+        if(s.code==-3)
+        {
+          value.RefereStatus=6
+          value.ID=s.result.ID
+          console.log(value.ID)
+          const res=await IsReference({UserPhoneID:value.ID,DepID:value.Department_ID})  
+          console.log(res);
+          if(res.code==-4)
+          {
+            let data={
+              IsRefecenced:true,
+              U:value,
+              code:"-5",
+              msg:'该手机号已经被该单位使用!'
+            }  
+            return data
+          }
+          else
+          {
+            let data={
+              IsRefecenced:false,
+              U:value,
+              code:"-4",
+              msg:'该手机号已经被其他单位使用!'
+            }  
+            return data
+          }
+        }
+        else
+        {
+          value.RefereStatus=-1
+          let data={
+            U:value,
+            code:'1'
+          }
+          return data
+        }
+      
+    } 
   },
   async CheckNameAndTelNum(rule,value,callback)
   {

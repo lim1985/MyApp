@@ -99,8 +99,52 @@
       :showAlertInfo="true"
       @onSelect="onChange"
     >
-      <template slot="cellphone" slot-scope="text">
+      <template slot="Tel" slot-scope="text">
         <a @click="GetUboxToTel(text)">{{ text }}</a>
+      </template>
+      <template slot="cellphone" slot-scope="text,record">
+        <a-divider type="vertical" />
+        <a-dropdown v-show="text">
+          <a class="ant-dropdown-link">
+            {{ text }} <a-icon type="down" />
+          </a>
+          <a-menu slot="overlay">
+            <a-menu-item>
+              <a @click="sendsms(record)">发短信</a>
+            </a-menu-item>
+            <a-menu-item>
+              <a @click="GetUboxToTel(text)">打电话</a>
+            </a-menu-item>           
+          </a-menu>
+        </a-dropdown>      
+      </template>
+      <template slot="H_cellphone" slot-scope="text,record">
+        <a-divider type="vertical" />
+        <a-dropdown v-show="text">
+          <a class="ant-dropdown-link">
+            {{ text }} <a-icon type="down" />
+          </a>
+          <a-menu slot="overlay">
+            <a-menu-item>
+              <a @click="sendsmstwo(record)">发短信</a>
+            </a-menu-item>
+            <a-menu-item>
+              <a @click="GetUboxToTel(text)">打电话</a>
+            </a-menu-item>
+            <!-- <a-menu-item v-show="record.Ustatus==9 || record.Ustatus==7">
+              <a href="javascript:alert('该功能尚未完成');">禁用</a>
+            </a-menu-item>
+            <a-menu-item v-show="record.Ustatus==9 || record.Ustatus==7|| record.Ustatus==6">
+              <a-popconfirm
+                v-if="loadData.length"
+                title="确定删除该联系人么?"
+                @confirm="() => onDelete(record)">
+                <a href="javascript:;">删除</a>
+              </a-popconfirm>
+            </a-menu-item> -->
+          </a-menu>
+        </a-dropdown>
+        <!-- <a @click="GetUboxToTel(text)">{{ text }}</a> -->
       </template>
       <span slot="action" slot-scope="text, record">
         <a v-show="record.Ustatus==9 || record.Ustatus==7" @click="handleEdit(record)">编辑</a>
@@ -110,9 +154,9 @@
             操作 <a-icon type="down" />
           </a>
           <a-menu slot="overlay">
-            <a-menu-item>
+            <!-- <a-menu-item>
               <a @click="sendsms(record)">发短信</a>
-            </a-menu-item>
+            </a-menu-item> -->
             <a-menu-item>
               <a href="javascript:alert('该功能尚未完成');">详情</a>
             </a-menu-item>
@@ -227,16 +271,25 @@
           {
             title: '工作座机',
             dataIndex: 'Tel',
+            scopedSlots: { customRender: 'Tel' },
            
           },
           {
-          title: '手机',
+          title: '工作手机',
           dataIndex: 'cellphone',
           scopedSlots: { customRender: 'cellphone' },
           // sorter: true,
           // needTotal: true,
           // customRender: (text) => text + ' 次'
-          },       
+          }, 
+            {
+          title: '家庭手机',
+          dataIndex: 'H_cellphone',
+          scopedSlots: { customRender: 'H_cellphone' },
+          // sorter: true,
+          // needTotal: true,
+          // customRender: (text) => text + ' 次'
+          },         
           {
             table: '操作',
             dataIndex: 'action',
@@ -255,22 +308,20 @@
         this.queryParam.DepID=s  
     
         return GetALLByDepID(Object.assign(parameter,this.queryParam))
-            .then(res => {   
-              
-              let data= res.result        
+            .then(res => {                 
+            let data= res.result        
             data.data.forEach(v => {
                 if(v.Rstatus==6)
                 {
                   v.Ustatus=v.Rstatus
                 }
             });          
-            console.log(data)
-        
+          
            this.Pupu=data.data.map(item=>{
              return {Phone:item.cellphone,username:item.UserName,DPname:item.DepartmentName,ID:item.ID,UJOB:item.UJOB,checked:false}
            })              
            return data
-            })           
+         })           
         },
         options:[],
         onclick:false,
@@ -344,10 +395,23 @@
         }
         this.$refs.mytable.refresh()
     },
+    sendsmstwo(IDs){
+      console.log(IDs);
+       let _obj=new Object();
+       _obj.DepartmentName=IDs.DepartmentName;
+       _obj.Hcellphone=IDs.H_cellphone;
+       _obj.ID=IDs.ID;
+ this.$refs.SendsmsModal.get(_obj); 
+    },
       sendsms(IDs)
       {
       // let _arr=[]  
-      // !IDs.length? _arr.push(IDs): _arr=IDs
+       console.log(IDs);
+      
+      //   let _obj=new Object();
+      //  _obj.DepartmentName=IDs.DepartmentName;
+      //  _obj.cellphone=IDs.cellphone;
+      //  _obj.ID=IDs.ID;
       this.$refs.SendsmsModal.get(IDs); 
       },
       handleSaveClose(){

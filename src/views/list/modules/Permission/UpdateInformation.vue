@@ -1,46 +1,16 @@
 <template>
- <!-- <div> -->
-    <!-- <a-modal
-      :title="`${telmsg}`+'信息'"
-      :width="400"
-      @cancel="telHookon"
-      v-model="Phonevisible"
-      :footer="null"     
-      :keyboard="false"
-      :maskClosable="false"
-      :confirmLoading="confirmLoading"
-    >
-      <a-spin :spinning="confirmLoading">
-        <a-form
-          :form="form"       
-        > 
-          <a-row>         
-            <a-col :span="24">
-              <h1>{{ keys }}</h1>             
-            </a-col>
-            <a-col :span="24">{{ result }}</a-col> -->
-
-          
-          <!--<a-col :span="16"><a-cascader placeholder="选择部门类别" v-decorator="['DepKeylist',{initialValue:this.DepValue,rules: [{ required: true, message: '部门不能为空！' }]}]" :showSearch="{filter}" :options="options" @change="onChangeDeplist"/></a-col>
-          <a-col :span="4"></a-col> -->
-          <!-- ReferenceStatus -->
-          <!-- </a-row>   
-        </a-form> 
-      </a-spin>
-    </a-modal>   
-  </div>   -->
-    <a-modal
-      title="权限设置"
-      style="top: 220px;"
-      :width="800"
-      v-model="visible"
-      @ok="handleOk"
-      :confirmLoading="confirmLoading"
-      >
+  <a-modal
+    title="权限设置"
+    style="top: 220px;"
+    :width="800"
+    v-model="visible"
+    @ok="handleOk"
+    :confirmLoading="confirmLoading"
+  >
     <a-spin :spinning="confirmLoading">
-     <a-form :form="form"> 
+      <a-form :form="form"> 
 
-       <!-- <a-form-item
+        <!-- <a-form-item
           v-bind="formItemLayout"
           label='部门全称'
           hasFeedback                   
@@ -50,7 +20,7 @@
             placeholder='输入部门全称' 
             v-decorator="['DepFullName',{rules: [{ required: true, message: '部门全称不能为空！' },{validator:v().checkjob}]}]"
           />  -->
-          <!-- <a-input placeholder='部门名称（全称）' v-model="Mymdl.DEPName" @change="DepOnChange" id='DEPName' /> -->
+        <!-- <a-input placeholder='部门名称（全称）' v-model="Mymdl.DEPName" @change="DepOnChange" id='DEPName' /> -->
         <!-- </a-form-item> -->
         <a-form-item  
           :labelCol="{lg: {span: 7}, sm: {span: 7}}"
@@ -79,14 +49,14 @@
             </a-col>
           </a-row> 
           <!-- 正常模板开始 -->
-         <a-row :gutter="24" :key="index" v-for="(item,index) in Mymdl.permissions">
+          <a-row :gutter="24" :key="index" v-for="(item,index) in Mymdl.permissions">
             <a-col :span="16"> 
               <h2>{{ item.label }}</h2>              
             </a-col>              
             <a-col :span="4"> 
               <a-checkbox v-model="Mymdl.permissions[index].IsView" @change="v=>changeBox(v,1,item,index)" /> 
-             <!-- <a-checkbox  @change="v=>changeBox(v,1,item,index)"  />  -->
-           </a-col>
+            <!-- <a-checkbox  @change="v=>changeBox(v,1,item,index)"  />  -->
+            </a-col>
             <a-col :span="4"> 
               <a-checkbox :disabled="!item.IsView" v-model="Mymdl.permissions[index].IsEdit" @change="v=>changeBox(v,2,item,index)" :value="item.IsView" ></a-checkbox>
             </a-col>
@@ -103,16 +73,16 @@
             </a-row>
             <a-divider />
           </a-row> 
-      </a-form-item> 
+        </a-form-item> 
       </a-form> 
-         </a-spin>  
-    </a-modal>
+    </a-spin>  
+  </a-modal>
 </template>
   <script> 
   import { mapState} from 'vuex'
-  import Validate from '@/tools/Validate/index'
+  // import Validate from '@/tools/Validate/index'
   //GetALLByDepID,asyncValidateTel
-   import {Select_PermissionsByRolesID,Updata_Permissioninfomation, Addroles , Delroles ,GetALLDep} from '@/api/manage'//getRolesList
+   import {Select_PermissionsByRolesID,Updata_Permissioninfomation,GetALLDep} from '@/api/manage'//getRolesList  Addroles , Delroles ,
 export default {
   name: 'PermissionModal', 
   data () {
@@ -245,11 +215,11 @@ export default {
    async handleEdit (record) {
      
         let _this=this   
-        let permissions= await GetALLDep().then(res=>{        
-           return res.result       
-        })   
+        // let permissions= await GetALLDep().then(res=>{        
+        //    return res.result       
+        // })   
         let _PermissionInformation=await Select_PermissionsByRolesID({ID:record.roleid})      
-        console.log(_PermissionInformation);
+      
         this.$nextTick(() => {
         setTimeout(() => {
         _this.form.setFieldsValue({
@@ -270,8 +240,8 @@ export default {
             return res.result       
           })               
             let _arr=[]  
-            console.log(_PermissionInformation)
-            console.log(permissions)
+            // console.log(_PermissionInformation)
+            // console.log(permissions)
             permissions.forEach(v => {
               let obj=new Object();             
               let _temp=[]

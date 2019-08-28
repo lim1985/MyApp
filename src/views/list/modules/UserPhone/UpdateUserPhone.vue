@@ -134,8 +134,8 @@
               hasFeedback                              
             >
               <!-- :help="Tips"  
-              :validateStatus="status"     -->
-              <a-input disabled placeholder='填写联系人的办公手机' v-decorator="['cellphone',{rules: [{ required: false },{ validator:v().checkPhoneallowNull }]}]"/> 
+              :validateStatus="status"     disabled-->
+              <a-input placeholder='填写联系人的办公手机' v-decorator="['cellphone',{rules: [{ required: false },{ validator:v().checkPhoneallowNull }]}]"/> 
               <!-- <a-input placeholder='填写联系人的办公手机' v-model="Mymdl.cellphone" id='cellphone' /> -->
             </a-form-item>   
           </a-col>          

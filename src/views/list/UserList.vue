@@ -222,7 +222,8 @@
             title: '创建时间',
             dataIndex: 'LastLoginTime',
             sorter: true
-          }, {
+          }, 
+          {
             title: '操作',
             width: '150px',
             dataIndex: 'action',
@@ -238,8 +239,7 @@
         // },
          // 加载数据方法 必须为 Promise 对象
         myloadData: parameter => {
-          let params= Object.assign(parameter, this.queryParam)
-        
+          let params= Object.assign(parameter, this.queryParam)        
           return GetAllUserList(params).then(res=>{
    
           if(res.code==-1)

@@ -188,9 +188,9 @@ export default {
   mounted(){
      
   },
-    computed:{
+    // computed:{
       
-    },
+    // },
   watch:{
       "$route": "getCustomGroup",
   },

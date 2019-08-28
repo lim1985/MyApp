@@ -102,8 +102,7 @@ export default {
       },
       visible: false,
       confirmLoading: false,
-      mdl: {},
-     
+      mdl: {},     
       loading:false,    
       Barr:[],
       countSms:0,
@@ -112,6 +111,7 @@ export default {
       AdminID:0,
       InervalTime:null,
       sendedCount:0
+     
     }
   },
   beforeCreate () {
@@ -152,21 +152,14 @@ export default {
         e.target.checked?this.Barr.push(checkedList):this.Barr.splice(0, 1);                 
         this.indeterminate = !! this.Barr.length && ( this.Barr.length < this.Pupuarr.length)
         this.checkAll =  this.Barr.length === this.Pupuarr.length            
-        this.countSms=this.Barr.length    
+        this.countSms=this.Barr.length  
+        console.log(this.Barr);  
     },
      onCheckAllChange (e) {   
         this.Barr=[]       
         this.Pupuarr.forEach(v=>{
-          !e.target.checked? v.checked=false:v.checked=true   
-          // if(!e.target.checked)
-          // {         
-          //   v.checked=false;
-                
-          // }
-          // else
-          // {           
-          //   v.checked=true           
-          // }           
+          !e.target.checked? v.checked=false:v.checked=true  
+                   
           })      
           for(let y in this.Pupuarr)
           {
@@ -185,6 +178,7 @@ export default {
      setTimeout(() => {
       let _arr=[]  
       !i.length? _arr.push(i): _arr=i
+    
         this.initSms(_arr);
      }, 100);
     },
@@ -206,7 +200,8 @@ export default {
        this.processvisible=true;
        this.GuID=this.genID(1);     
        let params={}  
-       
+      
+      
         for(let x in this.Pupuarr)
       {
         if(!this.Pupuarr[x].checked==false)      
@@ -239,7 +234,6 @@ export default {
                 SMSContent:this.vmodelContent,//发送的内容
                 UserName:r.u,//接收短信的人
               }
-
               return data
          })
         .then(data=>{                 
@@ -277,26 +271,36 @@ export default {
       console.log('计时器关闭')  
        
     },
-   async initSms(IDs){
-   
-    
-     console.log(IDs)
+   async initSms(IDs){ 
      let _this=this
+     console.log(IDs)
      console.log(_this.Pupuarr)
     //  IDs[0].DepartmentName?_this.vmodelContent=IDs[0].DepartmentName:_this.vmodelContent=IDs[0].Permission_name
     //  _this.vmodelContent=IDs[0].DepartmentName?true:false
     //   _this.vmodelContent=IDs[0].Permission_name?true:false
-       _this.vmodelContent=`【${IDs[0].DepartmentName}】`
+     _this.vmodelContent=`【${IDs[0].DepartmentName}】`
      _this.Barr=[]
      for(let x in _this.Pupuarr)
      {
       _this.Pupuarr[x].checked=false
       for(let y in IDs)
       {       
+       
+     
         if(_this.Pupuarr[x].ID==IDs[y].ID)
         {     
+          // _this.Pupuarr.Phone=IDs.
+         if(IDs[y].Hcellphone)
+         {
+           _this.Pupuarr[x].Phone=IDs[y].Hcellphone
+         }
           _this.Barr.push(_this.Pupuarr[x])
+          // _this.Pupuarr[x].Phone=IDs[y].H_cellphone
           _this.Pupuarr[x].checked=true
+        //    if(IDs[y].H_cellphone!='')
+        // {
+        //    _this.Pupuarr[x].Phone=IDs[y].H_cellphone
+        // }
         }      
       }
      }
@@ -307,6 +311,7 @@ export default {
       _this.smsContent= _this.vmodelContent
       // console.log(_this.vmodelContent)
       // console.log(_this.smsContent)
+       console.log(_this.Pupuarr)
     },
   
     

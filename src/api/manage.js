@@ -52,14 +52,17 @@ const api = {
   DeleteUserByUID:'http://59.230.230.40/api/DeleteUser',
   GetuserInformationByTelNum:'http://59.230.230.40/api/GetuserInformationbyTelNum',
   GetuserInformationbyname:'http://59.230.230.40/api/GetuserInformationbyname',
-
-  
- 
   GetAllPhoneuser:'http://59.230.230.40/api/GetAllPhoneuser',
   GetALLByDepID:'http://59.230.230.40/api/GetAllByDepID',//DepID=70 用于UserPhoneList页面获取通讯录用户数据用
+  GetUserByNameAndDepID:'http://172.20.8.28:3001/api/GetUserByNameAndDepID',//批量检查
+  importUsersList:'http://172.20.8.28:3001/api/importUsersList',//批量导入
+
+ 
+
  //引用表操作
   ReferenceAdd:'http://59.230.230.40/api/ReferenceAdd',//用于list/modules/UserPhone/addUserPhone
   ReferenceDelete:'http://59.230.230.40/api/ReferenceDelete',//用于list/modules/UserPhone/addUserPhone
+  IsReference:'http://172.20.8.28:3001/api/IsReference',//用于判断该单位是否引用过该用户{DEPid，userid}
 
 
   
@@ -77,7 +80,8 @@ const api = {
    FindAllUserByGroupID:'http://59.230.230.40/api/FindAllUserByGroupID',
    DeleteGroupUser:'http://59.230.230.40/api/DeleteGroupUser',
    DeleteGroup:'http://59.230.230.40/api/DeleteGroup',
-
+  //上传xlsx文件
+   Uploadfiles:'http://59.230.230.39:3002/api/upload'
    
 //  axios.get('http://info.dxzc.gov.cn:3000/api/sendsms', {
 //   params: {
@@ -93,6 +97,33 @@ const api = {
 
 export default api
 
+
+//批量导入
+export function importUsersList (parameter) {
+  return axios({
+    url: api.importUsersList,
+    method: 'post',
+    data:parameter  
+  })
+}
+//批量检查
+export function GetUserByNameAndDepID (parameter) {
+  return axios({
+    url: api.GetUserByNameAndDepID,
+    method: 'post',
+    data:parameter  
+  })
+}
+export function Uploadfiles (parameter) {
+  return axios({
+    url: api.Uploadfiles,
+    method: 'post',
+    data:parameter,  
+    headers: {
+    'Content-Type': 'multipart/form-data'
+    }
+  })
+}
 export function GetAllUserList (parameter) {
   return axios({
     url: api.GetAllUserList,
@@ -110,6 +141,14 @@ export function GetuserInformationbyName (parameter) {
 export function GetUserInformationByTelnum (parameter) {
   return axios({
     url: api.GetuserInformationByTelNum,
+    method: 'get',
+    params: parameter
+  })
+}
+//是否引用过
+export function IsReference (parameter) {
+  return axios({
+    url: api.IsReference,
     method: 'get',
     params: parameter
   })
