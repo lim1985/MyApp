@@ -298,6 +298,7 @@
         },
       handleEdit (record) {
           setTimeout(() => {
+            console.log(record);
             this.$refs.UpdateModal.add(record);  
         }, 100);            
       },

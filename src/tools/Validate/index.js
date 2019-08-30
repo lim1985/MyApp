@@ -1,18 +1,28 @@
-import {asyncValidateTel,GetUserInformationByTelnum,GetuserInformationbyName,IsReference} from '@/api/manage'
+import {GetUserInformationByUserNameLIke,asyncValidateTel,GetUserInformationByTelnum,GetuserInformationbyName,IsReference} from '@/api/manage'
 import store from '../../store/'
 
 const Validate={
   
   findbyUserInformation(val)
   {
-    var reg = /^1(3|4|5|7|8|9)\d{9}$/;   
+    var reg = /^1(3|4|5|7|8|9)\d{9}$/; //验证手机号  
+    let reg2=/^[a-zA-Z\u4e00-\u9fa5]+$///验证中文和英文字符
     return new Promise(function(resolve){
       setTimeout(async() => {
         let obj=new Object();
         obj.data=val;
+        obj.pageNo=1   
+        obj.pageSize=20     
+        
+        console.log(obj)
         if(reg.test(obj.data)){
           let res = await GetUserInformationByTelnum(obj);
           resolve(res)
+        }
+        else if(reg2.test(obj.data))
+        { 
+          let res = await GetUserInformationByUserNameLIke(obj);
+          resolve(res);
         }
         else
         {
@@ -216,8 +226,10 @@ async checkPhone(rule, value, callback) {
           }               
     }            
   },
+
   async checkListPhone(value)
   {
+    console.log(value);
     var reg = /^0?1(3|4|5|7|8|9)\d{9}$/;   
     if (!reg.test(value.cellphone)) {      
         let data={

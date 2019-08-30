@@ -13,7 +13,7 @@
     props: {
       title: {
         type: String,
-        default: 'Ant Design Pro',
+        default: '智能通讯录 v1.0',
         required: false
       },
       showTitle: {

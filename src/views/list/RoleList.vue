@@ -245,6 +245,7 @@
         myloadData: parameter => {
    
       let myparams=Object.assign(parameter, this.queryParam);
+      console.log(myparams)
           return getRolesList(myparams)
           .then(res => {
             if(res.code==-1)

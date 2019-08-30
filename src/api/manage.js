@@ -30,7 +30,7 @@ const api = {
   addrolePermission:'http://59.230.230.40/api/rolesAddPermission',//添加管理员角色
   GetPermissionByroleID:'http://59.230.230.40/api/getPermissionbyroleID',//获取权限
   GetrolesbyAdminID:'http://59.230.230.40/api/GetrolesbyAdminID',//获取管理员权限
-  GetAllPermissionInformationByRoleId:'http://59.230.230.40/api/GetAllPermissionInformationByRolesID',
+  GetAllPermissionInformationByRoleId:'http://59.230.230.40/api/GetAllPermissionInformationByRolesID',//999
   //'http://59.230.230.40/api/rolesAdd?RoleValue=1&Description=111'
   //部门管理接口列表
   AddParment:'http://59.230.230.40/api/AddParment',
@@ -48,21 +48,24 @@ const api = {
   AddPhoneUser:'http://59.230.230.40/api/AddPhoneUser',
   GetAllPhoneUserByPermissionKey:'http://59.230.230.40/api/AllPhoneUserByPermissionkey',
   GetByDepIDAndPermissionKey:'http://59.230.230.40/api/GetDepIDAndPermissionKey',
-  PostDepIDAndPermissionKey:'http://59.230.230.40/api/PostDepIDAndPermissionKey',
+  PostDepIDAndPermissionKey:'http://172.20.8.28:3001/api/PostDepIDAndPermissionKey',
   DeleteUserByUID:'http://59.230.230.40/api/DeleteUser',
-  GetuserInformationByTelNum:'http://59.230.230.40/api/GetuserInformationbyTelNum',
-  GetuserInformationbyname:'http://59.230.230.40/api/GetuserInformationbyname',
+  GetuserInformationByTelNum:'http://59.230.230.40/api/GetuserInformationbyTelNum',//获取用户信息By手机号
+  GetuserInformationbyname:'http://59.230.230.40/api/GetuserInformationbyname',//获取用户信息By用户名
+  GetUserInformationByUserNameLIke:'http://172.20.8.28:3001/api/GetUserInformationByUserNameLIke',//获取用户信息By用户名
+
+  
   GetAllPhoneuser:'http://59.230.230.40/api/GetAllPhoneuser',
   GetALLByDepID:'http://59.230.230.40/api/GetAllByDepID',//DepID=70 用于UserPhoneList页面获取通讯录用户数据用
-  GetUserByNameAndDepID:'http://172.20.8.28:3001/api/GetUserByNameAndDepID',//批量检查
-  importUsersList:'http://172.20.8.28:3001/api/importUsersList',//批量导入
+  GetUserByNameAndDepID:'http://59.230.230.40/api/GetUserByNameAndDepID',//批量检查999
+  importUsersList:'http://59.230.230.40/api/importUsersList',//批量导入999
 
  
 
  //引用表操作
   ReferenceAdd:'http://59.230.230.40/api/ReferenceAdd',//用于list/modules/UserPhone/addUserPhone
   ReferenceDelete:'http://59.230.230.40/api/ReferenceDelete',//用于list/modules/UserPhone/addUserPhone
-  IsReference:'http://172.20.8.28:3001/api/IsReference',//用于判断该单位是否引用过该用户{DEPid，userid}
+  IsReference:'http://59.230.230.40/api/IsReference',//用于判断该单位是否引用过该用户{DEPid，userid}999
 
 
   
@@ -96,7 +99,13 @@ const api = {
 }
 
 export default api
-
+export function GetUserInformationByUserNameLIke (parameter) {
+  return axios({
+    url: api.GetUserInformationByUserNameLIke,
+    method: 'get',
+    params: parameter
+  })
+}
 
 //批量导入
 export function importUsersList (parameter) {

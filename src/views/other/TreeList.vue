@@ -9,6 +9,7 @@
           :addgroup="false"
           @click="handleClick"
           @add="handleAdd"
+          @ReturnValue="GetUsersList"
           @titleClick="handleTitleClick"></s-tree>
       </a-col>
       <a-col :span="19">
@@ -56,6 +57,8 @@ import STree from '@/components/Tree/Tree'
 import  STable  from '@/components/newTable'
 // import OrgModal from './modules/OrgModal'
 import { DepTreelist,PostByDepIDPermissionKey } from '@/api/manage'
+import Validate from '@/tools/Validate/index'
+// import { Promise } from 'q';
 //  getOrgTree,getServiceList,GetALLDep,GetAllPhoneuser,GetByDepIDAndPermissionKey
 export default {
   name: 'TreeList',
@@ -67,6 +70,7 @@ export default {
   data () {
     return {
       openKeys: ['152'],
+      isSearch:false,
       // 查询参数
       queryParam: {},
       // 表头
@@ -105,8 +109,20 @@ export default {
       ],
       // 加载数据方法 必须为 Promise 对象
        loadData: (parameter) => {  
+         if(this.isSearch)
+         {
+           console.log(this.SearchValue);
+            return Validate.findbyUserInformation(this.SearchValue)
+            .then(res=>{
+              if(res.code==1)
+              {
+                this.isSearch=false;
+                return res.res
+              }       
+         })   
+         }
             if(this.onclick)
-            {  
+          {  
             let _obj=new Object()
             let _arr=[]
             _arr.push(this.queryParam)
@@ -140,20 +156,24 @@ export default {
       );
             return params
           }).then(params=>{  
-            console.log(this.onclick) 
+           console.log(this.onclick) 
            console.log(params) 
-          
-
                this.queryParam={
               param:params,                      
             } 
+            console.log('输出的参数！');
+             console.log(this.queryParam);
+            
             return PostByDepIDPermissionKey(Object.assign(parameter,this.queryParam))
           .then(res => {
+            console.log(`000000999999`)
             console.log(res.result)
-            return res.result
+            this.seach=res.result
+            return this.seach;
           })
         })
      },        
+      seach:[],
       DepArrParam:[],
       DepTree:[],
       orgTree: [],
@@ -161,9 +181,10 @@ export default {
       selectedRows: [],
       parameter:{
         pageNo:1,
-        pageSize:10
+        pageSize:20
       },
-      onclick:false
+      onclick:false,
+      SearchValue:''
    
     // const pageSize=res.pageSize pageNo       
     }
@@ -173,6 +194,136 @@ export default {
       console.log(this.DepTree)
   },
   methods: {
+    GetUsersList(val)
+    {
+      
+       
+       if(val!='')
+       {
+            this.SearchValue=val;
+            this.isSearch=true;
+            this.$refs.table.refresh(true)
+       }
+       else
+       {
+          this.queryParam = {
+        DepID: 152,
+        key:'QW',
+        status:9
+        }
+         this.$refs.table.refresh(true)
+       }        
+    
+  
+    //  return Validate.findbyUserInformation(val).then(res=>{
+    //    if(res.code==1)
+    //    {
+    //      return res.res
+    //    }
+       
+    //   })
+    //  }
+
+      
+        //  this.loadData=()=>{
+          
+          
+        //    return Validate.findbyUserInformation(val).then(res=>{
+        //      if(res.code==1)
+        //      {
+        
+         
+          
+        
+        //      }
+        //  })
+        //  }
+      
+  // Validate.findbyUserInformation(val).then(res=>{
+  //             console.log(res);
+            //     if(res.code==1)
+            //     {
+            //  let _res={
+            //     pageNo:1,
+            //     pageSize:20,
+            //     data:res.res.rows,
+            //     totalPage:parseInt(res.res.count/20),
+            //     count:res.res.count
+            //    }
+            //       resolve(_res)
+            //     }
+                //  console.log(res);
+            //  })
+
+      //  })
+          //  return Validate.findbyUserInformation(val).then(res=>{
+          //       if(res.code==1)
+          //       {
+          //    let _res={
+          //       pageNo:1,
+          //       pageSize:20,
+          //       data:val.res.rows,
+          //       totalPage:parseInt(val.res.count/20),
+          //       count:val.res.count
+          //      }
+          //      return _res;
+          //       }
+          //        console.log(res);
+          //    })
+ 
+     
+        // this.loadData=(this.parameter)= Validate.findbyUserInformation(_value)
+        // this.loadData=()=>{
+        //   return new Promise((resolve)=>{
+        //      Validate.findbyUserInformation(Object.assign(this.parameter,val)).then(res=>{
+        //          console.log(res);
+        //      })
+        //   })
+
+        // }
+      // if(val.IsSearch)
+      // {
+      //   this.loadData=()=>{
+      //     return new Promise((resolve)=>{
+      //         if(val.code==1)
+      //         {
+      //           let _res={
+      //           pageNo:1,
+      //           pageSize:20,
+      //           data:val.res.rows,
+      //           totalPage:parseInt(val.res.count/20),
+      //           count:val.res.count
+      //           }
+      //           resolve(_res);
+      //         }
+      //     })
+      //   }
+      //    this.$refs.table.refresh()
+      // }
+       
+        
+        //   let _res={
+        //     pageNo:1,
+        //     pageSize:10,
+        //     data:val.res.rows,
+        //     totalPage:parseInt(val.res.count/10),
+        //     count:val.res.count
+        //   }
+        // this.seach=_res;
+       
+        
+          //
+    
+   
+
+    
+      // if(val.code==1)
+      // {
+      //   this.loadData=val.res.rows;
+      // }
+
+      // console.log(this.loadData)
+    },
     // initlist(){
     //       this.queryParam = {
     //     DepID: 152,
@@ -214,6 +365,7 @@ handleEdit(s)
         key:e.keyPath[1],
         status:9
         }
+        console.log(this.queryParam);
       this.$refs.table.refresh(true)
     },
     handleAdd (item) {

@@ -195,16 +195,7 @@ export default {
              Updata_Permissioninfomation(data).then(res=>{
                console.log(res)
              })
-              // AddrolesPermission(values).then(res=>{
-              // if(res.code==1)
-              // {
-              //    this.showsuccess(res.message) 
-              // }             
-              // else
-              // {               
-              //    this.showerror(res.message) 
-              // }
-              // })
+             
           
           this.visible = false
         }
@@ -219,7 +210,8 @@ export default {
         //    return res.result       
         // })   
         let _PermissionInformation=await Select_PermissionsByRolesID({ID:record.roleid})      
-      
+            console.log('获取的权限数据')
+            console.log(_PermissionInformation);
         this.$nextTick(() => {
         setTimeout(() => {
         _this.form.setFieldsValue({

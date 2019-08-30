@@ -309,7 +309,13 @@ let res= [ {
             name: 'Phonelist_QWZZB',
             component: () => import('@/views/list/UserPhonelist'),
             meta: { title: '通信录', permission: [ 'QWZZB' ] }
-          }
+          },
+          {
+            path: '/list/CustomGroup/91',          
+            name: 'CustomGroup_QWZZB',
+            component: () => import('@/views/other/customgroup'),
+            meta: { title: '自定义组', permission: [ 'QWZZB' ] }
+          } 
         ]
       },  
       {
@@ -1685,58 +1691,58 @@ let res= [ {
       },
     ]
   },  
-  {
-    path:'/view',
-    name: 'deplistview',
-    component: PageView,
-    redirect: '/view/list',
-    meta: { title: '列表', icon: 'slack' },
-    children:[
-      {
-        path:'/view/list',
-        name: 'Deplist',
-        component: () => import('@/views/other/TreeList'),
-        meta: { title: '部门列表', icon: 'slack',keepAlive: true  },
+  // {
+  //   path:'/view',
+  //   name: 'deplistview',
+  //   component: PageView,
+  //   redirect: '/view/list',
+  //   meta: { title: '列表', icon: 'slack' },
+  //   children:[
+  //     {
+  //       path:'/view/list',
+  //       name: 'Deplist',
+  //       component: () => import('@/views/other/TreeList'),
+  //       meta: { title: '部门列表', icon: 'slack',keepAlive: true  },
 
-      }
-    ]
-  },
+  //     }
+  //   ]
+  // },
     // other
-    {
-      path: '/other',
-      name: 'otherPage',
-      component: PageView,
-      meta: { title: '其他组件', icon: 'slack' },
-      redirect: '/other/icon-selector',
-      children: [
+    // {
+    //   path: '/other',
+    //   name: 'otherPage',
+    //   component: PageView,
+    //   meta: { title: '其他组件', icon: 'slack' },
+    //   redirect: '/other/icon-selector',
+    //   children: [
         // {
         //   path: '/other/icon-selector',
         //   name: 'TestIconSelect',
         //   component: () => import('@/views/other/IconSelectorView'),
         //   meta: { title: 'IconSelector', icon: 'tool', keepAlive: true }
         // },
-        {
-          path: '/other/list',
-          component: RouteView,
-          meta: { title: '业务布局', icon: 'layout' },
-          redirect: '/other/list/tree-list',
-          children: [
-            {
-              path: '/other/list/tree-list',
-              name: 'TreeList',
-              component: () => import('@/views/other/TreeList'),
-              meta: { title: '树目录表格', keepAlive: true }
-            }
+        // {
+        //   path: '/other/list',
+        //   component: RouteView,
+        //   meta: { title: '业务布局', icon: 'layout' },
+        //   redirect: '/other/list/tree-list',
+        //   children: [
+        //     {
+        //       path: '/other/list/tree-list',
+        //       name: 'TreeList',
+        //       component: () => import('@/views/other/TreeList'),
+        //       meta: { title: '树目录表格', keepAlive: true }
+        //     }
            
-          ]
-        }
-      ]
-    }
+        //   ]
+        // }
+    //   ]
+    // }
   ]
  }]
     return res
 }
-
+//旧的路由表
 export const asyncRouterMap = [
 
   {

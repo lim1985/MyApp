@@ -24,8 +24,9 @@
           hasFeedback          
         >
           <!-- :fieldDecoratorOptions="{rules: [{ required: true, message: '请先选择部门类别' }]}"     -->
+          <!-- @select="DepOnChange"   -->
           <a-select  
-            @select="DepOnChange"     
+             
             showSearch
             placeholder="选择部门类别" 
             v-decorator="['Permission_Key',{rules: [{ required: true, message: '部门不能为空！' }]}]"
@@ -43,10 +44,11 @@
           label='部门全称'
           hasFeedback                   
         >       
+          <!-- @change="InputpOnChange" -->
           <a-input 
-            @change="InputpOnChange"
+           
             placeholder='输入部门全称' 
-            v-decorator="['DepFullName',{rules: [{ required: true, message: '部门全称不能为空！' },{validator:v().checkjob}]}]"
+            v-decorator="['DepartmentName',{rules: [{ required: true, message: '部门全称不能为空！' },{validator:v().checkjob}]}]"
           /> 
           <!-- <a-input placeholder='部门名称（全称）' v-model="Mymdl.DEPName" @change="DepOnChange" id='DEPName' /> -->
         </a-form-item>
@@ -66,7 +68,8 @@
           label='部门唯一标识'
           hasFeedback   
         >
-          <a-input             
+          <a-input        
+            disabled     
             placeholder='部门唯一标识' 
             v-decorator="['UploadDir',{rules: [{ required: true, message: '' }]}]"
           /> 
@@ -291,7 +294,7 @@ export default {
         this.form.setFieldsValue({
         DepartmentId:record.DepartmentId,
         Permission_Key:record.Permission_Key,
-        DepFullName:record.DepartmentName,
+        DepartmentName:record.DepartmentName,
         Abbreviation:record.Abbreviation,
         Priority:record.Priority,
         UploadDir:record.UploadDir,

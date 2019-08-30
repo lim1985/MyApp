@@ -242,7 +242,8 @@
         columns: [
           {
             title: '姓名',
-            dataIndex: 'UserName'
+            dataIndex: 'UserName',
+            width: 120,
           },
           {
             title: '状态',

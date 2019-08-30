@@ -1,6 +1,6 @@
 import { Menu, Icon, Input } from 'ant-design-vue'
 
-
+// import Validate from '@/tools/Validate/index'
 const { Item, ItemGroup, SubMenu } = Menu
 const { Search } = Input
 
@@ -40,6 +40,14 @@ export default {
     }
   },
   methods: {
+    async handleSearch(val){
+   
+       const { value} = val.target       
+       let _value=value
+       this.$emit('ReturnValue',_value);      
+       
+      
+    },
     handleAddGroup(){
      let _depid=this.$route.fullPath.split('/')[3];
      let _key=this.$route.meta.permission[0];  
@@ -66,6 +74,7 @@ export default {
     renderSearch () {
       return (
         <Search
+          {...{on:{change:(v)=>this.handleSearch(v)}}}
           placeholder="input search text"
           style="width: 100%; margin-bottom: 1rem"
         />
