@@ -3,25 +3,28 @@ import store from '../../store/'
 
 const Validate={
   
-  findbyUserInformation(val)
+  findbyUserInformation(obj)
   {
     var reg = /^1(3|4|5|7|8|9)\d{9}$/; //验证手机号  
     let reg2=/^[a-zA-Z\u4e00-\u9fa5]+$///验证中文和英文字符
     return new Promise(function(resolve){
       setTimeout(async() => {
-        let obj=new Object();
-        obj.data=val;
-        obj.pageNo=1   
-        obj.pageSize=20     
+        // let obj=new Object();
+        // obj.data=val;
+        // obj.pageNo=1   
+        // obj.pageSize=15    
         
         console.log(obj)
         if(reg.test(obj.data)){
           let res = await GetUserInformationByTelnum(obj);
+        
+          console.log(res)
           resolve(res)
         }
         else if(reg2.test(obj.data))
         { 
           let res = await GetUserInformationByUserNameLIke(obj);
+         
           resolve(res);
         }
         else
@@ -32,6 +35,15 @@ const Validate={
       }, 1000);
     })
   }, 
+   unique(array){//一维数组去重
+    var r = [];
+    for(var i = 0, l = array.length; i<l; i++){
+      for(var j = i + 1; j < l; j++)
+        if(array[i] == array[j]) j == ++i;
+      r.push(array[i]);
+    }
+    return r;
+  },
   ValidatePhone(s,id)
   {        
     return new Promise(function(resolve){
@@ -292,6 +304,15 @@ async checkPhone(rule, value, callback) {
   //   callback('姓名只能输入最多4个汉字')
   //   return
   // }
+    if(!value)
+    {
+      let obj=new Object();
+      obj.showAdd=false
+     
+      store.commit('SET_PhoneUSERINFO',obj)
+      callback();                 
+      return;
+    }
   
     if (!reg.test(value) && !reg2.test(value)) {
       callback('请输入正确的手机号或者姓名不得包含符号');              
@@ -299,7 +320,16 @@ async checkPhone(rule, value, callback) {
     }
     else 
     {
-      let _s =await Validate.findbyUserInformation(value) 
+      console.log(value)
+      let  parameter={
+        pageNo:1,
+        pageSize:10
+      }
+      let _obj=new Object();
+      _obj.data=value
+      _obj.parameter=parameter
+      let _s =await Validate.findbyUserInformation(_obj) 
+      console.log(_s)
       let obj=new Object();
       if(_s.code==-1)
       {
@@ -309,18 +339,73 @@ async checkPhone(rule, value, callback) {
         store.commit('SET_PhoneUSERINFO',obj)
         callback('该手机号或姓名不存在，请直接添加');                 
         return;
-      }         
-        obj.username=_s.res.UserName,
+      } 
+      else if(_s.isNum)
+      {
+        obj.username=_s.res.data[0].UserName,
         obj.code=_s.code         
-        obj.id=_s.res.ID,      
-        obj.tel=_s.res.cellphone,   
+        obj.id=_s.res.data[0].ID,      
+        obj.tel=_s.res.data[0].cellphone,   
+        obj.UJOB=_s.res.data[0].UJOB,   
+        obj.Abbreviation=_s.res.data[0]['ResferecDep.Abbreviation']
+        obj.showAdd=false   
+        
+        store.commit('SET_PhoneUSERINFO',obj); 
+      }
+      else
+      {
+        obj.username=_s.res.data[0].UserName,
+        obj.code=_s.code         
+        obj.id=_s.res.data[0].ID,      
+        obj.Abbreviation=_s.res.data[0]['ResferecDep.Abbreviation']
+        obj.tel=_s.res.data[0].cellphone,   
+        obj.UJOB=_s.res.data[0].UJOB,   
         obj.showAdd=false   
         store.commit('SET_PhoneUSERINFO',obj); 
+      }        
+//  UJOB
+// :
+// "信息化办主任"
+// UserName
+// :
+// "张海波"
+// cellphone
+// :
+// "13807399838"       
+      
+       
+     
     }   
   },
+  async CheckPhoneNumAndchanese(value)//检测0到4位中文和正确的手机号
+  {
+    var reg = /^1(3|4|5|7|8|9)\d{9}$/;   
+    let reg2 = /^[\u0391-\uFFE5]{0,4}$/;
+    if(!value)
+    {
+      return false
+    }
+    if (!reg.test(value) && !reg2.test(value)) {
+          return false
+    }
+    else
+    {
+      return true
+    }
+
+
+  } ,
   async Vuex_findByUserInformation(value)
   {
-    let _s =await Validate.findbyUserInformation(value) 
+    let  parameter={
+      pageNo:1,
+      pageSize:10
+    }
+    let _obj=new Object();
+    _obj.data=value
+    _obj.parameter=parameter
+    let _s =await Validate.findbyUserInformation(_obj) 
+     console.log(_s)
       let obj=new Object();
       if(_s.code==-1)
       {

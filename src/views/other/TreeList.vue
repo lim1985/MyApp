@@ -2,6 +2,22 @@
   <a-card :bordered="false">
     <a-row :gutter="8">
       <a-col :span="5">
+        <!-- <a-select
+          showSearch
+          placeholder="Select a person"
+          optionFilterProp="children"
+          style="width: 160px"
+          @focus="handleFocus"
+          @search="Searchs"
+          @blur="handleBlur"
+          @change="handleChange"
+          :filterOption="filterOption"
+        >
+          <a-select-option value="jack">Jack</a-select-option>
+          <a-select-option value="lucy">Lucy</a-select-option>
+          <a-select-option value="tom">Tom</a-select-option>
+          <a-select-option value="ZHB">张海波</a-select-option>
+        </a-select> -->
         <s-tree
           :dataSource="DepTree"         
           :openKeys.sync="openKeys"
@@ -9,19 +25,40 @@
           :addgroup="false"
           @click="handleClick"
           @add="handleAdd"
+          :showDepTree="true"
           @ReturnValue="GetUsersList"
           @titleClick="handleTitleClick"></s-tree>
       </a-col>
       <a-col :span="19">
+        <!-- showPagination=true -->
         <s-table
           ref="table"
-          size="default"
+          size="default"        
           :columns="columns"
           :rowKey="loadData=>loadData.ID"
           :data="loadData"
           :alert="false"
           :rowSelection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }"
         >
+          <template slot="Tel" slot-scope="text">
+            <a @click="GetUboxToTel(text)">{{ text }}</a>
+          </template>
+          <template slot="cellphone" slot-scope="text,record">
+            <a-divider type="vertical" />
+            <a-dropdown v-show="text">
+              <a class="ant-dropdown-link">
+                {{ text }} <a-icon type="down" />
+              </a>
+              <a-menu slot="overlay">
+                <a-menu-item>
+                  <a @click="sendsms(record)">发短信</a>
+                </a-menu-item>
+                <a-menu-item>
+                  <a @click="GetUboxToTel(text)">打电话</a>
+                </a-menu-item>           
+              </a-menu>
+            </a-dropdown>      
+          </template>
           <span slot="action" slot-scope="text, record">
             <template v-if="auth('table.update')">
               <a @click="handleEdit(record)">编辑</a>
@@ -47,17 +84,24 @@
         </s-table>
       </a-col>
     </a-row>
+    <SendsmsModal ref="SendsmsModal" :Pupuarr="Pupu" @ok="handleSaveOk" @close="handleSaveClose"/>
+    <PhoneModal ref="PhoneModal"/>
+    <!-- <Myselect ref="Myselect"/> -->
 
+    
     <!-- <org-modal ref="modal" @ok="handleSaveOk" @close="handleSaveClose" /> -->
   </a-card>
 </template>
 
 <script>
 import STree from '@/components/Tree/Tree'
-import  STable  from '@/components/newTable'
+import STable  from '@/components/newTable'
 // import OrgModal from './modules/OrgModal'
 import { DepTreelist,PostByDepIDPermissionKey } from '@/api/manage'
 import Validate from '@/tools/Validate/index'
+import PhoneModal from '@/views/list/modules/PhoneMsg/Phone'
+import SendsmsModal from '@/views/list/modules/sendSMS/sendsms'
+// import Myselect from '@/views/other/Select'
 // import { Promise } from 'q';
 //  getOrgTree,getServiceList,GetALLDep,GetAllPhoneuser,GetByDepIDAndPermissionKey
 export default {
@@ -65,12 +109,23 @@ export default {
   components: {
     STable,
     STree,
+    PhoneModal,
+    SendsmsModal,
+    // Myselect
     // OrgModal
   },
   data () {
-    return {
+    return {     
+      data:{},
       openKeys: ['152'],
       isSearch:false,
+      isNull:true,
+      paramss:[],
+      arrs:[],
+      pp:'',
+      Pupu:[],
+      reqCount:0,
+      isRes:{},
       // 查询参数
       queryParam: {},
       // 表头
@@ -85,21 +140,24 @@ export default {
         },
         {
           title: '手机',
-          dataIndex: 'cellphone'
+          dataIndex: 'cellphone',
+          scopedSlots: { customRender: 'cellphone' },
           // sorter: true,
           // needTotal: true,
           // customRender: (text) => text + ' 次'
         },
         {
-          title: '座机',
-          dataIndex: 'Tel',
-          // needTotal: true
+            title: '工作座机',
+            dataIndex: 'Tel',
+            scopedSlots: { customRender: 'Tel' },
+           
         },
         {
           title: '所属部门',
           dataIndex: 'Abbreviation',
           // sorter: true
         },
+      
         // {
         //   table: '操作',
         //   dataIndex: 'action',
@@ -110,14 +168,82 @@ export default {
       // 加载数据方法 必须为 Promise 对象
        loadData: (parameter) => {  
          if(this.isSearch)
-         {
-           console.log(this.SearchValue);
-            return Validate.findbyUserInformation(this.SearchValue)
-            .then(res=>{
+         {                
+             this.paramss.push(this.SearchValue)            
+             let _arrs= Validate.unique(this.paramss)         
+             this.pp=_arrs[_arrs.length-1]          
+             let data={
+              data:this.pp,
+              parameter
+            }
+            console.log(data)
+            // this.data=Object.assign(parameter,this.pp)
+            //     console.log(this.data)
+            return Validate.findbyUserInformation(data)
+            .then(res=>{      
+         
               if(res.code==1)
-              {
-                this.isSearch=false;
+              {        
+                console.log(res.res)                      
+                this.Pupu=res.res.data.map(item=>{
+                  return {Phone:item.cellphone,username:item.UserName,DPname:item.DepartmentName,ID:item.ID,UJOB:item.UJOB,checked:false}
+                })               
+            
                 return res.res
+              }
+              else
+              {
+             
+                this.isRes=res
+                if(this.isres==undefined && this.reqCount == 0)
+                {
+                    this.isSearch=false;
+                    this.onclick=true;
+                    this.queryParam = {
+                    DepID: 152,
+                    key:'QW',
+                    status:9
+                    }
+                    this.$message.error('没有搜索到该该联系人！')
+                    this.$refs.table.refresh()
+                    this.reqCount++
+                }
+            
+            
+                  // if(this.isNull)
+                  // {
+                  //   this.reqCount++
+                  //   if(res.code==-1)
+                  //   {
+
+                  //   }
+                  // }
+                // if(this.reqCount==0)
+                // {
+                //   this.reqCount++
+                //   if(this.reqCount==1)
+                //   {
+                //      this.$message.error('没有找到相关信息'); 
+                //      this.reqCount--
+                //   }
+                //   console.log('还是'+this.reqCount);
+                // }
+               
+               
+                //  if(this.reqCount==1)
+                //  {
+                //     this.$message.error('没有找到相关信息');  
+                //     this.isSearch=false;
+                //     this.onclick=true;
+                //     this.queryParam = {
+                //     DepID: 152,
+                //     key:'QW',
+                //     status:9
+                //     }
+                //     this.reqCount--
+                //     this.$refs.table.refresh()                   
+                //  }
+                   
               }       
          })   
          }
@@ -131,14 +257,18 @@ export default {
           return PostByDepIDPermissionKey(Object.assign(parameter,_obj))
             .then(res => {
               console.log(res.result)
+           
+             this.Pupu=res.result.data.map(item=>{
+             return {Phone:item.cellphone,username:item.UserName,DPname:item.DepartmentName,ID:item.ID,UJOB:item.UJOB,checked:false}
+           })  
+            console.log(this.Pupu) 
               return res.result
             })
           }   
            
         return DepTreelist()
           .then(res => {
-            console.log("7777777777777777")
-            console.log(res.result)
+       
             return res.result
           }).then(r=>{          
           let _arr=[]
@@ -153,22 +283,24 @@ export default {
           DepID: item.key,      
           status: 9
           })
-      );
+          )
             return params
           }).then(params=>{  
            console.log(this.onclick) 
            console.log(params) 
                this.queryParam={
-              param:params,                      
+                param:params,                      
             } 
-            console.log('输出的参数！');
-             console.log(this.queryParam);
-            
+             console.log('输出的参数！');
+             console.log(this.queryParam);            
             return PostByDepIDPermissionKey(Object.assign(parameter,this.queryParam))
           .then(res => {
-            console.log(`000000999999`)
-            console.log(res.result)
-            this.seach=res.result
+            console.log(`000000999999`)             
+               this.Pupu=res.result.data.map(item=>{
+             return {Phone:item.cellphone,username:item.UserName,DPname:item.DepartmentName,ID:item.ID,UJOB:item.UJOB,checked:false}
+           })  
+            console.log(this.Pupu)
+            this.seach=res.result 
             return this.seach;
           })
         })
@@ -194,172 +326,104 @@ export default {
       console.log(this.DepTree)
   },
   methods: {
+   //搜索框方法
+  // async Searchs(val){
+  //    let _value=val;
+  //      let isok=await Validate.CheckPhoneNumAndchanese(_value)    
+  //      if(isok)
+  //      {
+  //       this.SearchValue=_value;
+  //       this.isSearch=true;
+  //       this.seach=[]         
+  //       this.$refs.table.refresh()
+  //      console.log(_value);
+  //      }
+  //       else if (_value=='')
+  //      {
+  //      console.log(_value);
+  //      }
+  
+  //  },
+    handleChange (value) {      
+      console.log(`selected ${value}`);
+    },
+    handleBlur() {
+      console.log('blur');
+    },
+    handleFocus() {
+      console.log('focus');
+    },
+    filterOption(input, option) {
+      return option.componentOptions.children[0].text.toLowerCase().indexOf(input.toLowerCase()) >= 0
+    },
+   //搜索框方法结束
+
+     sendsms(IDs)
+      {
+      // let _arr=[]  
+      // let _obj=new Object();
+      // _obj.DepartmentName=IDs.DepartmentName;
+      // _obj.cellphone=IDs.cellphone;
+      // _obj.ID=IDs.ID;
+      this.$refs.SendsmsModal.get(IDs); 
+      },
+       GetUboxToTel(e)
+    {
+      this.$refs.PhoneModal.get(e)          
+    },
     GetUsersList(val)
     {
-      
-       
+
+      console.log(val)
        if(val!='')
        {
-            this.SearchValue=val;
-            this.isSearch=true;
-            this.$refs.table.refresh(true)
+        this.SearchValue=val;
+        this.isSearch=true;
+        console.log(val);
+        this.seach=[]     
+        this.$refs.table.refresh()        
+                    
        }
        else
-       {
-          this.queryParam = {
+       {        
+        console.log(val);
+        console.log('到这了');
+        this.isSearch=false;
+        this.onclick=true;
+        this.reqCount=0;
+        this.queryParam = {
         DepID: 152,
         key:'QW',
         status:9
         }
-         this.$refs.table.refresh(true)
-       }        
-    
-  
-    //  return Validate.findbyUserInformation(val).then(res=>{
-    //    if(res.code==1)
-    //    {
-    //      return res.res
-    //    }
-       
-    //   })
-    //  }
-
-      
-        //  this.loadData=()=>{
-          
-          
-        //    return Validate.findbyUserInformation(val).then(res=>{
-        //      if(res.code==1)
-        //      {
-        
-         
-          
-        
-        //      }
-        //  })
-        //  }
-      
-  // Validate.findbyUserInformation(val).then(res=>{
-  //             console.log(res);
-            //     if(res.code==1)
-            //     {
-            //  let _res={
-            //     pageNo:1,
-            //     pageSize:20,
-            //     data:res.res.rows,
-            //     totalPage:parseInt(res.res.count/20),
-            //     count:res.res.count
-            //    }
-            //       resolve(_res)
-            //     }
-                //  console.log(res);
-            //  })
-
-      //  })
-          //  return Validate.findbyUserInformation(val).then(res=>{
-          //       if(res.code==1)
-          //       {
-          //    let _res={
-          //       pageNo:1,
-          //       pageSize:20,
-          //       data:val.res.rows,
-          //       totalPage:parseInt(val.res.count/20),
-          //       count:val.res.count
-          //      }
-          //      return _res;
-          //       }
-          //        console.log(res);
-          //    })
- 
-     
-        // this.loadData=(this.parameter)= Validate.findbyUserInformation(_value)
-        // this.loadData=()=>{
-        //   return new Promise((resolve)=>{
-        //      Validate.findbyUserInformation(Object.assign(this.parameter,val)).then(res=>{
-        //          console.log(res);
-        //      })
-        //   })
-
-        // }
-      // if(val.IsSearch)
-      // {
-      //   this.loadData=()=>{
-      //     return new Promise((resolve)=>{
-      //         if(val.code==1)
-      //         {
-      //           let _res={
-      //           pageNo:1,
-      //           pageSize:20,
-      //           data:val.res.rows,
-      //           totalPage:parseInt(val.res.count/20),
-      //           count:val.res.count
-      //           }
-      //           resolve(_res);
-      //         }
-      //     })
-      //   }
-      //    this.$refs.table.refresh()
-      // }
-       
-        
-        //   let _res={
-        //     pageNo:1,
-        //     pageSize:10,
-        //     data:val.res.rows,
-        //     totalPage:parseInt(val.res.count/10),
-        //     count:val.res.count
-        //   }
-        // this.seach=_res;
-       
-        
-          //
-    
-   
-
-    
-      // if(val.code==1)
-      // {
-      //   this.loadData=val.res.rows;
-      // }
-
-      // console.log(this.loadData)
+         this.$refs.table.refresh()
+       }     
     },
-    // initlist(){
-    //       this.queryParam = {
-    //     DepID: 152,
-    //     key:"QW",
-    //     status:9
-    //     }
-      // this.$refs.table.refresh(true)
-        // GetAllPhoneuser().then(res=>{
-        //   this.loadData=res.result.data
-        //   console.log(res)
-        // })
+
 
 getDepTree(){
       DepTreelist().then(res=>{
-        // this.DepTree=res.result
-        
+        // this.DepTree=res.result        
         res.result.forEach(v => {
           v.OrderID && this.DepTree.push(v)
         });
-        console.log("-----------------000000000000000000000----------------");
-        console.log(res.result);
+     
         // console.log(res.result)
       })  
 },  
-handleEdit(s)
-{
-  console.log(s)
-},
-    auth(e)
-    {
-      if (e)
-      return true;
-    },
+      handleEdit(s)
+      {
+        console.log(s)
+      },
+          auth(e)
+          {
+            if (e)
+            return true;
+          },
     handleClick (e) {
       console.log('handleClick', e)
       this.onclick=true;
+      this.isSearch=false;
       this.queryParam = {
         DepID: e.key,
         key:e.keyPath[1],

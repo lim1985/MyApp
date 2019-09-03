@@ -66,7 +66,6 @@
       @ok="handleOk"
     >
       <a-form :autoFormCreate="(form)=>{this.form = form}">
-
         <a-form-item
           :labelCol="labelCol"
           :wrapperCol="wrapperCol"

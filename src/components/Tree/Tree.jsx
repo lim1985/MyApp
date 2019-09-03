@@ -1,6 +1,6 @@
 import { Menu, Icon, Input } from 'ant-design-vue'
 
-// import Validate from '@/tools/Validate/index'
+import Validate from '@/tools/Validate/index'
 const { Item, ItemGroup, SubMenu } = Menu
 const { Search } = Input
 
@@ -23,7 +23,10 @@ export default {
       type: Boolean,
       default: false
     },
-  
+    showDepTree:{
+      type: Boolean,
+      default: false
+    },
   },
   created () {
     this.localOpenKeys = this.openKeys.slice(0)
@@ -35,17 +38,31 @@ export default {
   data () {
     return {
       localOpenKeys: [],
-     
+      reqCount:0
+      // visible:true,
+      // it:{
+      //   key:1,
+      //   value:1,
+      //   title:'好的'
+      // }
      
     }
   },
   methods: {
-    async handleSearch(val){
-   
-       const { value} = val.target       
-       let _value=value
-       this.$emit('ReturnValue',_value);      
-       
+    async handleSearch(val){   
+     const { value} = val.target       
+     let _value=value
+     let isok=await Validate.CheckPhoneNumAndchanese(_value)    
+    
+       if(isok)
+       {      
+         this.$emit('ReturnValue',_value);         
+        // this.reqCount++        
+       } 
+       else if (_value=='')
+       {        
+         this.$emit('ReturnValue',_value);          
+       }
       
     },
     handleAddGroup(){
@@ -70,16 +87,28 @@ export default {
       item.depid=this.$route.fullPath.split('/')[3]
       this.$emit('minu', item)
     },
-
+    handSelectDep({key})
+    {
+      console.log(`Click on item ${key}`);
+    },
     renderSearch () {
       return (
         <Search
           {...{on:{change:(v)=>this.handleSearch(v)}}}
-          placeholder="input search text"
-          style="width: 100%; margin-bottom: 1rem"
-        />
+          placeholder="请输入姓名搜索 如：张三"
+          style="width: 100%; margin-bottom: 1rem">
+          
+          </Search>
+        
       )
     },
+    // renderDepartmentName(){
+    //   return (<Select placeholder="选择活动" style={{ width: 300 }}>
+    //     <Select.Option key={this.it.id} value={this.it.id}>
+    //                {this.it.title}
+    //     </Select.Option>
+    //     </Select>)
+    // },
     renderAddGroup() {
       return (
         <div><a-button {...{on:{click:()=>this.handleAddGroup()}}} type="primary" block>添加自定义组</a-button><br/></div>     
@@ -106,8 +135,7 @@ export default {
       const { addgroup } = this.$props
 
       return (
-        <Item style="padding-left:35px;" key={item.key}>
-     
+        <Item style="padding-left:35px;" key={item.key}>     
           { this.renderIcon(item.icon) }
           { addgroup ? this.renderminusGroup(item):null}        
           { item.title }
@@ -173,11 +201,12 @@ export default {
     const list = dataSource.map(item => {
       return this.renderItem(item)
     })
-
+  //    { showDepTree ?this.renderDepartmentName():null}
     return (
       <div class="tree-wrapper">
         { addgroup ? this.renderAddGroup():null}
         { search ? this.renderSearch() : null }
+       
         <Menu mode="inline" class="custom-tree" {...{ on: { click: item => this.$emit('click', item), 'update:openKeys': val => { this.localOpenKeys = val } } }} openKeys={this.localOpenKeys}>
           { list }
         </Menu>

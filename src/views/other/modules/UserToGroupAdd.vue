@@ -42,6 +42,8 @@
               <a-card hoverable title="" :bordered=false>
                 <p>ID:{{ vuex_UserINFO.id }}</p>
                 <p>姓名：{{ vuex_UserINFO.username }}</p>
+                <p>部门：{{ vuex_UserINFO.Abbreviation }}</p>
+                <p>职务: {{ vuex_UserINFO.UJOB }}</p>
                 <p>电话：{{ vuex_UserINFO.tel }}</p>
               </a-card>
             </a-col>    

@@ -4,12 +4,12 @@ const path = require('path')
 //用于生产环境去除多余的css
 // const PurgecssPlugin = require("purgecss-webpack-plugin");
 //压缩代码并去掉console
-//  const TerserPlugin = require("terser-webpack-plugin");
+ const TerserPlugin = require("terser-webpack-plugin");
 //代码打包zip
-//  const CompressionWebpackPlugin = require("compression-webpack-plugin");
-//  const productionGzipExtensions = /\.(js|css|json|txt|html|ico|svg)(\?.*)?$/i;
+ const CompressionWebpackPlugin = require("compression-webpack-plugin");
+ const productionGzipExtensions = /\.(js|css|json|txt|html|ico|svg)(\?.*)?$/i;
 //
-// const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+ const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 function resolve (dir) {
   return path.join(__dirname, dir)
 }
@@ -66,12 +66,12 @@ module.exports = {
 // },
 //显示项目架构
  
-  configureWebpack: {
+configureWebpack: {
     // performance: {
     //   hints:false
     // }
-    //或者
-    //警告 webpack 的性能提示
+    // // 或者
+    // // 警告 webpack 的性能提示
     // performance: {
     //   hints:'warning',
     //   //入口起点的最大体积

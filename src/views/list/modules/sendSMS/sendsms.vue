@@ -278,7 +278,8 @@ export default {
     //  IDs[0].DepartmentName?_this.vmodelContent=IDs[0].DepartmentName:_this.vmodelContent=IDs[0].Permission_name
     //  _this.vmodelContent=IDs[0].DepartmentName?true:false
     //   _this.vmodelContent=IDs[0].Permission_name?true:false
-     _this.vmodelContent=`【${IDs[0].DepartmentName}】`
+    //  _this.vmodelContent=`【${IDs[0].DepartmentName}】`
+    _this.vmodelContent=`例：【区人民政府】接市里通知，请您于明天上午到市政府六楼会议室参加蔡市长召开的《创文现场调度会》。短信模板内容可以自行根据实际情况修改`
      _this.Barr=[]
      for(let x in _this.Pupuarr)
      {

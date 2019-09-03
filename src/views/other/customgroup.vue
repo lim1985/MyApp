@@ -80,7 +80,7 @@
 
 <script>
 import STree from '@/components/Tree/Tree'
-import  STable  from '@/components/newTable'
+import STable  from '@/components/newTable'
 import CustomGroupModal from './modules/CustomGroupAdd'
 import UserToGroupModal from './modules/UserToGroupAdd'
 import SendsmsModal from '@/views/list/modules/sendSMS/sendsms'

@@ -48,11 +48,11 @@ const api = {
   AddPhoneUser:'http://59.230.230.40/api/AddPhoneUser',
   GetAllPhoneUserByPermissionKey:'http://59.230.230.40/api/AllPhoneUserByPermissionkey',
   GetByDepIDAndPermissionKey:'http://59.230.230.40/api/GetDepIDAndPermissionKey',
-  PostDepIDAndPermissionKey:'http://172.20.8.28:3001/api/PostDepIDAndPermissionKey',
+  PostDepIDAndPermissionKey:'http://59.230.230.40/api/PostDepIDAndPermissionKey',
   DeleteUserByUID:'http://59.230.230.40/api/DeleteUser',
   GetuserInformationByTelNum:'http://59.230.230.40/api/GetuserInformationbyTelNum',//获取用户信息By手机号
   GetuserInformationbyname:'http://59.230.230.40/api/GetuserInformationbyname',//获取用户信息By用户名
-  GetUserInformationByUserNameLIke:'http://172.20.8.28:3001/api/GetUserInformationByUserNameLIke',//获取用户信息By用户名
+  GetUserInformationByUserNameLIke:'http://59.230.230.40/api/GetUserInformationByUserNameLIke',//获取用户信息By用户名
 
   
   GetAllPhoneuser:'http://59.230.230.40/api/GetAllPhoneuser',

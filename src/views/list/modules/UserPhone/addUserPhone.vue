@@ -318,6 +318,7 @@ export default {
         const _this = this
         new Promise ((resolve)=>{
              setTimeout(async () => {
+               console.log(_this.mdl);
                  const res=await ReferenceAdd({UserPhoneID:_this.ReferenceUserId,DepID:_this.mdl[1]})             
                  resolve(res);     
             // this.Referencevisible=false;
@@ -392,6 +393,7 @@ export default {
         }
       })
     },
+    //停用函数
       HandleUserPhoneAdd(e)
         {
         // this.Mymdl.Sex=this.Sex     
