@@ -6,7 +6,7 @@ const api = {
   orgTree: '/org/tree',
   permission: '/permission',
   //权限接口
-  addPermission: 'http://59.230.230.40/api/PermissionAdd',//添加权限//src\views\list\PermissionList.vue页面使用了该接口
+  addPermission: 'http://172.20.8.28:3001/api/PermissionAdd',//添加权限//src\views\list\PermissionList.vue页面使用了该接口
   UpdataPermission: 'http://59.230.230.40/api/PermissionUpdata',//修改权限//src\views\list\PermissionList.vue页面使用了该接口
   DelPermission: 'http://59.230.230.40/api/PermissionDel',//修改权限//src\views\list\PermissionList.vue页面使用了该接口
   GetAllPermissionList:'http://59.230.230.40/api/PermissionList',//未找到使用页面
@@ -26,7 +26,7 @@ const api = {
   //管理员用户接口
   UpdataAdminRoles:'http://59.230.230.40/api/ActionUpdataAdmin',  //修改管理员角色
   GetAdmininfo:'http://59.230.230.40/api/userInfo', //查询管理员信息
-  Delrole:'http://59.230.230.40/api/rolesdel',//删除角色
+  Delrole:'http://172.20.8.28:3001/api/rolesdel',//删除角色
   addrolePermission:'http://59.230.230.40/api/rolesAddPermission',//添加管理员角色
   GetPermissionByroleID:'http://59.230.230.40/api/getPermissionbyroleID',//获取权限
   GetrolesbyAdminID:'http://59.230.230.40/api/GetrolesbyAdminID',//获取管理员权限
@@ -39,6 +39,8 @@ const api = {
   QueryAllDeplist:'http://59.230.230.40/api/DepartmentQueryALL',
   SelectAllDepchild:'http://59.230.230.40/api/selectAlldepartmentBykey',
   SelectDepartmentByID:'http://59.230.230.40/api/DepartmentGetByID',
+  SelectDepslistsbyLike:'http://59.230.230.40/api/SelectDepslistsbyLike',
+ 
   //通讯录管理接口
   //通讯录人员添加
 
@@ -52,9 +54,7 @@ const api = {
   DeleteUserByUID:'http://59.230.230.40/api/DeleteUser',
   GetuserInformationByTelNum:'http://59.230.230.40/api/GetuserInformationbyTelNum',//获取用户信息By手机号
   GetuserInformationbyname:'http://59.230.230.40/api/GetuserInformationbyname',//获取用户信息By用户名
-  GetUserInformationByUserNameLIke:'http://59.230.230.40/api/GetUserInformationByUserNameLIke',//获取用户信息By用户名
-
-  
+  GetUserInformationByUserNameLIke:'http://59.230.230.40/api/GetUserInformationByUserNameLIke',//获取用户信息By用户名  
   GetAllPhoneuser:'http://59.230.230.40/api/GetAllPhoneuser',
   GetALLByDepID:'http://59.230.230.40/api/GetAllByDepID',//DepID=70 用于UserPhoneList页面获取通讯录用户数据用
   GetUserByNameAndDepID:'http://59.230.230.40/api/GetUserByNameAndDepID',//批量检查999
@@ -99,6 +99,16 @@ const api = {
 }
 
 export default api
+
+
+export function SelectDepslistsbyLike (parameter) {
+  return axios({
+    url: api.SelectDepslistsbyLike,
+    method: 'get',
+    params: parameter
+  })
+}
+
 export function GetUserInformationByUserNameLIke (parameter) {
   return axios({
     url: api.GetUserInformationByUserNameLIke,

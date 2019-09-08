@@ -1,7 +1,8 @@
 ﻿import store from '@/store/'
 			// let	CODER_ALAW		= 0;
-			// let	CODER_PCM		= 1;
+			let	CODER_PCM		= 1;
 			// let	CODER_G729		= 3;
+			
 			// let	CODER_SPEEX	= 20;
 			// let	CODER_ULAW		= 100;
 			// let	UBOX_MODE_RECORD	= 0;		//录音模式， 通常使用的模式
@@ -26,6 +27,7 @@ class LUbox {
 	console.log('电话拿起了')
 	store.commit('SET_EVENT',event)	
 	ubox.lines[uboxhdl].state =  UBOX_STATE_HOOK_OFF;
+	LUbox.ubox_RecordFile();
 }
 	static ubox_DeviceAlarm(uboxhdl, type)
 {
@@ -56,8 +58,6 @@ class LUbox {
 	console.log("复位 audio device失败, 设备警告,重启软件")
 	//    AppendStatus("复位 audio device失败, 设备警告,重启软件");//
    }
-
-
 }
 
 	static ubox_DeviceError(uboxhdl)
@@ -194,6 +194,7 @@ class LUbox {
 						LUbox.Ubox_Plug_In(msg.handle);
 					}else if(msg.event == "joined")
 					{
+						ubox.workpath = decodeURIComponent(msg.path);
 					console.log("connect websocket ok")
 					let msgs = {
 					"event": "getinfo"			   
@@ -274,6 +275,7 @@ class LUbox {
 				else if(msg.event=='hookup' || msg.event=='ringCancel')//挂机或者取消拨打
 				{
 				console.log('挂机了')
+				LUbox.ubox_StopRecord();
 				store.commit('SET_EVENT',msg.event)		
 				store.commit('SET_PHONENUMER','')		
 				store.commit('SET_NUMKEYS','')
@@ -377,13 +379,66 @@ class LUbox {
 						// else if(msg.event=='ringCancel')
 						// {
 						// store.commit('SET_EVENT',msg.event)			
-						// }
-			
+						// }			
 					}
-
 			}
+		}
+		static ubox_RecordFile()
+		{
+
+			var curDate = new Date();
+			var year = curDate.getFullYear();
+			var month = curDate.getMonth()+1;
+			var day = curDate.getDate();
+			var hours= curDate.getHours();
+			var minutes = curDate.getMinutes();
+			var seconds = curDate.getSeconds();
+
+			var rec_name = ubox.workpath+"ubox_record\\"+year+"-"+month+"-"+day+"-"+hours+"-"+minutes+"-"+seconds+".wav";
+			//var rec_name = "E:\\usb\\gsm-usb\\bin\\ubox-record\\test.wav";
+			console.log(rec_name)
+			// AppendStatus(rec_name);
+			//var msg = [];
+			if(hdl != -1)
+			{
+				var msg = {
+				"event": "RecordFile",
+				"handle": hdl,
+				"filename":rec_name,
+				"codec":  CODER_PCM
+				};
+				console.log('开始录音')
+				// AppendStatus("开始录音...")
+				
+				//如果失败， 在notify 消息中，会报错的
+				
+				LUbox.websocket_send_msg(JSON.stringify(msg));
+			}
+					
 
 		}
+		static websocket_send_msg(msg)
+		{
+			ws.send(msg);
+		}
+		
+		static ubox_StopRecord()
+		{
+			if(hdl != -1)
+			{
+				var msg = {
+				"event": "StopRecord",
+				"handle": hdl
+				};
+			
+				//  如果失败， 在notify 消息中，会报错的
+				
+				LUbox.websocket_send_msg(JSON.stringify(msg));
+				console.log('已经停止录音');
+				// AppendStatus("已经停止录音");
+			}
+		}
+
 		static showStatus(msg){
 			console.log(msg)
 		}

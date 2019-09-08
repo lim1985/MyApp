@@ -3,10 +3,26 @@ import { Menu, Icon, Input } from 'ant-design-vue'
 import Validate from '@/tools/Validate/index'
 const { Item, ItemGroup, SubMenu } = Menu
 const { Search } = Input
+// const { Option } = AutoComplete 
+
+
+// Vue.component(AutoComplete.name, AutoComplete);
+// Vue.component(AutoComplete.Option.name, AutoComplete.Option);
+// Vue.component(AutoComplete.OptGroup.name, AutoComplete.OptGroup);
+
+// Vue.component(Menu.name, Menu);
+// Vue.component(Menu.Item.name, Menu.Item);
+// Vue.component(Menu.SubMenu.name, Menu.SubMenu);
+// Vue.component(Menu.Divider.name, Menu.Divider);
+// Vue.component(Menu.ItemGroup.name, Menu.ItemGroup);
 
 export default {
   name: 'Tree',
   props: {
+    DepsDataSource: {
+      type: Array,
+      default: () => [] // es6的箭头函数
+    },
     dataSource: {
       type: Array,
       required: true
@@ -27,10 +43,15 @@ export default {
       type: Boolean,
       default: false
     },
+    showDeplist:{
+      type:Boolean,
+      default:false
+    }
   },
   created () {
     this.localOpenKeys = this.openKeys.slice(0)
     console.log(this.localOpenKeys)
+    console.log(this.DepsDataSource);
     // DEPID:this.$route.fullPath.split('/')
     // console.log(this.$route.fullPath.split('/'))
   
@@ -52,8 +73,7 @@ export default {
     async handleSearch(val){   
      const { value} = val.target       
      let _value=value
-     let isok=await Validate.CheckPhoneNumAndchanese(_value)    
-    
+     let isok=await Validate.CheckPhoneNumAndchanese(_value)       
        if(isok)
        {      
          this.$emit('ReturnValue',_value);         
@@ -62,8 +82,7 @@ export default {
        else if (_value=='')
        {        
          this.$emit('ReturnValue',_value);          
-       }
-      
+       }      
     },
     handleAddGroup(){
      let _depid=this.$route.fullPath.split('/')[3];
@@ -87,21 +106,23 @@ export default {
       item.depid=this.$route.fullPath.split('/')[3]
       this.$emit('minu', item)
     },
-    handSelectDep({key})
+    handSelectDep(item)
     {
-      console.log(`Click on item ${key}`);
+      console.log(`Click on item ${item}`);
+      console.log(item);
+      this.$emit('SearchDepslist', item)
     },
+
     renderSearch () {
       return (
         <Search
           {...{on:{change:(v)=>this.handleSearch(v)}}}
-          placeholder="请输入姓名搜索 如：张三"
-          style="width: 100%; margin-bottom: 1rem">
-          
-          </Search>
-        
+          placeholder="可按单位名或姓名搜索..."
+          style="width: 100%; margin-bottom: 1rem">               
+          </Search>                      
       )
     },
+    
     // renderDepartmentName(){
     //   return (<Select placeholder="选择活动" style={{ width: 300 }}>
     //     <Select.Option key={this.it.id} value={this.it.id}>
@@ -123,10 +144,8 @@ export default {
     },
     renderminusGroup(item){
       return (   
-     <a class="btn" style="left: 0px !important;"><a-button {...{on:{click:()=>this.handleMinu(item)}}}  type="danger" size="small">删除</a-button></a>
-     
-         )
-    },//删除组操作
+     <a class="btn" style="left: 0px !important;"><a-button {...{on:{click:()=>this.handleMinu(item)}}}  type="danger" size="small">删除</a-button></a>     
+         )},//删除组操作
     renderIcon (icon) {
       return icon && (<Icon type={icon} />) || null
     },
@@ -139,8 +158,7 @@ export default {
           { this.renderIcon(item.icon) }
           { addgroup ? this.renderminusGroup(item):null}        
           { item.title }
-          { addgroup ? this.renderAddUsers(item):null}        
-          
+          { addgroup ? this.renderAddUsers(item):null}
         </Item>
       )
     },
@@ -152,7 +170,6 @@ export default {
       const childrenItems = item.children.map(o => {
         return this.renderItem(o, o.key)
       })
-
       return (
         <ItemGroup key={item.key}>
           <template slot="title">
@@ -170,18 +187,52 @@ export default {
         </ItemGroup>
       )
     },
+    renderdeplistItem(dataSource){
+    
+      let list= dataSource.map(v=>{
+        return (
+          <li class="global-search-item" {...{on:{click:()=>this.handSelectDep(v)}}} >
+          <span class="global-search-item-desc">
+            {v.Depname}
+            </span>
+          </li>
+      )
+        // return (<li key={v.DepID}>{v.Depname}</li>)
+      })     
+      return list
+    },
+    renderSearchLists(){
+      const { DepsDataSource } = this.$props
+      const Li_List=this.renderdeplistItem(DepsDataSource);
+
+      // const Li_list=  DepsDataSource.map(v=>{
+      //   return (<li key={v.DepID}>{v.Depname}</li>)
+      // })   
+      return (
+        <div class="global-search-wrapper">
+        <ul class="gloabl-ul">
+          {Li_List}
+          </ul>
+          </div>
+      )
+      // return (
+      // <ul>
+       
+      //  {Li_list}
+
+      //   </ul>)
+    },
     renderSubItem (item, key) {
+     
       const childrenItems = item.children && item.children.map(o => {
         return this.renderItem(o, o.key)
       })
-
       const title = (
         <span slot="title">
           { this.renderIcon(item.icon) }
           <span>{ item.title }</span>
         </span>
       )
-
       if (item.group) {
         return this.renderItemGroup(item)
       }
@@ -195,19 +246,29 @@ export default {
     }
   },
   render () {
-    const { dataSource, search, addgroup } = this.$props
+    const { dataSource, search, addgroup,showDeplist } = this.$props
 
     // this.localOpenKeys = openKeys.slice(0)
+
     const list = dataSource.map(item => {
       return this.renderItem(item)
     })
+    console.log(dataSource);
+    console.log(list)
   //    { showDepTree ?this.renderDepartmentName():null}
     return (
       <div class="tree-wrapper">
         { addgroup ? this.renderAddGroup():null}
-        { search ? this.renderSearch() : null }
-       
-        <Menu mode="inline" class="custom-tree" {...{ on: { click: item => this.$emit('click', item), 'update:openKeys': val => { this.localOpenKeys = val } } }} openKeys={this.localOpenKeys}>
+        { search ? this.renderSearch() : null }    
+        { showDeplist?this.renderSearchLists():null}
+         
+        <Menu 
+        mode="inline"
+        class="custom-tree" 
+        {...{ on: { click: item => this.$emit('click', item), 
+        'update:openKeys': val => { this.localOpenKeys = val } } }
+        }
+         openKeys={this.localOpenKeys}>
           { list }
         </Menu>
       </div>

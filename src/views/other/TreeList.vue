@@ -23,12 +23,32 @@
           :openKeys.sync="openKeys"
           :search="true"
           :addgroup="false"
+          :DepsDataSource="Deplists"
+          :showDeplist="showListSearch"
           @click="handleClick"
+          @SearchDepslist="handleSearchDeps"
           @add="handleAdd"
           :showDepTree="true"
           @ReturnValue="GetUsersList"
           @titleClick="handleTitleClick"></s-tree>
+
       </a-col>
+      <!-- <a-row :gutter="8">
+        <a-col>
+          <a-list
+            size="small"
+            bordered
+            itemLayout="horizontal"
+            :dataSource="data2"
+          >           
+            <a-list-item slot="renderItem" slot-scope="item, index">
+              <a-list-item-meta>
+                <a slot="title" href="https://vue.ant.design/">{{ index }}.{{ item.title }}</a>       
+              </a-list-item-meta>
+            </a-list-item>
+          </a-list>
+        </a-col>
+      </a-row> -->
       <a-col :span="19">
         <!-- showPagination=true -->
         <s-table
@@ -94,10 +114,24 @@
 </template>
 
 <script>
+// const data2 = [
+//   {
+//     title: 'Ant Design Title 1',
+//   },
+//   {
+//     title: 'Ant Design Title 2',
+//   },
+//   {
+//     title: 'Ant Design Title 3',
+//   },
+//   {
+//     title: 'Ant Design Title 4',
+//   },
+// ]
 import STree from '@/components/Tree/Tree'
 import STable  from '@/components/newTable'
 // import OrgModal from './modules/OrgModal'
-import { DepTreelist,PostByDepIDPermissionKey } from '@/api/manage'
+import { DepTreelist, PostByDepIDPermissionKey,SelectDepslistsbyLike} from '@/api/manage'
 import Validate from '@/tools/Validate/index'
 import PhoneModal from '@/views/list/modules/PhoneMsg/Phone'
 import SendsmsModal from '@/views/list/modules/sendSMS/sendsms'
@@ -115,7 +149,10 @@ export default {
     // OrgModal
   },
   data () {
-    return {     
+    return {
+      // data2,
+      Deplists:[],
+      showListSearch:false,
       data:{},
       openKeys: ['152'],
       isSearch:false,
@@ -180,20 +217,21 @@ export default {
             // this.data=Object.assign(parameter,this.pp)
             //     console.log(this.data)
             return Validate.findbyUserInformation(data)
-            .then(res=>{      
-         
+            .then(res=>{ 
               if(res.code==1)
               {        
                 console.log(res.res)                      
                 this.Pupu=res.res.data.map(item=>{
                   return {Phone:item.cellphone,username:item.UserName,DPname:item.DepartmentName,ID:item.ID,UJOB:item.UJOB,checked:false}
-                })               
-            
+                })                          
                 return res.res
               }
               else
-              {
-             
+              {             
+                // if(this.showListSearch)
+                // {
+                //   console.log('可以传参数了！')
+                // }              
                 this.isRes=res
                 if(this.isres==undefined && this.reqCount == 0)
                 {
@@ -207,43 +245,7 @@ export default {
                     this.$message.error('没有搜索到该该联系人！')
                     this.$refs.table.refresh()
                     this.reqCount++
-                }
-            
-            
-                  // if(this.isNull)
-                  // {
-                  //   this.reqCount++
-                  //   if(res.code==-1)
-                  //   {
-
-                  //   }
-                  // }
-                // if(this.reqCount==0)
-                // {
-                //   this.reqCount++
-                //   if(this.reqCount==1)
-                //   {
-                //      this.$message.error('没有找到相关信息'); 
-                //      this.reqCount--
-                //   }
-                //   console.log('还是'+this.reqCount);
-                // }
-               
-               
-                //  if(this.reqCount==1)
-                //  {
-                //     this.$message.error('没有找到相关信息');  
-                //     this.isSearch=false;
-                //     this.onclick=true;
-                //     this.queryParam = {
-                //     DepID: 152,
-                //     key:'QW',
-                //     status:9
-                //     }
-                //     this.reqCount--
-                //     this.$refs.table.refresh()                   
-                //  }
-                   
+                }                
               }       
          })   
          }
@@ -341,8 +343,7 @@ export default {
   //       else if (_value=='')
   //      {
   //      console.log(_value);
-  //      }
-  
+  //      }  
   //  },
     handleChange (value) {      
       console.log(`selected ${value}`);
@@ -371,18 +372,40 @@ export default {
     {
       this.$refs.PhoneModal.get(e)          
     },
-    GetUsersList(val)
+    async handleSearchDeps(val)
     {
-
+      console.log('子组件传来的')
       console.log(val)
+         this.queryParam = {
+        DepID: val.DepID,
+        key:val.Per_Key,
+        status:9
+        }
+      this.onclick=true;
+      this.$refs.table.refresh()
+    },
+    async GetUsersList(val)
+     {
+
+       console.log(val)
        if(val!='')
        {
+        let res=await SelectDepslistsbyLike({DPName:val})      
+        if(res.code==1)
+        {
+          this.showListSearch=true;
+          console.log(res.res);
+          this.Deplists=res.res//props 数据到自组建
+        }
+        else if(res.code==-1)
+        {         
         this.SearchValue=val;
         this.isSearch=true;
         console.log(val);
         this.seach=[]     
-        this.$refs.table.refresh()        
-                    
+        this.$refs.table.refresh()  
+        }
+                                  
        }
        else
        {        
@@ -390,6 +413,7 @@ export default {
         console.log('到这了');
         this.isSearch=false;
         this.onclick=true;
+        this.showListSearch=false;
         this.reqCount=0;
         this.queryParam = {
         DepID: 152,
@@ -457,6 +481,23 @@ getDepTree(){
 </script>
 
 <style lang="less">
+.gloabl-ul{ padding: 10px 10px 0px 15px}
+.global-search-wrapper{
+   border: 1px solid #d9d9d9;
+    border-top-color: #fff;
+    margin-top: -20px;
+    border-radius: 5px;
+}
+ .global-search-item{
+   list-style: none;
+    padding: 2px;
+   &:hover{
+     font-size: 15px;
+     color:#1890ff;
+     cursor:pointer;
+    
+   }
+ }
   .custom-tree {
     /deep/ .ant-menu-item-group-title {
       position: relative;

@@ -19,12 +19,17 @@ const Validate={
           let res = await GetUserInformationByTelnum(obj);
         
           console.log(res)
+        
           resolve(res)
         }
         else if(reg2.test(obj.data))
         { 
           let res = await GetUserInformationByUserNameLIke(obj);
-         
+          // if(res==-1)
+          // {
+            
+          // }
+          console.log(res)
           resolve(res);
         }
         else
