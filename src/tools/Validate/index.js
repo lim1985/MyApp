@@ -167,6 +167,19 @@ checkGroupName(rule, value, callback)
   }
   callback();
 }, 
+checkPhoneNum(rule, value, callback){
+  let reg=/^0?1(3|4|5|7|8|9)\d{9}$/; 
+  if(!value)
+  {
+    callback();
+    return 
+  }else if(!reg.test(value))
+  {
+    callback('请正确填写手机号。如：13800008888')
+    return
+  }
+    callback();
+},
 checkTel(rule, value, callback){
   let reg=/^(\(\d{3,4}\)|\d{3,4}-|\s)?\d{7,14}$/;
   if(!value)
@@ -180,12 +193,31 @@ checkTel(rule, value, callback){
   }
     callback();
 },
-checkUsername(rule,value,callback)
-{
-  let reg = /^[\u0391-\uFFE5]{0,4}$/;
+ async asyncCheckUserName(rule,value,callback){
+  let reg = /^[\u0391-\uFFE5]{0,8}$/;
   if(!reg.test(value))
   {
-    callback('姓名只能输入最多4个汉字')
+    callback('最多只能输入8个汉字')
+    return
+  }
+  else
+  {
+    let _obj={};
+    _obj.data=value;
+    let res = await GetuserInformationbyName(_obj)
+      console.log(res);
+      callback();
+  }
+   
+
+
+},
+checkUsername(rule,value,callback)
+{
+  let reg = /^[\u0391-\uFFE5]{0,8}$/;
+  if(!reg.test(value))
+  {
+    callback('最多只能输入8个汉字')
     return
   }
    callback();
@@ -362,7 +394,7 @@ async checkPhone(rule, value, callback) {
         obj.username=_s.res.data[0].UserName,
         obj.code=_s.code         
         obj.id=_s.res.data[0].ID,      
-        obj.Abbreviation=_s.res.data[0]['ResferecDep.Abbreviation']
+        obj.Abbreviation=_s.res.data[0]['Abbreviation']
         obj.tel=_s.res.data[0].cellphone,   
         obj.UJOB=_s.res.data[0].UJOB,   
         obj.showAdd=false   

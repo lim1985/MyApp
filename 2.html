@@ -1,0 +1,474 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>邵阳市大祥区政府_写信页</title>
+<link href="{PE.SiteConfig.SkinPath/}2018_hdjl/css/hdjl.css" rel="stylesheet" type="text/css" />
+
+<link href="{PE.SiteConfig.SkinPath/}2018_hdjl/css/style.css" rel="stylesheet" type="text/css" />
+<!---右侧滚动--->
+<link href="{PE.SiteConfig.SkinPath/}dxzc2017/css/lrtk.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="/Template/Default_Red/Skin/dxzc2017/js/jquery.js"></script>
+<!-- 引入样式 -->
+<link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+<!-- 引入组件库 -->
+<!-- <script src="https://unpkg.com/element-ui/lib/index.js"></script> -->
+<!--<script type="text/javascript" src="{PE.SiteConfig.SkinPath/}dxzc2017/js/jquery-1.8.3.min.js"></script>-->
+<script type="text/javascript" src="{PE.SiteConfig.SkinPath/}dxzc2017/js/lrtk.js"></script>
+<!---右侧滚动--->
+<!---右侧滚动--->
+
+<script src="{PE.SiteConfig.SkinPath/}dxzc2017/js/swf.js" language="javascript"></script>
+<script type="text/JavaScript">
+<!--
+function MM_swapImgRestore() { //v3.0
+  var i,x,a=document.MM_sr; for(i=0;a&&i<a.length&&(x=a[i])&&x.oSrc;i++) x.src=x.oSrc;
+}
+
+function MM_preloadImages() { //v3.0
+  var d=document; if(d.images){ if(!d.MM_p) d.MM_p=new Array();
+    var i,j=d.MM_p.length,a=MM_preloadImages.arguments; for(i=0; i<a.length; i++)
+    if (a[i].indexOf("#")!=0){ d.MM_p[j]=new Image; d.MM_p[j++].src=a[i];}}
+}
+
+function MM_findObj(n, d) { //v4.01
+  var p,i,x;  if(!d) d=document; if((p=n.indexOf("?"))>0&&parent.frames.length) {
+    d=parent.frames[n.substring(p+1)].document; n=n.substring(0,p);}
+  if(!(x=d[n])&&d.all) x=d.all[n]; for (i=0;!x&&i<d.forms.length;i++) x=d.forms[i][n];
+  for(i=0;!x&&d.layers&&i<d.layers.length;i++) x=MM_findObj(n,d.layers[i].document);
+  if(!x && d.getElementById) x=d.getElementById(n); return x;
+}
+
+function MM_swapImage() { //v3.0
+  var i,j=0,x,a=MM_swapImage.arguments; document.MM_sr=new Array; for(i=0;i<(a.length-2);i+=3)
+   if ((x=MM_findObj(a[i]))!=null){document.MM_sr[j++]=x; if(!x.oSrc) x.oSrc=x.src; x.src=a[i+2];}
+}
+//-->
+</script>
+<style>
+
+</style>
+<script>
+
+/*tab切换脚本*/ 
+function setTab(name,cursel,n){ 
+for(i=1;i<=n;i++){ 
+var menu=document.getElementById(name+i); 
+var con=document.getElementById("tab_"+name+"_"+i); 
+menu.className=i==cursel?"hover":""; 
+con.style.display=i==cursel?"block":"none"; 
+}
+}
+//-->
+</script>
+<script type="text/javascript">
+
+    //jQuery.noConflict();
+    // (function($) {
+    //     $(function() {
+
+    //         $('#mainMenu').superfish({
+    //             pathClass: 'current'
+    //         });
+		
+			
+    //     });
+    // })(jQuery);
+    function Reset() {
+        var tbLetterInfo = document.getElementById("tbLetterInfo");
+        var txt = tbLetterInfo.getElementsByTagName("input");
+        for (var i = 0; i < txt.length; i++)
+            txt[i].value = "";
+
+        var sel = tbLetterInfo.getElementsByTagName("select");
+        for (var i = 0; i < sel.length; i++) {
+            if (sel[i].name == "DropCertificateName") {
+                sel[i].options[1].selected = true;
+            }
+            else {
+                sel[i].options[0].selected = true;
+            }
+        }
+        var txtarea = tbLetterInfo.getElementsByTagName("textarea");
+        txtarea[0].value = "";
+        document.getElementById("RadIsOpen").checked = false;
+        document.getElementById("RadIsNotOpen").checked = true;
+    }
+	//-->
+</script>
+
+<!-- <script type="text/javascript" src="{PE.SiteConfig.SkinPath/}dxzc2017/js/jquery.js"></script> -->
+<script type="text/javascript" src="{PE.SiteConfig.SkinPath/}dxzc2017/js/jquery.SuperSlide.2.1.1.js"></script>
+		<script type="text/javascript">
+			$(function() {
+                redirect();
+				var lin= $("#TxtContent")
+				console.log(lin)
+				$("#TxtContent").width("69px");
+		     	$("#cke_TxtContent").width("680px");
+				jQuery(".slideBox").slide({
+					titCell: ".hd ul",
+					mainCell: ".bd ul",
+					autoPlay: true,
+					effect: "fold",
+					interTime: 5000,
+					autoPage: true
+				});
+				jQuery(".newstab").slide({
+					titCell: ".title li",
+					mainCell: ".conWrap",
+					targetCell: ".more a",
+					delayTime: 0,
+					triggerTime: 0
+				});
+				jQuery(".xxgkdh").slide({
+					titCell: ".hd li",
+					mainCell: ".bd",
+					delayTime: 300,
+					triggerTime: 0
+				});
+				jQuery(".tpxw").slide({
+					mainCell: ".bd ul",
+					autoPlay: false,
+					effect: "leftMarquee",
+					vis: 3,
+					interTime: 20,
+					delayTime: 1000,
+					autoPlay: true
+				});
+				// createMailList();
+              
+             	 $(".hylItem").hover(function(){
+					$(this).next(".hylCell").slideToggle()
+				})
+			});
+    function redirect()
+    {
+      var params=  GetRequest();
+           
+             var code=params.code;
+	     var browser={
+    versions:function(){
+        var u = navigator.userAgent, 
+            app = navigator.appVersion;
+        return {
+            trident: u.indexOf('Trident') > -1, //IE内核
+            presto: u.indexOf('Presto') > -1, //opera内核
+            webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+            gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1,//火狐内核
+            mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+            ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+            android: u.indexOf('Android') > -1 || u.indexOf('Adr') > -1, //android终端
+            iPhone: u.indexOf('iPhone') > -1 , //是否为iPhone或者QQHD浏览器
+            iPad: u.indexOf('iPad') > -1, //是否iPad
+            webApp: u.indexOf('Safari') == -1, //是否web应该程序，没有头部与底部
+            weixin: u.indexOf('MicroMessenger') > -1, //是否微信 （2015-01-22新增）
+            qq: u.match(/\sQQ/i) == " qq" //是否QQ
+        };
+    }(),
+    language:(navigator.browserLanguage || navigator.language).toLowerCase()
+}
+
+              
+             console.log(browser.versions.mobile);
+             
+               if(code == '' || code==undefined)
+                {
+			gotoLogin(browser.versions.mobile);
+                }
+                else
+                { 
+                    
+		     getUserInfo(code);
+                     console.log(code)
+                }
+                //  window.location.href="http://zwfw.hunan.gov.cn/hnvirtualhall/login.jsp?areacode=430503999000&redirect_url="+window.location.href; 
+              }
+function getUserInfo(s)
+{
+	let url ='http://api.dxzc.gov.cn:3000/api/getalluserinfo?code='+s
+	$.ajax({
+        type:'GET',
+        url: url,
+        dataType: 'json',      
+        success:function(result) {     
+			let jsonRes=JSON.parse(result.c);                   
+                console.log(jsonRes)
+				if(jsonRes.errorCode=='invalid_client')
+				{
+				//	alert(jsonRes.errorMessage+'点击后将重新认证！')
+					window.location.href='http://www.dxzc.gov.cn/Government/Letter/Letterwriter.aspx?DepartmentId=15'
+				}
+				else
+				{
+					//	$("#logins").val(s.name);					
+						
+						initform(jsonRes)
+					//	#TxtName姓名
+					//	#TxtIdentityNumber证件号码
+					//	#DropSex性别 1：男 0：女
+					//	#TxtEmail邮箱
+					//	#TxtAddress地址
+					//  #TxtTelphone手机号
+					}
+                // if(result.state === 'success')                                   
+				//  {orderList.lists[index].store_address = updata;
+                // alert("修改成功")
+                // }
+				// else
+				// {
+                // alert("修改失败")
+                // }
+               },
+         error:function(err) {
+               console.log(err)
+               alert('服务正在升级...')
+            }
+           })
+
+}
+function initform(s)
+{
+	$("#logins").hide();
+	$("#loged_span").show();	
+	$("#logname_a").text(s.name);
+	$("#TxtName").val(s.name);
+	$("#TxtName").attr("readonly","readonly")
+	$("#TxtIdentityNumber").val(s.certificateNum);
+	$("#TxtIdentityNumber").attr("readonly","readonly")
+	$("#TxtEmail").val(s.email);
+	//$("#TxtEmail").attr("readonly","readonly")
+	$("#TxtAddress").val(s.addr);
+	$("#TxtTelphone").val(s.phone);
+	$("#TxtTelphone").attr("readonly","readonly")
+	$("#DropSex").attr("readonly","readonly")
+
+	if(s.sex=='1')
+	{
+		$("#DropSex").val(0); 
+	//	alert('nan')
+		//$("#DropSex option[text='0']").attr("selected", true); 
+	}
+	else
+	{
+		$("#DropSex").val(1); 
+	//	$("#DropSex option[text='1']").attr("selected", true); 
+	}
+}
+function gotoLogin(bool)
+{
+	if(bool)
+	{
+		window.location.href="http://zwfw.hunan.gov.cn/hnvirtualhall/mobile_index/jsp/mobile_login.jsp?areacode=430503999000&redirect_url="+window.location.href; 
+//		http://zwfw.hunan.gov.cn/hnvirtualhall/mobile_index/jsp/mobile_login.jsp
+
+//?redirect_url=http://www.dxzc.gov.cn/Government/Letter/Letterwriter.aspx?DepartmentId=15&redirect_uri=&areacode=430503999000
+	}
+	else
+	{
+		window.location.href="http://zwfw.hunan.gov.cn/hnvirtualhall/login.jsp?areacode=430503999000&redirect_url="+window.location.href; 
+	}
+	
+}
+function GetRequest() {   
+   var url = location.search; //获取url中"?"符后的字串   
+   var theRequest = new Object();   
+   if (url.indexOf("?") != -1) {   
+      var str = url.substr(1);   
+      strs = str.split("&");   
+      for(var i = 0; i < strs.length; i ++) {   
+         theRequest[strs[i].split("=")[0]]=unescape(strs[i].split("=")[1]);   
+      }   
+   }   
+   return theRequest;   
+}   
+		</script>
+        <link href="{PE.SiteConfig.SkinPath/}dxzc2017/css/imggdgd.css" rel="stylesheet" type="text/css" />
+
+</head>
+
+<body onload="MM_preloadImages('images/zwgk08.jpg')">
+<div class="gnq">
+	<div class="gnqnr w1140">
+		<ul>
+				<li><img src="{PE.SiteConfig.SkinPath/}dxzc2017/images/dh_tb.jpg" /><a href="http://www.dxzc.gov.cn/Category_175/Index.aspx">区委</a></li>
+				<li><img src="{PE.SiteConfig.SkinPath/}dxzc2017/images/gh_tb.jpg" /><a href="http://www.dxzc.gov.cn/Category_176/Index.aspx">区人大</a></li>
+				<li><img src="{PE.SiteConfig.SkinPath/}dxzc2017/images/gh_tb.jpg" /><a href="http://www.dxzc.gov.cn/Category_177/Index.aspx">区政府</a></li>
+				<li><img src="{PE.SiteConfig.SkinPath/}dxzc2017/images/zx_tb.png" /><a href="http://www.dxzc.gov.cn/Category_178/Index.aspx">区政协</a></li>
+				<!-- <li><span id="loged_span" style="display: none;"><a onclick="turnTop('/hnvalidatelogon/personalcenter/jsp/personalcenter.jsp?areacode=430503999000');" target="_self" id="logname_a"></a><label> | </label><a onclick="zhuxiao();" id="logout">退出</a></span>
+					</li> -->
+	<li>
+		<span style="display:none;" id="loged_span">
+			<a onclick="turnTop('/hnvalidatelogon/personalcenter/jsp/personalcenter.jsp?areacode=430503999000');" target="_self" id="logname_a"></a>
+			<label> | </label>
+			<a onclick="zhuxiao();" id="logout">退出</a>
+		</span>		
+		<span id="belog_span"><a id="logins" href="http://zwfw.hunan.gov.cn/hnvirtualhall/login.jsp?areacode=430503999000" target="_self" class="top-ico01">登录</a><label> | </label><a id="regUser" href="http://zwfw.hunan.gov.cn/hnvirtualhall/register/jsp/realname.jsp">个人注册</a><label> | </label><a id="regUser" href="http://zwfw.hunan.gov.cn/hnvirtualhall/register/jsp/register.jsp">法人注册</a></span>
+			   </li>
+		</ul>
+	</div>
+</div>
+<div class="banner w1140"><script>showflashview('{PE.SiteConfig.SkinPath/}dxzc2017/swf/swf.swf',1140,174,1,0,'')</script></div>
+{PE.Label id="lim_2017网站导航"  /}
+</div>
+
+
+
+<!--头部-->
+<div class="jltitle1">
+    <div class="jldxzz">
+        <div class="jldxri2">
+        	<div class="jldxti">我要写信</div>
+        	<div class="jldxye">
+					<!-- <a href="">大祥区党政门户网</a>   &gt;  <a href="">互动交流</a>    &gt;    <a href="" target=""></a>    &gt;     
+					<a href="" target="" title="">调查征集</a>&gt;&gt; -->
+					<div id="nav"></div>
+						您现在的位置：<a href="{PE.SiteConfig.applicationpath/}">{PE.SiteConfig.sitename /}</a>>>{PE.Label id="当前位置导航" nodeId="@RequestInt_Id" /}
+			</div>
+            </div>
+    </div>
+</div>
+
+<div class="symain">
+	<div class="symain1">
+    	<div class="symaleft">
+				<div class="z1"><a href="http://www.dxzc.gov.cn/Government/Letter/LetterQuery.aspx">信件处理进度查询</a></div>
+				<div class="z2"><a href="http://www.dxzc.gov.cn/Government/Letter/Letterwriter.aspx?DepartmentId=15&code=" style="width:80px; float:left">我要写信</a><a href="http://www.dxzc.gov.cn/Government/Letter/Help.aspx" style="width:80px; float:left; margin-left:10px">使用说明</a></div>
+				<div class="z3"><a href="" style=" padding-top:20px">消费者投诉举报咨询12315</a><a href="" style=" padding-top:10px">法律维权咨询12348</a></div>
+		</div>
+        
+                    
+			<div style=" float:right; width:820px; padding:0 20px; background:white; padding-top:30px">
+    
+    			
+                <div class="p1">
+                    <h2>尊敬的来访人,请您在写下信访件的同时注意以下事项</h2>
+                    <p>１.投诉人真实姓名、电子邮件、电话（一定要有区号）。以方便我们及时与您联系。
+<br />２.被投诉单位信息中，在被投诉单位“Ｅmial”和“传真”中填写一项，以便受理。
+<br />３.投诉标题应简明扼要，一目了然。
+<br />４.在具体内容中，应写明投诉事件发生发经过，包括时间、地点和当事人（包括被投诉方）。最后定明你的投诉要点和要求。
+<br />５.年龄处只能填数字。
+<br />６.必须遵守中华人民共和国的一切法律法规。
+<br />７.不允许发表任何非法的、骚扰性的、中伤他人的、伤害性的、庸俗的，淫秽等信息资料。
+用户若散布和传播反动、色情或其他违反国家法律的信息，系统记录有可能作为用户违反法律的证据。</p>
+    
+				</div>  
+<div class="contents">  
+                <div class="p4">
+					 <h2>信访人信息<b>（注意：标有 * 的必须填写；请填写电子邮箱，以方便我们向您反馈处理信息）</b></h2>
+					 {PE.Control.form1}
+					<ul class="hjsqtxt">
+						 <li><label>姓 名：</label>
+							{PE.Control.TxtName/}{PE.Control.RValerName/}					</li>
+						   <li><label>性别：</label>
+							{PE.Control.DropSex/}{PE.Control.RValSex/}
+							</li>
+						 <li><label>年龄：</label>
+							{PE.Control.TxtAge/}{PE.Control.RValTxtAge/}
+						</li>
+						   <li><label>职业：</label>
+							{PE.Control.TxtProfession/}
+						</li>  
+                        
+ 						<li><label>证件名称：</label>
+							{PE.Control.DropCertificateName/}
+                        </li>
+						 <li><label>证件号码：</label> 
+							{PE.Control.TxtIdentityNumber/}{PE.Control.RValIdentityNumber/}
+						</li>
+						 <li><label>联系电话：</label>
+							{PE.Control.TxtTelphone/}{PE.Control.RValTelphone/}{PE.Control.REValTelphone/}
+						</li>
+						   <li><label>电子邮件：</label> 
+							{PE.Control.TxtEmail/}{PE.Control.RValEmail/}{PE.Control.REValEmail/}
+							</li>
+						<li style=" width:800px;"><label>联系地址：</label> 
+							{PE.Control.TxtAddress/}{PE.Control.RValTxtAddress/}
+						</li>
+                        
+ 						<!-- <li style=" width:800px"><label>选择部门：</label>
+                        	<select style=" width:400px">
+                                <option value="2">大祥区委办公室</option>
+                                <option value="1">大祥区纪律检查委员会</option>
+                                <option value="3">大祥区委组织部</option>
+                                <option value="4">大祥区委宣传部</option>
+                                <option value="5">大祥区委统战部</option>
+                                <option value="6">大祥区政法委</option>
+                                <option value="70">大祥区农村工作办公室、区委农村工作部</option>
+                                <option value="118">大祥区委督查室</option>
+                                <option value="8">大祥区机关党委</option>
+                                <option value="11">大祥区机关事务局</option>
+                                <option value="9">大祥区信访局</option>
+                                <option value="12">大祥区老干局</option>
+                                <option value="10">大祥区委党校</option>
+                                <option value="7">大祥区机构编制委员会办公室</option>
+                                <option value="46">大祥区政协办公室</option>
+                                <option value="97">中共大祥区委全面深化改革领导小组办公室（挂靠区政研室）</option>
+                                <option value="14">大祥区人大办公室</option>
+                            </select>
+                        </li> -->
+						{PE.Control.TrDepartment/}
+						 <li style=" width:800px"><label>主题：</label> 
+							{PE.Control.TxtTitle/}{PE.Control.RValTitle/}
+							</li>
+                        <li style=" width:800px; height:150px"><label>内容：</label>
+							{PE.Control.TxtContent/}{PE.Control.ValrContent/}
+                        </li >
+                        <li style=" width:720px;padding:50px 120px 20px 120px">
+								{PE.Control.ExtenFileUpload/}
+							</li>
+                        <li><label>请选择类别：</label>
+							{PE.Control.DropLetterType/}{PE.Control.RValLetterType/}
+                        </li>
+                        <li>
+                        	<label>是否公开：</label>
+                        
+							<div class="ann"> {PE.Control.RadIsOpen/} {PE.Control.RadIsNotOpen/}</div>
+                        </li> 
+                        </ul>                        
+					<div class="hjbutan">
+						<ul>
+							<li>
+									{PE.Control.TxtValidateCode/}
+									
+								</li>
+								<li>
+										
+										{PE.Control.VcodeSubmit/}
+										
+									</li>
+									<li>
+											
+											{PE.Control.RValValidateCode/}
+										</li>
+							</ul>
+						</div>  
+
+						<table width="100%" border="0" cellpadding="2" cellspacing="1">
+								<tr class="ButtonTr">
+									<td align="center" valign="middle" class="bottombt">
+
+
+										{PE.Control.BtnAdd/} &nbsp;&nbsp;&nbsp;&nbsp;
+										<input id="BtnCancel" class="inputbutton" name="BtnCancel" type="button" onclick="Reset();"
+											value="重置" />
+									</td>
+								</tr>
+							</table>
+					{/PE.Control.form1}
+					</div> 
+					</div>
+				</div> 
+				 </div>		 
+</div>
+
+
+<!--底部-->
+{PE.Label id="lim_2017网站底部"  /}
+<!-- 代码 开始 -->
+<div id="top"></div>
+<!-- 代码 结束 -->
+</body>
+</html>
+<script type="text/javascript" src="http://zwfw.hunan.gov.cn/hnvirtualhall/resources/js/main.js"></script>
+<script type="text/javascript" src="http://zwfw.hunan.gov.cn/hnvirtualhall/resources/js/top.js"></script>

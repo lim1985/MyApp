@@ -1,49 +1,27 @@
 <template>
   <div class="main">
-    <a-form :form="form" class="user-layout-login" ref="formLogin" id="formLogin">
-      <!-- <a-form :autoFormCreate="(form)=>{this.form = form}" > -->
+    <a-form class="user-layout-login" ref="formLogin" :autoFormCreate="(form)=>{this.form = form}" id="formLogin">
       <a-tabs
         :activeKey="customActiveKey"
         :tabBarStyle="{ textAlign: 'center', borderBottom: 'unset' }"
         @change="handleTabClick">
         <a-tab-pane key="tab1" tab="账号密码登陆">
-          
-          <a-form-item        
-            hasFeedback    
-          > 
-            <!-- <a-input placeholder='填正确填写部门简称' v-model="Mymdl.Abbreviation" id='Abbreviation' /> -->
-            <a-input 
-              size="large" 
-              placeholder='输入管理员账号' 
-              v-decorator="['username',{rules: [{ validator: this.handleUsernameOrEmail },{ required: true, message: '管理员姓名不能为空！' }]}]"
-            /> 
-          </a-form-item>
-          <!-- <a-form-item
+
+          <a-form-item
             fieldDecoratorId="username"
             :fieldDecoratorOptions="{rules: [{ required: true, message: '请输入帐户名或邮箱地址' }, { validator: this.handleUsernameOrEmail }], validateTrigger: 'change'}"
           >
             <a-input size="large" type="text" placeholder="帐户名或邮箱地址">
               <a-icon slot="prefix" type='user' :style="{ color: 'rgba(0,0,0,.25)' }"/>
             </a-input>
-          </a-form-item> -->
+          </a-form-item>
 
-          <!-- <a-form-item
+          <a-form-item
             fieldDecoratorId="password"
             :fieldDecoratorOptions="{rules: [{ required: true, message: '请输入密码' }], validateTrigger: 'blur'}">
             <a-input size="large" type="password" placeholder="密码">
               <a-icon slot="prefix" type='lock' :style="{ color: 'rgba(0,0,0,.25)' }"/>
             </a-input>
-          </a-form-item> -->
-          <a-form-item        
-            hasFeedback    
-          > 
-            <!-- <a-input placeholder='填正确填写部门简称' v-model="Mymdl.Abbreviation" id='Abbreviation' /> -->
-            <a-input 
-              size="large" 
-              placeholder='输入管理员密码' 
-              type="password"
-              v-decorator="['password',{rules: [{ required: true, message: '密码不能为空！' }]}]"
-            /> 
           </a-form-item>
         </a-tab-pane>
         <a-tab-pane key="tab2" tab="手机号登陆">
@@ -60,14 +38,15 @@
           /> 
         </a-form-item> -->
 
-          <a-form-item
+          <a-form-item              
+            label='部门简称'
             hasFeedback    
           > 
             <!-- <a-input placeholder='填正确填写部门简称' v-model="Mymdl.Abbreviation" id='Abbreviation' /> -->
             <a-input 
               size="large" 
-              placeholder='手机号' 
-              v-decorator="['mobile',{rules: [{ required: true, message: '请输入正确的手机号' },{validator:v().checkPhoneNum}]}]"
+              placeholder='输入管理员姓名' 
+              v-decorator="['UserName',{rules: [{ required: true, message: '管理员姓名不能为空！' },{validator:v().checkjob}]}]"
             /> 
           </a-form-item>
           <!-- 
@@ -79,32 +58,22 @@
             </a-input>
           </a-form-item> -->
 
-          <!-- <a-form-item
+          <a-form-item
             fieldDecoratorId="mobile"
             :fieldDecoratorOptions="{rules: [{ required: true, pattern: /^1[345789]\d{9}$/, message: '请输入正确的手机号' }], validateTrigger: 'change'}">
             <a-input size="large" type="text" placeholder="手机号">
               <a-icon slot="prefix" type='mobile' :style="{ color: 'rgba(0,0,0,.25)' }"/>
             </a-input>
-          </a-form-item> -->
+          </a-form-item>
 
           <a-row :gutter="16">
             <a-col class="gutter-row" :span="16">
-              <!-- <a-form-item
+              <a-form-item
                 fieldDecoratorId="captcha"
                 :fieldDecoratorOptions="{rules: [{ required: true, message: '请输入验证码' }], validateTrigger: 'blur'}">
                 <a-input size="large" type="text" placeholder="验证码">
                   <a-icon slot="prefix" type='mail' :style="{ color: 'rgba(0,0,0,.25)' }"/>
                 </a-input>
-              </a-form-item> -->
-              <a-form-item
-                hasFeedback    
-              > 
-                <!-- <a-input placeholder='填正确填写部门简称' v-model="Mymdl.Abbreviation" id='Abbreviation' /> -->
-                <a-input 
-                  size="large" 
-                  placeholder='验证码' 
-                  v-decorator="['captcha',{rules: [{ required: true, message: '请输入验证码' }]}]"
-                /> 
               </a-form-item>
             </a-col>
             <a-col class="gutter-row" :span="8">
@@ -139,15 +108,9 @@
 
       <div class="user-login-other">
         <span>其他登陆方式</span>
-        <div class="hunanlogin">
-          <!-- http://zwfw.hunan.gov.cn/hnvirtualhall/login.jsp?areacode=430503999000&redirect_url=http://www.dxzc.gov.cn/Government/Letter/Letterwriter.aspx?DepartmentId=15&code= -->
-          <!-- <router-link :to="{ path: 'http://zwfw.hunan.gov.cn/hnvirtualhall/login.jsp?areacode=430503999000', query: { redirect_url: 'http://172.20.8.28' }}"><img width="40%" style="padding:5px" src="http://zwfw-new.hunan.gov.cn/hnzwfw/zwfw4/images/app_logo.png" /><span>一体化平台登陆</span></router-link> -->
-          <a @click="gotoHunan()"><img width="40%" style="padding:5px" src="http://zwfw-new.hunan.gov.cn/hnzwfw/zwfw4/images/app_logo.png" /><span class="ss">统一登录入口</span></a>        
-        </div>
-       
-        <!-- <a><a-icon class="item-icon" type="alipay-circle"></a-icon></a>
+        <a><a-icon class="item-icon" type="alipay-circle"></a-icon></a>
         <a><a-icon class="item-icon" type="taobao-circle"></a-icon></a>
-        <a><a-icon class="item-icon" type="weibo-circle"></a-icon></a> -->
+        <a><a-icon class="item-icon" type="weibo-circle"></a-icon></a>
         <router-link class="register" :to="{ name: 'register' }">
           注册账户
         </router-link>
@@ -164,9 +127,8 @@
 
 <script>
   import md5 from "md5"
-  // import api from '@/api'
+  import api from '@/api'
   import TwoStepCaptcha from '@/components/tools/TwoStepCaptcha'
-  import { GetVerificatCode ,GetUserInformation} from '@/api/manage' 
   import { mapActions } from "vuex"
   import { timeFix } from "@/utils/util"
   import Validate from '@/tools/Validate/index'
@@ -177,9 +139,6 @@
     },
     data () {
       return {
-        Userinfo:{},
-        go:false,
-        gotoLogin:false,
         customActiveKey: "tab1",
         loginBtn: false,
         // login type: 0 email, 1 username, 2 telephone
@@ -200,57 +159,7 @@
         },
       }
     },
-    mounted(){
-      // console.log(this.$route.path);
-      // console.log(window.location.href);
-     
-    },
-   async created () {
-      let url=window.location;
-      console.log(url.search);
-      if(url.search)
-      {
-        //http://api.dxzc.gov.cn:3000/api/getalluserinfo?code='+s
-        let res=url.search.split('=')
-        let userinformation= await GetUserInformation({code:res[1]});
-        console.log(userinformation);
-         console.log(typeof(userinformation.c))
-        // if(userinformation)
-        if(userinformation.c=='{"errorCode":"invalid_clie'|| userinformation.c=='{"errorCode":"invalid')
-        {
-          console.log('妈的，参数都写错了')
-          return 
-        }
-        else
-        { 
-           let toJson=JSON.parse(userinformation.c);
-           if(toJson.phone)
-           {
-              this.go=true;
-              this.Userinfo=toJson;
-              this.handleSubmit();
-           }
-        }
-       
-        
-        //let json=JSON.parse(userinformation.c)
-    
-       
-        //  console.log(json)
-      //   //"errorCode":"invalid_client" "errorCode":"invalid_clie"     "{"errorCode":"invalid_client",    
-      //  if(json.phone)
-      //  {
-      //    console.log('可以了')
-      //    this.go=true;
-      //    this.handleSubmit();
-      //  }
-      }
-      else
-      {
-        console.log('没有获取到code')
-      }
-    //  let res=this.GetRequest()
-       
+    created () {
       // this.$http.get('/auth/2step-code')
       //   .then(res => {
      
@@ -259,39 +168,11 @@
       //     console.log('2step-code:', err)
       //   })
      // this.requiredTwoStepCaptcha = true
-     
-    this.form = this.$form.createForm(this)
-    console.log('form::', this.form)
-  
+      
     },
     methods: {
-   GetRequest() {   
-   var url = location.search; //获取url中"?"符后的字串   
-   var theRequest = new Object();   
-   if (url.indexOf("?") != -1) {   
-      let str = url.substr(1);   
-      let  strs = str.split("&");   
-      for(var i = 0; i < strs.length; i ++) {   
-         theRequest[strs[i].split("=")[0]]=unescape(strs[i].split("=")[1]);   
-      }   
-   }   
-   return theRequest;   
-}   ,
-      gotoHunan(){
-        console.log('ssssss')
-        this.gotoLogin=true;
-        window.location="http://zwfw.hunan.gov.cn/hnvirtualhall/login.jsp?areacode=430503999000&redirect_url=http://59.230.230.40"
-        //href="http://zwfw.hunan.gov.cn/hnvirtualhall/login.jsp?areacode=430503999000&redirect_url=http://172.20.8.28:8080
-      },
-      // getCode(fullpath)
-      // {
-      //   // str.replace(/\?.*/,'?')
-      //   console.log(fullpath);
-      //   let s= fullpath.replace(/^([^\?]*).*$/)
-      //   console.log(s)
-      // },
       v(){     
-       return Validate;
+        return Validate;
     },  
       ...mapActions([ "Login", "Logout" ]),
       // handler
@@ -315,62 +196,34 @@
         let loginParams = {
           remember_me: that.formLogin.rememberMe
         };
-        if(that.go)
-        {
-          loginParams = Object.assign(loginParams, this.Userinfo)
-          console.log(loginParams);
-          console.log('到这了，可以发给后台了')   
-          that.loginBtn = true
-          console.log(loginParams)
-          that.Login(loginParams).then((res) => {
-          console.log('服务器回传的')
-          console.log(res);   
-          if(res.code===1)
-          {
-            that.loginSuccess(res)    
-          }    
-          else
-          {
-            this.$message.error(timeFix()+','+ res.message, 3)
-            that.loginBtn = false
-          }      
-        }) 
-               
-        }       
-        else
-        {
-           console.log(loginParams)
-        // 使用账户密码登陆 this.form.validateFields((err, values) => {
+
+        // 使用账户密码登陆
         if (that.customActiveKey === 'tab1') {
           that.form.validateFields([ 'username', 'password' ], { force: true }, (err, values) => {
             if (!err) {
               flag = true
              // console.log(username , password);
            //  console.log(values.username+','+values.password);
-              console.log(values);
               loginParams[!that.loginType ? 'email' : 'username'] = values.username
               loginParams.password = md5(values.password)
-              console.log(loginParams);
+              //console.log(loginParams);
             }
           })
           
         // 使用手机号登陆
         } else {
-          console.log(that.customActiveKey)
           that.form.validateFields([ 'mobile', 'captcha' ], { force: true }, (err, values) => {
-         
             if (!err) {
               flag = true
               loginParams = Object.assign(loginParams, values)
-           
             }
           })
         }
-      }
+
         if (!flag) return
 
         that.loginBtn = true
-        console.log(loginParams)
+       // console.log(loginParams)
         that.Login(loginParams).then((res) => {
           console.log('服务器回传的')
           console.log(res);   
@@ -382,7 +235,14 @@
           {
             this.$message.error(timeFix()+','+ res.message, 3)
             that.loginBtn = false
-          }      
+          }
+       //  console.log($user.state.SET_USERINFO);
+       
+          // if (that.requiredTwoStepCaptcha) {
+          //   that.stepCaptchaVisible = false
+          // } else {
+          //   that.loginSuccess()
+          // }
         })
         // .catch((err) => {
         //   that.requestFailed(err);
@@ -394,9 +254,8 @@
         let that = this
 
         this.form.validateFields([ 'mobile' ], { force: true },
-          (err,values) => {
+          (err) => {
             if (!err) {
-              console.log(values);
               this.state.smsSendBtn = true;
 
               let interval = window.setInterval(() => {
@@ -406,58 +265,24 @@
                   window.clearInterval(interval);
                 }
               }, 1000);
-              let _data={            
-                "mobile":values.mobile     
-              }
+
               const hide = this.$message.loading('验证码发送中..', 0);
-                 GetVerificatCode(JSON.stringify(_data)).then(res=>{
-                   console.log(res);
-                   if(res.res=='短信发送成功')
-                   {
-                      setTimeout(hide, 2500);
-                      this.$notification[ 'success' ]({
-                        message: '提示',
-                        description: '发送成功，请查看手机上的验证码',
-                        duration: 8
-                      })
-                   }
-                   else
-                   {
-                     if(res.code==-1)
-                     {
-                        setTimeout(hide, 2500);
-                      this.$notification[ 'error' ]({
-                        message: '提示',
-                        description: '该手机号不是管理员，如需要开通账号请与系统管理员联系',
-                        duration: 8
-                      })
-                     }
-                   }
-                                   
-                 })  
-                  .catch(err => {
+              this.$http.post(api.SendSms, { mobile: that.formLogin.mobile })
+                .then(res => {
+                  setTimeout(hide, 2500);
+                  this.$notification[ 'success' ]({
+                    message: '提示',
+                    description: '验证码获取成功，您的验证码为：' + res.result.captcha,
+                    duration: 8
+                  })
+                })
+                .catch(err => {
                   setTimeout(hide, 1);
                   clearInterval(interval);
                   that.state.time = 60;
                   that.state.smsSendBtn = false;
                   this.requestFailed(err);
                 });
-              // this.$http.post(api.SendSms, { mobile: that.formLogin.mobile })
-              //   .then(res => {
-              //     setTimeout(hide, 2500);
-              //     this.$notification[ 'success' ]({
-              //       message: '提示',
-              //       description: '验证码获取成功，您的验证码为：' + res.result.captcha,
-              //       duration: 8
-              //     })
-              //   })
-                // .catch(err => {
-                //   setTimeout(hide, 1);
-                //   clearInterval(interval);
-                //   that.state.time = 60;
-                //   that.state.smsSendBtn = false;
-                //   this.requestFailed(err);
-                // });
             }
           }
         );
@@ -489,17 +314,7 @@
 </script>
 
 <style lang="scss" scoped>
-.ss{
-  font-family:"黑体,宋体，微软雅黑";
-  color:#fff;
-  font-weight: 800;
-  font-size: 14px;
-  letter-spacing:1px;
-}
-.hunanlogin { 
-   background-color: #1890ff;
-   border-radius: 5px;
-}
+
   .user-layout-login {
     label {
       font-size: 14px;

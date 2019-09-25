@@ -3,14 +3,28 @@
     <a-row :gutter="8">
       <a-col :span="5">
        
+        <!-- :dataSource="DepTree"         
+          :openKeys.sync="openKeys"
+          :search="true"
+          :addgroup="false"
+          :DepsDataSource="Deplists"
+          :showDeplist="showListSearch"
+          @click="handleClick"
+          @SearchDepslist="handleSearchDeps"
+          @add="handleAdd"
+          :showDepTree="true"
+          @ReturnValue="GetUsersList"
+          @titleClick="handleTitleClick" -->
         <s-tree
+          :search="false"
           :dataSource="Grouplist"         
           :openKeys.sync="openKeys"        
           :addgroup="true"
           @click="handleClick"
           @add="handleAdd"
           @minu="handleMinu"        
-          @titleClick="handleTitleClick"          
+          @titleClick="handleTitleClick"    
+          @ReturnValue="GetUsersList"      
           @addGroup="addgroup">          
         </s-tree>
          
@@ -89,7 +103,7 @@ import PhoneModal from '@/views/list/modules/PhoneMsg/Phone'
 
 import { mapState} from 'vuex'
 // import OrgModal from './modules/OrgModal'
-import { GetCustomGroupByDepID,FindAllUserByGroupID ,DeleteGroupUser,DeleteGroup} from '@/api/manage'
+import { GetCustomGroupByDepID,FindAllUserByGroupID ,DeleteGroupUser,DeleteGroup,SelectDepslistsbyLike} from '@/api/manage'
 
 //  getOrgTree,getServiceList,GetALLDep,GetAllPhoneuser,GetByDepIDAndPermissionKey,DepTreelist,PostByDepIDPermissionKey
 export default {
@@ -195,6 +209,50 @@ export default {
       "$route": "getCustomGroup",
   },
   methods: { 
+    async GetUsersList(val)
+     {
+
+       console.log(val)
+       if(val!='')
+       {
+         let res =await SelectDepslistsbyLike({DPName:val})   
+         console.log(res);
+       }
+     },
+      //  if(val!='')
+      //  {
+      //   let res=await SelectDepslistsbyLike({DPName:val})      
+      //   if(res.code==1)
+      //   {
+      //     this.showListSearch=true;
+      //     console.log(res.res);
+      //     this.Deplists=res.res//props 数据到自组建
+      //   }
+      //   else if(res.code==-1)
+      //   {         
+      //   this.SearchValue=val;
+      //   this.isSearch=true;
+      //   console.log(val);
+      //   this.seach=[]     
+      //   this.$refs.table.refresh()  
+      //   }
+                                  
+      //  }
+      //  else
+      //  {        
+      //   console.log(val);
+      //   console.log('到这了');
+      //   this.isSearch=false;
+      //   this.onclick=true;
+      //   this.showListSearch=false;
+      //   this.reqCount=0;
+      //   this.queryParam = {
+      //   DepID: 152,
+      //   key:'QW',
+      //   status:9
+      //   }
+      //    this.$refs.table.refresh()
+      //  }     
    
     DeleteUser(data)
     {

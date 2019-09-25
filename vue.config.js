@@ -66,7 +66,7 @@ module.exports = {
 // },
 //显示项目架构
  
- configureWebpack: {
+configureWebpack: {
     // performance: {
     //   hints:false
     // }
@@ -83,7 +83,7 @@ module.exports = {
     //     return assetFilename.endsWith('.js');
     //   }
     // }
-},
+  },
   chainWebpack: (config) => {
     config.resolve.alias
       .set('@$', resolve('src'))
@@ -111,26 +111,58 @@ module.exports = {
     }
   },
   devServer: {
+    open: true,
+    port: 8080,
     proxy: {
-      // '/api': {
-      //   target: 'https://mock.ihx.me/mock/5baf3052f7da7e07e04a5116/antd-pro',
-      //   ws: false,
-      //   changeOrigin: true
+        '/apis': {
+            target: 'http://zwfw.hunan.gov.cn/hnvirtualhall/yzCertificatenodo.jsp',  // target host
+            ws: true,  // proxy websockets 
+            changeOrigin: true,  // needed for virtual hosted sites
+            pathRewrite: {
+                '^/apis': ''  // rewrite path
+            }
+        },
+      //   '/ProxyLogin': {
+      //     target: 'http://172.20.8.28:3001/api/login',  // target host
+      //     ws: true,  // proxy websockets 
+      //     changeOrigin: true,  // needed for virtual hosted sites
+      //     pathRewrite: {
+      //         '^/ProxyLogin': ''  // rewrite path
+      //     }
       // },
-      '/banns': {
-        target: 'http://www.dxzc.gov.cn/Category_1188/Index.aspx',
-        changeOrigin: true,
-        pathRewrite: {
-          '^/banns': '/api'
-        }
-      },
-      // '/gateway': {
-      //   target: 'https://mock.ihx.me/mock/5baf3052f7da7e07e04a5116/antd-pro',
-      //   changeOrigin: true,
-      //   pathRewrite: {
-      //     '^/gateway': '/api'
-      //   }
-      // }
     }
+
+
+    // proxy: {
+    //   '/api': {
+    //     target: 'https://mock.ihx.me/mock/5baf3052f7da7e07e04a5116/antd-pro',
+    //     ws: false,
+    //     changeOrigin: true
+    //   },
+    //   '/banns': {
+    //     target: 'http://www.dxzc.gov.cn/Category_1188/Index.aspx',
+    //     ws: false,
+    //     changeOrigin: true
+    //     // changeOrigin: true,
+    //     // pathRewrite: {
+    //     //   '^/banns': '/api'
+    //     // }
+    //   },
+    //   '/IDcard': {
+    //     target: 'http://zwfw.hunan.gov.cn/hnvirtualhall/yzCertificatenodo.jsp',
+    //     ws: false,
+    //     changeOrigin: true
+    //     // pathRewrite: {
+    //     //   '^/IDcard': '/api'
+    //     // }
+    //   },
+    //   // '/gateway': {
+    //   //   target: 'https://mock.ihx.me/mock/5baf3052f7da7e07e04a5116/antd-pro',
+    //   //   changeOrigin: true,
+    //   //   pathRewrite: {
+    //   //     '^/gateway': '/api'
+    //   //   }
+    //   // }
+    // }
   }
 }

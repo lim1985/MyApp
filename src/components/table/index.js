@@ -150,6 +150,7 @@ export default {
     onClearSelected() {
       this.selectedRowKeys = []
       this.updateSelect([], [])
+      console.log('清空了！')
     },
     renderMsg(h) {
       const _vm = this

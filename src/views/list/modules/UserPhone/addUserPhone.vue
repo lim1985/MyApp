@@ -32,7 +32,7 @@
           >
             <a-input 
               placeholder='联系人姓名' 
-              v-decorator="['UserName',{rules: [{ required: true },{ validator:v().checkUsername }]}]"
+              v-decorator="['UserName',{rules: [{ required: true },{ validator:v().asyncCheckUserName }]}]"
             /> 
             <!-- <a-input placeholder='联系人姓名' v-model="Mymdl.UserName" id='UserName' /> -->
           </a-form-item>

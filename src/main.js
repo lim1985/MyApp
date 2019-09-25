@@ -5,7 +5,7 @@ import router from './router'
 import store from './store/'
 
 import { VueAxios } from "@/utils/request"
-import './mock'
+// import './mock'
 
 import Antd from 'ant-design-vue'
 import Viser from 'viser-vue'
@@ -21,7 +21,7 @@ import LUbox from '@/assets/js/LIm_UBOX'
 Vue.prototype.$moment = moment;//赋值使用
 Vue.prototype.$LUBOX = LUbox;//赋值使用
 Vue.config.productionTip = false
-
+// axios.defaults.withCredentials=true;
 Vue.use(Storage, config.storageOptions)
 Vue.use(Antd)
 Vue.use(VueAxios, router)

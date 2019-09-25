@@ -6,7 +6,7 @@ const api = {
   orgTree: '/org/tree',
   permission: '/permission',
   //权限接口
-  addPermission: 'http://172.20.8.28:3001/api/PermissionAdd',//添加权限//src\views\list\PermissionList.vue页面使用了该接口
+  addPermission: 'http://59.230.230.40/api/PermissionAdd',//添加权限//src\views\list\PermissionList.vue页面使用了该接口
   UpdataPermission: 'http://59.230.230.40/api/PermissionUpdata',//修改权限//src\views\list\PermissionList.vue页面使用了该接口
   DelPermission: 'http://59.230.230.40/api/PermissionDel',//修改权限//src\views\list\PermissionList.vue页面使用了该接口
   GetAllPermissionList:'http://59.230.230.40/api/PermissionList',//未找到使用页面
@@ -26,7 +26,7 @@ const api = {
   //管理员用户接口
   UpdataAdminRoles:'http://59.230.230.40/api/ActionUpdataAdmin',  //修改管理员角色
   GetAdmininfo:'http://59.230.230.40/api/userInfo', //查询管理员信息
-  Delrole:'http://172.20.8.28:3001/api/rolesdel',//删除角色
+  Delrole:'http://59.230.230.40/api/rolesdel',//删除角色
   addrolePermission:'http://59.230.230.40/api/rolesAddPermission',//添加管理员角色
   GetPermissionByroleID:'http://59.230.230.40/api/getPermissionbyroleID',//获取权限
   GetrolesbyAdminID:'http://59.230.230.40/api/GetrolesbyAdminID',//获取管理员权限
@@ -54,13 +54,14 @@ const api = {
   DeleteUserByUID:'http://59.230.230.40/api/DeleteUser',
   GetuserInformationByTelNum:'http://59.230.230.40/api/GetuserInformationbyTelNum',//获取用户信息By手机号
   GetuserInformationbyname:'http://59.230.230.40/api/GetuserInformationbyname',//获取用户信息By用户名
-  GetUserInformationByUserNameLIke:'http://59.230.230.40/api/GetUserInformationByUserNameLIke',//获取用户信息By用户名  
+  GetUserInformationByUserNameLIke:'http://59.230.230.40/api/GetUserInformationByUserNameLIke',//获取用户信息By用户名  自定义组 和 首页搜索里用了该接口
   GetAllPhoneuser:'http://59.230.230.40/api/GetAllPhoneuser',
   GetALLByDepID:'http://59.230.230.40/api/GetAllByDepID',//DepID=70 用于UserPhoneList页面获取通讯录用户数据用
   GetUserByNameAndDepID:'http://59.230.230.40/api/GetUserByNameAndDepID',//批量检查999
   importUsersList:'http://59.230.230.40/api/importUsersList',//批量导入999
+  SortUserPhoneList:'http://59.230.230.40/api/SortUserPhoneList',//排序
 
- 
+  
 
  //引用表操作
   ReferenceAdd:'http://59.230.230.40/api/ReferenceAdd',//用于list/modules/UserPhone/addUserPhone
@@ -71,9 +72,14 @@ const api = {
   
  //发短信接口
    sendsms:'http://info.dxzc.gov.cn:3000/api/sendsms',
+   GetVerificatCode:'http://59.230.230.40/api/GetVerificatCode',   
    smsstatus:'http://info.dxzc.gov.cn:3000/api/status',
    SmsAddRecord:'http://info.dxzc.gov.cn:3000/api/smsAddrecord',
    smssucceedcount:'http://info.dxzc.gov.cn:3000/api/GetSmsSucceedCount',
+   ChinaCMCCSendSMS:'http://info.dxzc.gov.cn:3000/api/sendCMCC',
+//通过省里的深度融合接口返回数据
+   //http://api.dxzc.gov.cn:3000/api/getalluserinfo
+   GetUserInformation:'http://api.dxzc.gov.cn:3000/api/getalluserinfo',
    //添加自定义组
    CreateCustomGroup:'http://59.230.230.40/api/createGroup',
    GetCustomGroup:'http://59.230.230.40/api/GetGroup',
@@ -84,8 +90,10 @@ const api = {
    DeleteGroupUser:'http://59.230.230.40/api/DeleteGroupUser',
    DeleteGroup:'http://59.230.230.40/api/DeleteGroup',
   //上传xlsx文件
-   Uploadfiles:'http://59.230.230.39:3002/api/upload'
-   
+   Uploadfiles:'http://59.230.230.39:3002/api/upload',
+   //省里发短信地址
+   HuNansms:'https://auth.zwfw.hunan.gov.cn/aip/v1/gov/person/sms',
+   GetPhoneNum:'http://localhost:8080/apis'
 //  axios.get('http://info.dxzc.gov.cn:3000/api/sendsms', {
 //   params: {
 //   u:'limannlee',
@@ -99,8 +107,64 @@ const api = {
 }
 
 export default api
+//通过省里平台获取用户信息
+export function GetUserInformation (parameter) {
+  return axios({
+    url: api.GetUserInformation,
+    method: 'get',
+    params: parameter  
+  })
+}
+//根据身份证获取手机号
+export function GetPhoneNum (parameter) {
+  return axios({
+    url: api.GetPhoneNum,
+    method: 'POST',
+    data:parameter,
+    // transformRequest: [function (data) {
+    //   let ret = ''
+    //   for (let it in data) {
+    //     ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&'
+    //   }
+    //   return ret
+    // }],
+    headers:{
+      'Content-Type' :'application/x-www-form-urlencoded;'
+    }
+  })
+}
+//CMCC发短信
+export function HuNansms (parameter) {
+  return axios({
+    url: api.HuNansms,
+    method: 'post',
+    data:parameter  ,
+    headers : {
+			'Accept' : 'application/json',
+			'Content-Type' : 'application/json'
+		},
+  })
+}
+
+//CMCC发短信
+export function CMCCSendSMS (parameter) {
+  return axios({
+    url: api.ChinaCMCCSendSMS,
+    method: 'post',
+    data:parameter  
+  })
+}
 
 
+//获取验证码
+export function GetVerificatCode (parameter) {
+  return axios({
+    url: api.GetVerificatCode,
+    method: 'get',
+    params: parameter,
+    withCredentials:true  
+  })
+}
 export function SelectDepslistsbyLike (parameter) {
   return axios({
     url: api.SelectDepslistsbyLike,
@@ -116,7 +180,15 @@ export function GetUserInformationByUserNameLIke (parameter) {
     params: parameter
   })
 }
-
+//拖拽排序
+//method=post
+export function SortUserPhoneList (parameter) {
+  return axios({
+    url: api.SortUserPhoneList,
+    method: 'post',
+    data:parameter  
+  })
+}
 //批量导入
 export function importUsersList (parameter) {
   return axios({

@@ -62,11 +62,12 @@
     </div> -->
 
     <div class="table-operator">
-      <a-button type="primary" @click="addphone()" :style="{ fontSize: '18px' }" icon="user-add">添加联系人</a-button>
-    
+      <a-button type="primary" @click="addphone()" :style="{ fontSize: '18px' }" icon="user-add">添加联系人</a-button>        
+      <!-- <a-button type="primary" @click="sortUser()" :style="{ fontSize: '18px' }"><a-icon id="swap-i" type="swap" />排序</a-button>       -->
       <a-dropdown v-if="selectedRowKeys.length > 0">
         <a-menu slot="overlay">
           <a-menu-item key="3" @click="sendsms(selectedRows)"><a-icon type="lock" />发短信</a-menu-item>
+          <a-menu-item key="1" @click="sortUser(selectedRows)"><a-icon id="swap-i" type="swap" />排序</a-menu-item>
           <!-- <a-menu-item key="1"><a-icon type="delete" />删除</a-menu-item> -->
           <!-- lock | unlock -->
           <!-- <a-menu-item key="2"><a-icon type="lock" />锁定</a-menu-item> -->
@@ -85,7 +86,7 @@
      
         </a-row>
       </div>
-     
+ 
     </div>
     
   
@@ -179,6 +180,7 @@
     <UpdateUserModal ref="UpdateUserPhonemodal" @ok="handleSaveOk" @close="handleSaveClose"/>
     <SendsmsModal ref="SendsmsModal" :Pupuarr="Pupu" @ok="handleSaveOk" @close="handleSaveClose"/>
     <PhoneModal ref="PhoneModal"/>
+    <SortModal ref="SortModal" @ok="handleSortOK"/>
   </a-card>
 </template>
 
@@ -193,10 +195,11 @@
   import UpdateUserModal from './modules/UserPhone/UpdateUserPhone'
   import SendsmsModal from './modules/sendSMS/sendsms'
   import PhoneModal from '@/views/list/modules/PhoneMsg/Phone'
-
+  import SortModal from '@/views/list/modules/UserSort/userSort'
   export default {
     name: "TableList",
     components: {
+      SortModal,
       PhoneModal,
       AInput,
       ATextarea,
@@ -212,6 +215,7 @@
     },
     data () {
       return {    
+        Userlist:[],
         loading:false,
         sDepID:'',
         initLoaddata:[],
@@ -297,12 +301,10 @@
             width: '150px',
             scopedSlots: { customRender: 'action' },
           }
-        ],         
-    
+        ],           
         loadData: parameter => {                 
-        let path=this.$route.path
-        let arr=path.split("/")                   
-        let s=arr[3]
+                
+        let s=this.$route.fullPath.split('/')[3] 
         // if(typeof parameter == "string"){
         //   parameter = {pageNo:1,pageSize:10};
         // }        
@@ -310,17 +312,22 @@
     
         return GetALLByDepID(Object.assign(parameter,this.queryParam))
             .then(res => {                 
-            let data= res.result        
-            data.data.forEach(v => {
+            let data= res.result    
+            
+            data.data.forEach(v => { 
                 if(v.Rstatus==6)
-                {
-                  v.Ustatus=v.Rstatus
+                {     
+                   v.Department_ID=this.$route.fullPath.split('/')[3]        
+                   v.Ustatus=v.Rstatus                 
                 }
             });          
           
            this.Pupu=data.data.map(item=>{
              return {Phone:item.cellphone,username:item.UserName,DPname:item.DepartmentName,ID:item.ID,UJOB:item.UJOB,checked:false}
            })              
+           this.Userlist=data.data
+           console.log(this.$route);
+           console.log(data)
            return data
          })           
         },
@@ -331,6 +338,9 @@
       }
     },
     created () {
+         
+        //  this.depID=
+         console.log()
         // getRoleList({ t: new Date()})     
         // GetPermissioninfobyKey({key:'qw'}).then(res=>{
         // console.log(res)
@@ -340,6 +350,23 @@
       // this.options=await this.GetDepnameAndchild();
     },
     methods: {
+      sortUser(val)
+      {
+        //this.Userlist
+      
+        // !val?_list=val:_list=this.Userlist
+        // console.log(_list);
+        // val==''?
+        if(val!='')
+        {
+          // val=this.Userlist
+           this.$refs.SortModal.show(val); 
+        }
+        
+          
+       
+       
+      },
        GetUboxToTel(e)
     {
       this.$refs.PhoneModal.get(e)          
@@ -419,8 +446,14 @@
             this.$refs.mytable.refresh()
       },
       handleSaveOk(){
-        console.log('AddOK')
-            this.$refs.mytable.refresh()
+            console.log('AddOK')        
+            this.$refs.mytable.refresh();
+        },
+       handleSortOK(){
+        console.log('sortOK')
+        
+            this.$refs.mytable.refresh();
+            this.$refs.mytable.onClearSelected();            
         },
     filter(inputValue, path) {
       return (path.some(option => (option.label).toLowerCase().indexOf(inputValue.toLowerCase()) > -1));
@@ -540,6 +573,10 @@
   }
 </script>
 <style scoped>
+#swap-i
+{
+  transform: rotate(90deg); 
+}
 .content .table-operator
 {
   margin-bottom:0px;

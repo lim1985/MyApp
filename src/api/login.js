@@ -18,8 +18,11 @@ export function login(parameter) {
   //url:'http://localhost:8080/banns',
     url: api.Login,
   // url:'/auth/login',
-    method: 'post',
-    data: parameter,
+    // method: 'post',
+    // data: parameter,
+    method: 'get',
+    params: parameter,  
+    withCredentials:true,
     headers: {
       'Content-Type': 'application/json;charset=UTF-8'
     }

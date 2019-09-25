@@ -68,8 +68,10 @@ const user = {
     // 登录
     Login({ commit }, userInfo) {
    //   console.log('登录页输入的内容：');
-      // console.log(userInfo);
+      console.log(userInfo);
       return new Promise((resolve, reject) => {
+      
+        console.log(userInfo);
         login(userInfo).then(res => {
         //  console.log('服务器打印的')       
           if(res.code===1)
@@ -95,6 +97,7 @@ const user = {
         }).catch(error => {
           reject(error)
         })
+     
       })
     }, 
     // 获取用户信息

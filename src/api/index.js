@@ -1,5 +1,8 @@
 const api = {
     Login: 'http://59.230.230.40/api/login',
+  //  Login: 'http://172.20.8.28:8080/api/ProxyLogin',
+
+    
     Logout: '/auth/logout',
     ForgePassword: '/auth/forge-password',
     Register: '/auth/register',

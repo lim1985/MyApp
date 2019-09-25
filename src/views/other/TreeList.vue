@@ -1,5 +1,5 @@
 <template>
-  <a-card :bordered="false">
+  <a-card :bordered="false">    
     <a-row :gutter="8">
       <a-col :span="5">
         <!-- <a-select
@@ -30,7 +30,9 @@
           @add="handleAdd"
           :showDepTree="true"
           @ReturnValue="GetUsersList"
-          @titleClick="handleTitleClick"></s-tree>
+          @titleClick="handleTitleClick"
+        >
+        </s-tree>
 
       </a-col>
       <!-- <a-row :gutter="8">
@@ -114,20 +116,7 @@
 </template>
 
 <script>
-// const data2 = [
-//   {
-//     title: 'Ant Design Title 1',
-//   },
-//   {
-//     title: 'Ant Design Title 2',
-//   },
-//   {
-//     title: 'Ant Design Title 3',
-//   },
-//   {
-//     title: 'Ant Design Title 4',
-//   },
-// ]
+
 import STree from '@/components/Tree/Tree'
 import STable  from '@/components/newTable'
 // import OrgModal from './modules/OrgModal'
@@ -222,8 +211,10 @@ export default {
               {        
                 console.log(res.res)                      
                 this.Pupu=res.res.data.map(item=>{
-                  return {Phone:item.cellphone,username:item.UserName,DPname:item.DepartmentName,ID:item.ID,UJOB:item.UJOB,checked:false}
-                })                          
+                  return {Phone:item.cellphone,username:item.UserName,DPname:item["ResferecDep.Abbreviation"],ID:item.ID,UJOB:item.UJOB,checked:false}
+                }) 
+                              
+                console.log(this.Pupu)           
                 return res.res
               }
               else
@@ -290,8 +281,13 @@ export default {
           }).then(params=>{  
            console.log(this.onclick) 
            console.log(params) 
+
                this.queryParam={
-                param:params,                      
+                param:[{
+                  DepID:152,
+                  key:"QW",
+                  status:9
+                }]                      
             } 
              console.log('输出的参数！');
              console.log(this.queryParam);            

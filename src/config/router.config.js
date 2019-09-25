@@ -31,22 +31,7 @@ let res= [ {
   //    component: () => import('@/views/list/DepCardList'), 
   //    meta: { title: '卡片式', icon: 'dashboard' },  
   //  }  
-  },
-  //  {
-  //    path: '/dashboard',
-  //    name: 'dashboard',
-  //    redirect: '/dashboard/analysis',
-  //    component: RouteView,
-  //    meta: { title: '首页', icon: 'dashboard' },
-  //    children: [
-  //      {
-  //        path: '/dashboard/analysis',
-  //        name: 'Analysis',
-  //        component: () => import('@/views/dashboard/Analysis'),
-  //        meta: { title: '工作台' }
-  //      }       
-  //    ]   
-  //  },
+  },  
    {
     path: '/list/QW',
     name: 'QW',   
@@ -1653,6 +1638,12 @@ let res= [ {
     component: PageView,
     meta: { title: '管理', icon: 'dashboard', permission: [ 'Admin' ] },
     children: [
+      {      
+            path: '/CMCCSend/send',
+            name: 'CMCCSend',
+            component: () => import('@/views/list/modules/sendSMS/cmccSendSms'),
+            meta: { title: '移动发短信' , permission: [ 'Admin' ] }
+      },
       {
         path: '/Department/manager',
         name: 'Department',

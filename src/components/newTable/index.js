@@ -212,6 +212,7 @@ export default {
       if (this.rowSelection) {
         this.rowSelection.onChange([], [])
         this.updateSelect([], [])
+        console.log('清空了啊')
       }
     },
     /**
