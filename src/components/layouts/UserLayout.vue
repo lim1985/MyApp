@@ -9,7 +9,7 @@
           </a>
         </div>
         <div class="desc">
-          Ant Design 是大祥区最具影响力的 Web 设计规范
+          Ant Design 是最具影响力的 Web 设计规范
         </div>
       </div>
 
@@ -22,7 +22,7 @@
           <a href="_self">条款</a>
         </div>
         <div class="copyright">
-          Copyright &copy; 2019 大祥区技术组出品
+          Copyright &copy; 2019 技术支持：大祥区电政办（0739-5396272）
         </div>
       </div>
     </div>

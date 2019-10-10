@@ -178,6 +178,7 @@ const user = {
         commit('SET_USERID', '')        
         Vue.ls.remove(ACCESS_TOKEN)
         Vue.ls.remove(User_ID)
+        console.log(state.token);
         logout(state.token).then(() => {
           resolve()
         }).catch(() => {

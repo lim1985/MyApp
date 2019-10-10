@@ -190,7 +190,7 @@
   import ATextarea from "ant-design-vue/es/input/TextArea"
   import AInput from "ant-design-vue/es/input/Input"
   import { mapState} from 'vuex'
-  import {GetALLByDepID,AddPhoneUser,DeleteUser,ReferenceDelete} from '@/api/manage'
+  import {GetALLByDepID,AddPhoneUser,DeleteUser,ReferenceDelete,SelectDepByID} from '@/api/manage'
   import UserModal from './modules/UserPhone/addUserPhone'
   import UpdateUserModal from './modules/UserPhone/UpdateUserPhone'
   import SendsmsModal from './modules/sendSMS/sendsms'
@@ -302,9 +302,29 @@
             scopedSlots: { customRender: 'action' },
           }
         ],           
-        loadData: parameter => {                 
+       loadData:async parameter => {                 
                 
         let s=this.$route.fullPath.split('/')[3] 
+
+        let _Key=await SelectDepByID({ID:s});
+        let _array=[]
+        if(_Key.code==1)
+        {
+         
+          _array.push(_Key.result.Permission_Key);
+          _array.push(_Key.result.DepartmentId)
+        }
+      localStorage.setItem('DepKeylist',_array);
+        
+         console.log(_array);
+        // let _array=[]
+        // if(_Key=)
+        // _array.push(_Key.result.Permission_Key)
+        // let PermissionKey=SelectDepByID({ID:s}).then(res=>{
+        //   console.log(res);
+        //   return res.result.Permission_Key;
+        // })
+        // console.log(PermissionKey);
         // if(typeof parameter == "string"){
         //   parameter = {pageNo:1,pageSize:10};
         // }        
@@ -314,6 +334,7 @@
             .then(res => {                 
             let data= res.result    
             
+            console.log(data);
             data.data.forEach(v => { 
                 if(v.Rstatus==6)
                 {     
@@ -352,8 +373,7 @@
     methods: {
       sortUser(val)
       {
-        //this.Userlist
-      
+        //this.Userlist      
         // !val?_list=val:_list=this.Userlist
         // console.log(_list);
         // val==''?
@@ -361,11 +381,7 @@
         {
           // val=this.Userlist
            this.$refs.SortModal.show(val); 
-        }
-        
-          
-       
-       
+        }       
       },
        GetUboxToTel(e)
     {

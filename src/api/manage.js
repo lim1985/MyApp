@@ -21,8 +21,6 @@ const api = {
   addRole: 'http://59.230.230.40/api/rolesAdd',
   getrolelist:'http://59.230.230.40/api/roleslist',
 
-  
-
   //管理员用户接口
   UpdataAdminRoles:'http://59.230.230.40/api/ActionUpdataAdmin',  //修改管理员角色
   GetAdmininfo:'http://59.230.230.40/api/userInfo', //查询管理员信息
@@ -39,8 +37,7 @@ const api = {
   QueryAllDeplist:'http://59.230.230.40/api/DepartmentQueryALL',
   SelectAllDepchild:'http://59.230.230.40/api/selectAlldepartmentBykey',
   SelectDepartmentByID:'http://59.230.230.40/api/DepartmentGetByID',
-  SelectDepslistsbyLike:'http://59.230.230.40/api/SelectDepslistsbyLike',
- 
+  SelectDepslistsbyLike:'http://59.230.230.40/api/SelectDepslistsbyLike', 
   //通讯录管理接口
   //通讯录人员添加
 
@@ -67,8 +64,6 @@ const api = {
   ReferenceAdd:'http://59.230.230.40/api/ReferenceAdd',//用于list/modules/UserPhone/addUserPhone
   ReferenceDelete:'http://59.230.230.40/api/ReferenceDelete',//用于list/modules/UserPhone/addUserPhone
   IsReference:'http://59.230.230.40/api/IsReference',//用于判断该单位是否引用过该用户{DEPid，userid}999
-
-
   
  //发短信接口
    sendsms:'http://info.dxzc.gov.cn:3000/api/sendsms',

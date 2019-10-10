@@ -211,8 +211,18 @@
       if(url.search)
       {
         //http://api.dxzc.gov.cn:3000/api/getalluserinfo?code='+s
+        //?code=d3zdsJ-lTZe3hOba5WfgtQ&userType=1
         let res=url.search.split('=')
-        let userinformation= await GetUserInformation({code:res[1]});
+
+        let s=res[1];
+        console.log(s.split("&"));
+        let a=s.split('&');
+        console.log(a[0]);
+        //zIsRSTuoR721YPw1kuMgyQ&userType
+        //"9OhFCnFHSAOhFMcfTv3Efg&userType"
+        // let _arrs=res[1].splice('&');
+        // console.log(_arrs)
+        let userinformation= await GetUserInformation({code:a[0]});
         console.log(userinformation);
          console.log(typeof(userinformation.c))
         // if(userinformation)
@@ -227,6 +237,7 @@
            if(toJson.phone)
            {
               this.go=true;
+              console.log(toJson);
               this.Userinfo=toJson;
               this.handleSubmit();
            }
@@ -280,7 +291,7 @@
       gotoHunan(){
         console.log('ssssss')
         this.gotoLogin=true;
-        window.location="http://zwfw.hunan.gov.cn/hnvirtualhall/login.jsp?areacode=430503999000&redirect_url=http://59.230.230.40"
+        window.location="http://zwfw-new.hunan.gov.cn/hnvirtualhall/login.jsp?areacode=430503999000&redirect_url="+window.location.href; 
         //href="http://zwfw.hunan.gov.cn/hnvirtualhall/login.jsp?areacode=430503999000&redirect_url=http://172.20.8.28:8080
       },
       // getCode(fullpath)

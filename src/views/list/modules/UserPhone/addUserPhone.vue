@@ -31,9 +31,11 @@
             hasFeedback         
           >
             <a-input 
+              @change="GetUserByUserName"
               placeholder='联系人姓名' 
-              v-decorator="['UserName',{rules: [{ required: true },{ validator:v().asyncCheckUserName }]}]"
+              v-decorator="['UserName',{rules: [{ required: true },{ validator:v().checkUsername }]}]"
             /> 
+            <!-- checkUsername asyncCheckUserName -->
             <!-- <a-input placeholder='联系人姓名' v-model="Mymdl.UserName" id='UserName' /> -->
           </a-form-item>
           <a-form-item
@@ -107,10 +109,10 @@
           </a-row>
           <a-row>
             <a-col :span="24">
-              <a-form-item   
+              <a-form-item
                 v-bind="formItemLayout"             
-                label='办公座机'  
-                hasFeedback                 
+                label='办公座机'
+                hasFeedback
               >
                 <a-input placeholder='填写联系人的办公座机' v-decorator="['tel',{rules: [{ required: false },{ validator:v().checkTel }]}]"/>
               </a-form-item>           
@@ -119,13 +121,31 @@
         </a-form>
       </a-spin>
     </a-modal> 
+     <a-modal
+      title="选择人员"
+      :width="680"
+      v-model="userVisible"    
+      :confirmLoading="confirmLoading"
+    >
+    <a-table :columns="columns" :dataSource="AddUserData">
+    <a slot="name" slot-scope="text" href="javascript:;">{{text}}</a>
+    <span slot="customTitle"><a-icon type="smile-o" /> 姓名</span>
+ 
+    <span slot="action" slot-scope="text, record">
+   
+      <a @click="chele(record)">选择</a>
+      <a-divider type="vertical" />
+     
+    </span>
+  </a-table>
+     </a-modal>
   </div>  
 </template>
 <script>
   import Vue from 'vue'  
   import { mapState} from 'vuex'
   import { User_ID } from "@/store/mutation-types" 
-  import {Select_PermissionsByRolesID,getUserrolesbyAdminID,AddPhoneUser,ReferenceAdd} from '@/api/manage'
+  import {Select_PermissionsByRolesID,getUserrolesbyAdminID,AddPhoneUser,ReferenceAdd,GetUserInformationByUserNameLIke} from '@/api/manage'
   import { Promise } from 'q';
   import Validate from '@/tools/Validate/index'
   import { error } from 'util';
@@ -137,7 +157,55 @@
 export default {
   name: 'AdduserModal', 
   data () {
-    return {      
+    return {   
+                    AddUserData : [{
+                    key: '1',
+                    name: '刘勃',
+                    sex: 1,
+                    Abbreviation: '区人民政府',
+                    cellPhone:'15243990018'
+                    // tags: ['nice', 'developer'],
+                  }],
+                   columns : [{
+                    dataIndex: 'name',
+                    key: 'name',
+                    slots: { title: 'customTitle' },
+                    scopedSlots: { customRender: 'name' },
+                  }, {
+                    title: '性别',
+                    dataIndex: 'sex',
+                    key: 'sex',
+                       customRender: (text=>{
+                        if(text==1)
+                        {
+                          return '男'
+                        }
+                        else              
+                        {
+                          return '女'
+                        }            
+                      }) 
+                  }, {
+                    title: '部门',
+                    dataIndex: 'Abbreviation',
+                    key: 'Abbreviation',
+                  }, {
+                    title: '手机号',
+                    key: 'cellPhone',
+                    dataIndex: 'cellPhone',
+                    scopedSlots: { customRender: 'cellPhone' },
+                  }, {
+                    title: '操作',
+                    key: 'action',
+                    scopedSlots: { customRender: 'action' },
+                  }],
+     
+      userVisible:false,
+       parameter:{
+        pageNo:1,
+        pageSize:20
+      },   
+      getcellphone:'',
       Referencevisible:false,
       DepValue:[],
       tel:'',
@@ -182,7 +250,12 @@ export default {
       })    
     },
    watch: {
-   
+    '$route'()
+    {        
+      console.log(this.$route.meta)
+      this.$store.commit('SET_DEPKEY',this.$route.meta.permission[0]);     
+      
+    }
       },
   async mounted(){   
       let _arr=await this.GetDepnameAndchild()    
@@ -194,6 +267,56 @@ export default {
 
     },
   methods:  {
+    chele(record){      
+        this.userVisible=false;
+        setTimeout(() => {
+           this.form.setFieldsValue({
+          UserName:record.name,
+          cellphone: record.cellPhone,
+          UJOB: record.UJOB,
+          tel: record.tel,   
+          Abbreviation:record.Abbreviation,
+          Sex:record.Sex+''
+        })
+        }, 1000);
+    },
+     async GetUserByUserName(e)
+    {
+       const { value } = e.target
+        let reg = /^[\u0391-\uFFE5]{0,1}$/;
+     if(!reg.test(value))
+    {
+     let res=await GetUserInformationByUserNameLIke({data:value,parameter:this.parameter})
+      console.log(res);    
+      if(res.code==1)
+      {
+        if(res.res.totalCount>1)
+        {
+             this.AddUserData=res.res.data.map(action=>{
+               return {key:action.ID,name:action.UserName,sex:action.Sex,Abbreviation:action.Abbreviation,cellPhone:action.cellphone,UJOB:action.UJOB,tel:action.Tel,Sex:action.Sex}
+             })    
+          this.userVisible=true;
+          return;
+        }     
+          this.form.setFieldsValue({      
+             UserName:res.res.data[0].UserName,  
+          cellphone: res.res.data[0].cellphone,
+          UJOB: res.res.data[0].UJOB,
+          tel: res.res.data[0].Tel,  
+          Abbreviation:res.res.data[0].Abbreviation, 
+          Sex:res.res.data[0].Sex+''
+        })
+        //  tel: res.res.data[0].cellphone,
+        //    UJOB: res.res.data[0].cellphone,
+        //   UJOB
+
+      }
+      return;
+    }
+
+
+    },
+  
     AddReference(){
       this.Referencevisible=true;     
     },
@@ -217,11 +340,11 @@ export default {
           _arr.push(s[i])
       }
       this.DepValue=_arr
+      console.log(this.DepValue);
       }     
     },
       QuChongFuObject(arr) {
-            var uniques = [];
-          
+            var uniques = [];          
             var obj = {};
                 for(var i =0; i<arr.length; i++){
                     if(!obj[arr[i].value]){

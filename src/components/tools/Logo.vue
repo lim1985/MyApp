@@ -13,7 +13,7 @@
     props: {
       title: {
         type: String,
-        default: '智能通讯录 v1.0',
+        default: '智能通讯录 v1.1',
         required: false
       },
       showTitle: {

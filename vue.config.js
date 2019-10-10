@@ -31,42 +31,42 @@ module.exports = {
   },
   */
  //打包配置开始
-//  configureWebpack: config => {
-//   const plugins = [];
+ configureWebpack: config => {
+  const plugins = [];
 
-//  // 启用代码压缩
-//   plugins.push(
-//     new TerserPlugin({
-//       terserOptions: {
-//         compress: {
-//           warnings: false,
-//           drop_console: true,
-//           drop_debugger: false,
-//           pure_funcs: ["console.log"] //移除console
-//         }
-//       },
-//       sourceMap: false,
-//       parallel: true
-//     })
-//   ),
-//    // 代码压缩打包
-//     // plugins.push(
-//     //   new CompressionWebpackPlugin({
-//     //     filename: "[path].gz[query]",
-//     //     algorithm: "gzip",
-//     //     test: productionGzipExtensions,
-//     //     threshold: 10240,
-//     //     minRatio: 0.8
-//     //   })
-//     // );
-//     plugins.push(
-//       new BundleAnalyzerPlugin()
-//     );
-//   config.plugins = [...config.plugins, ...plugins];
-// },
+ // 启用代码压缩
+  plugins.push(
+    new TerserPlugin({
+      terserOptions: {
+        compress: {
+          warnings: false,
+          drop_console: true,
+          drop_debugger: false,
+          pure_funcs: ["console.log"] //移除console
+        }
+      },
+      sourceMap: false,
+      parallel: true
+    })
+  ),
+   // 代码压缩打包
+    // plugins.push(
+    //   new CompressionWebpackPlugin({
+    //     filename: "[path].gz[query]",
+    //     algorithm: "gzip",
+    //     test: productionGzipExtensions,
+    //     threshold: 10240,
+    //     minRatio: 0.8
+    //   })
+    // );
+    plugins.push(
+      new BundleAnalyzerPlugin()
+    );
+  config.plugins = [...config.plugins, ...plugins];
+},
 //显示项目架构
  
-configureWebpack: {
+// configureWebpack: {
     // performance: {
     //   hints:false
     // }
@@ -83,7 +83,7 @@ configureWebpack: {
     //     return assetFilename.endsWith('.js');
     //   }
     // }
-  },
+  // },
   chainWebpack: (config) => {
     config.resolve.alias
       .set('@$', resolve('src'))

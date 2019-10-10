@@ -52,13 +52,24 @@
       ...mapGetters(["nickname", "avatar"]),
       handleLogout() {
         const that = this
-
+        const hostName=location.hostname;
+        const Port=location.port;
         this.$confirm({
           title: '提示',
           content: '真的要注销登录吗 ?',
           onOk() {
             return that.Logout({}).then(() => {
-              window.location.reload()
+              console.log(window.location)
+          
+          if(Port)
+          {
+              window.location="http://"+hostName+":"+Port;
+              return ;
+          }
+               window.location="http://"+hostName;
+            
+              // window.location.reload()
+
             }).catch(err => {
               that.$message.error({
                 title: '错误',
