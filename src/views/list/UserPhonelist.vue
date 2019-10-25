@@ -62,22 +62,33 @@
     </div> -->
 
     <div class="table-operator">
-      <a-button type="primary" @click="addphone()" :style="{ fontSize: '18px' }" icon="user-add">添加联系人</a-button>        
+      <a-row :gutter="2">
+        <a-col :xs="{ span: 24}" :lg="{ span: 8 }" :xl="{span: 8 }" :xxl="{ span: 6}"><a-button type="primary" @click="addphone()" :style="{ fontSize: '18px' }" icon="user-add">添加联系人</a-button>     
+          <a-dropdown>
+            <a-menu slot="overlay">
+              <a-menu-item key="3" @click="sendsms(selectedRows)"><a-icon type="lock" />发短信</a-menu-item>
+              <a-menu-item key="1" @click="sortUser(selectedRows)"><a-icon id="swap-i" type="swap" />排序</a-menu-item>
+              <!-- <a-menu-item key="1"><a-icon type="delete" />删除</a-menu-item> -->
+              <!-- lock | unlock -->
+              <!-- <a-menu-item key="2"><a-icon type="lock" />锁定</a-menu-item> -->
+            </a-menu>
+            <a-button style="margin-left: 8px">
+              批量操作 <a-icon type="down" />
+            </a-button>
+          </a-dropdown>
+        </a-col>
+        <a-col :xs="{ span: 24 }" :lg="{ span: 6, offset: 8 }" :xxl="{ span: 6,offset:12 }" >
+          <!-- //:span="6" :offset="12" -->
+          <a-input-search placeholder="输入姓名进行检索" style="width:320px" @change="onSearchPhoneUser" />
+        </a-col>
+      </a-row>
+          
       <!-- <a-button type="primary" @click="sortUser()" :style="{ fontSize: '18px' }"><a-icon id="swap-i" type="swap" />排序</a-button>       -->
-      <a-dropdown v-if="selectedRowKeys.length > 0">
-        <a-menu slot="overlay">
-          <a-menu-item key="3" @click="sendsms(selectedRows)"><a-icon type="lock" />发短信</a-menu-item>
-          <a-menu-item key="1" @click="sortUser(selectedRows)"><a-icon id="swap-i" type="swap" />排序</a-menu-item>
-          <!-- <a-menu-item key="1"><a-icon type="delete" />删除</a-menu-item> -->
-          <!-- lock | unlock -->
-          <!-- <a-menu-item key="2"><a-icon type="lock" />锁定</a-menu-item> -->
-        </a-menu>
-        <a-button style="margin-left: 8px">
-          批量操作 <a-icon type="down" />
-        </a-button>
-      </a-dropdown>
-      <div>
+      <!-- v-if="selectedRowKeys.length > 0" -->
+     
     
+     
+      <div>    
         <a-row type="flex" justify="center" align="middle">
           <a-col :span="24">       
             <p class="height-50"><span>温馨提示：本单位通讯录里的联系人将会出现在对应的主通讯录的单位目录里。</span></p>
@@ -190,7 +201,8 @@
   import ATextarea from "ant-design-vue/es/input/TextArea"
   import AInput from "ant-design-vue/es/input/Input"
   import { mapState} from 'vuex'
-  import {GetALLByDepID,AddPhoneUser,DeleteUser,ReferenceDelete,SelectDepByID} from '@/api/manage'
+  import _ from 'lodash'
+  import {GetALLByDepID,AddPhoneUser,DeleteUser,ReferenceDelete,SelectDepByID,GetUserInformationByUserNameLIke} from '@/api/manage'
   import UserModal from './modules/UserPhone/addUserPhone'
   import UpdateUserModal from './modules/UserPhone/UpdateUserPhone'
   import SendsmsModal from './modules/sendSMS/sendsms'
@@ -215,6 +227,7 @@
     },
     data () {
       return {    
+        Search:false,
         Userlist:[],
         loading:false,
         sDepID:'',
@@ -304,32 +317,50 @@
         ],           
        loadData:async parameter => {                 
                 
-        let s=this.$route.fullPath.split('/')[3] 
-
+        let s=this.$route.fullPath.split('/')[3]
+        this.queryParam.DepID=s  
         let _Key=await SelectDepByID({ID:s});
         let _array=[]
         if(_Key.code==1)
-        {
-         
+        {         
           _array.push(_Key.result.Permission_Key);
           _array.push(_Key.result.DepartmentId)
         }
       localStorage.setItem('DepKeylist',_array);
-        
-         console.log(_array);
-        // let _array=[]
-        // if(_Key=)
-        // _array.push(_Key.result.Permission_Key)
-        // let PermissionKey=SelectDepByID({ID:s}).then(res=>{
-        //   console.log(res);
-        //   return res.result.Permission_Key;
-        // })
-        // console.log(PermissionKey);
-        // if(typeof parameter == "string"){
-        //   parameter = {pageNo:1,pageSize:10};
-        // }        
-        this.queryParam.DepID=s  
-    
+        if(this.isSearch)
+        {
+          console.log(this.queryParam);
+          return GetUserInformationByUserNameLIke(Object.assign(parameter,this.queryParam))
+          .then(res=>{
+            console.log(res);
+            if(res.code==-1)
+            {
+             this.$message.error('没有找到该联系人！请重试')
+             this.isSearch=false;
+             this.$refs.mytable.refresh()  
+            }
+            else
+            {
+
+            let data= res.res
+               data.data.forEach(v => { 
+                if(v['ResferecDep.LIM_ResferenceAndDep.status']==-1)
+                {     
+                 if(v.status ==6)
+                 {
+                   v.Department_ID=this.$route.fullPath.split('/')[3]        
+                   v.Ustatus=v.status
+                 }                     
+                   v.Ustatus=v.status
+                            
+                }
+            });   
+            return data
+            }          
+          })        
+        }
+       
+
         return GetALLByDepID(Object.assign(parameter,this.queryParam))
             .then(res => {                 
             let data= res.result    
@@ -349,13 +380,15 @@
            this.Userlist=data.data
            console.log(this.$route);
            console.log(data)
+           this.allRows=data;
            return data
          })           
         },
         options:[],
         onclick:false,
         selectedRowKeys: [],
-        selectedRows: []
+        selectedRows: [],
+        allRows:[]
       }
     },
     created () {
@@ -371,17 +404,41 @@
       // this.options=await this.GetDepnameAndchild();
     },
     methods: {
+
+
+      onSearchPhoneUser:_.debounce(function(val){
+       const { value} = val.target  
+       console.log(value)  
+       if(value)
+       {
+         this.isSearch=true    
+         this.queryParam.data=value; 
+         this.$refs.mytable.refresh()  
+         console.log(this.queryParam);   
+       }
+       else
+       {
+         this.isSearch=false
+         this.queryParam.data=value
+         this.$refs.mytable.refresh()  
+       }
+      },1000),
+      // onSearchPhoneUser : this.$debounce (function (val){
+      //   console.log(val)
+      // },500),
       sortUser(val)
       {
-        //this.Userlist      
-        // !val?_list=val:_list=this.Userlist
-        // console.log(_list);
-        // val==''?
+      
         if(val!='')
         {
-          // val=this.Userlist
+       
            this.$refs.SortModal.show(val); 
-        }       
+        }   
+        else
+        {
+           this.$refs.SortModal.show(this.Userlist); 
+         
+        }    
       },
        GetUboxToTel(e)
     {

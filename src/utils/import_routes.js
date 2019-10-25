@@ -1,0 +1,1 @@
+module.exports = file => () => import('@/components/layouts/'+file+'.vue')

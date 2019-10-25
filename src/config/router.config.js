@@ -1,5 +1,48 @@
-import { UserLayout, BasicLayout, RouteView, PageView } from '@/components/layouts'
+import { UserLayout, BasicLayout, RouteView, PageView ,TreeList} from '@/components/layouts'
 
+
+import {GetDyNamicRoutes} from '@/api/manage'
+//  import TreeList from '@/views/other/TreeList'
+
+import TableList from '@/views/list/UserPhonelist'
+import Cusomgroup from '@/views/other/customgroup'
+
+// component: () => import('@/views/other/customgroup'),
+export const NewAsyncDyNamicRouter=(params)=>{
+  return new Promise((resolve)=>{
+    const DyNamicRoute=[];    
+  setTimeout(() => {
+    
+  }, 500);
+      GetDyNamicRoutes(params).then(res=>{     
+      DyNamicRoute.push(res.DyNamicRoutes);
+      resolve(DyNamicRoute);
+      })      
+  })
+  
+  // let _routes= new Promise((resolve)=>{
+  //     let _arr=GetDyNamicRoutes(params).then(res=>{
+  //       return res
+  //     })
+  //     resolve(_arr);
+  // })
+  // let routes=_routes.then(res=>{
+  //   return res;
+  // })
+  // let routes= GetDyNamicRoutes({AdminID:1}).then(res=>{
+  //   return res;
+  // })  
+ 
+  //  let routes=_routes.then(res=>{
+  //    return res;
+  //  })
+ 
+    // DyNamicRoute.push()
+
+  // console.log(params);
+  
+  // return DyNamicRoute
+}
 export const newasyncRoterMap=(params)=>{
   console.log(`----------------------`)
   console.log(params)
@@ -9,8 +52,7 @@ let res= [ {
  component: BasicLayout,
  meta: { title: '首页' },
  redirect: '/views',
- children: [
-  
+ children: [  
   {
     path: '/views',
     redirect: '/views/DepTreelist',
@@ -21,16 +63,10 @@ let res= [ {
       {
         name: 'DepList',   
         path: '/views/DepTreelist',
-        component: () => import('@/views/other/TreeList'),
+         component:TreeList,
+        // component: () => import('@/views/other/TreeList'),
         meta: { title: '部门列表' }
-      }
-    ] 
-  // {
-  //    path:'/dashboard/DepCardList',
-  //    name:'cardlist',
-  //    component: () => import('@/views/list/DepCardList'), 
-  //    meta: { title: '卡片式', icon: 'dashboard' },  
-  //  }  
+      }]  
   },  
    {
     path: '/list/QW',
@@ -42,13 +78,16 @@ let res= [ {
       {
         path: '/list/UserPhonelist/152',          
         name: 'Phonelist_QW',
-        component: () => import('@/views/list/UserPhonelist'),
+        // component: () => import('@/views/list/UserPhonelist'),
+        component:TableList,
         meta: { title: '通信录', permission: [ 'QW' ] }
       },
       {
         path: '/list/CustomGroup/152',          
         name: 'CustomGroup_QW',
-        component: () => import('@/views/other/customgroup'),
+        
+        component:Cusomgroup,
+        // component: () => import('@/views/other/customgroup'),
         meta: { title: '自定义组', permission: [ 'QW' ] }
       },
       
@@ -135,10 +174,9 @@ let res= [ {
     path: '/list/QJWJCJ',
     name: 'QJWJCJ',
     redirect: {name:'Phonelist_QJWJCJ'},
-    meta: { title: '区纪委、监察局',icon: 'dashboard', permission: [ 'QJWJCJ' ] },
+    meta: { title: '区纪委监委',icon: 'dashboard', permission: [ 'QJWJCJ' ] },
     children:[
-      {
-      
+      {      
         path: '/list/UserPhonelist/157',
         name: 'Phonelist_QJWJCJ',
         component: () => import('@/views/list/UserPhonelist'),
@@ -261,7 +299,7 @@ let res= [ {
         path: '/list/DAJ',
         name: 'DAJ',
         redirect: {name:'Phonelist_DAJ'},
-        meta: { title: '档案局', permission: [ 'DAJ' ] },
+        meta: { title: '档案馆', permission: [ 'DAJ' ] },
         children:[
           {
           
@@ -451,7 +489,7 @@ let res= [ {
         path: '/list/XFHTCSKJFBGS',
         name: 'XFHTCSKJFBGS',
         redirect: {name:'Phonelist_XFHTCSKJFBGS'},
-        meta: { title: '信访和调处社会纠纷办公室', permission: [ 'XFHTCSKJFBGS' ] },
+        meta: { title: '信访局', permission: [ 'XFHTCSKJFBGS' ] },
         children:[
           {
           
@@ -467,7 +505,7 @@ let res= [ {
         path: '/list/JGSWGLJ',
         name: 'JGSWGLJ',
         redirect: {name:'Phonelist_JGSWGLJ'},
-        meta: { title: '机关事务管理局', permission: [ 'JGSWGLJ' ] },
+        meta: { title: '机关事务服务中心', permission: [ 'JGSWGLJ' ] },
         children:[
           {
          
@@ -726,7 +764,7 @@ let res= [ {
         path: '/list/AQSCJDGLJ',
         name: 'AQSCJDGLJ',
         redirect: {name:'Phonelist_AQSCJDGLJ'},
-        meta: { title: '安全生产监督管理局', permission: [ 'AQSCJDGLJ' ] },
+        meta: { title: '应急管理局', permission: [ 'AQSCJDGLJ' ] },
         children:[
           {
          
@@ -742,14 +780,20 @@ let res= [ {
         path: '/list/SPYPJDGLJ',
         name: 'SPYPJDGLJ',
         redirect: {name:'Phonelist_SPYPJDGLJ'},
-        meta: { title: '食品药品监督管理局', permission: [ 'SPYPJDGLJ' ] },
+        meta: { title: '市场监管局', permission: [ 'SPYPJDGLJ' ] },
         children:[
           {         
             path: '/list/UserPhonelist/116',
             name: 'Phonelist_SPYPJDGLJ',
             component: () => import('@/views/list/UserPhonelist'),
             meta: { title: '通信录', permission: [ 'SPYPJDGLJ' ] }
-          }
+          },
+          {
+            path: '/list/CustomGroup/116',          
+            name: 'CustomGroup_SPYPJDGLJ',
+            component: () => import('@/views/other/customgroup'),
+            meta: { title: '自定义组', permission: [ 'SPYPJDGLJ' ] }
+          } 
         ]
       }, 
       {
@@ -1615,6 +1659,182 @@ let res= [ {
   ]
 },
 {
+  path: '/list/WFLSW',
+  name: 'WFLSW',
+  component: PageView,
+  meta: { title: '未分类单位', icon: 'dashboard', permission: [ 'WFLSW' ] },
+  children: [
+    {
+      component: RouteView,
+      path: '/list/wxb',
+      name: 'WXB',
+      redirect: {name:'Phonelist_WXB'},
+      meta: { title: '网信办', permission: [ 'WXB' ] },
+      children:[
+        {        
+          path: '/list/UserPhonelist/165',
+          name: 'Phonelist_WXB',
+          component: () => import('@/views/list/UserPhonelist'),
+          meta: { title: '通信录', permission: [ 'WXB' ] }
+        },
+        {
+          path: '/list/CustomGroup/165',          
+          name: 'CustomGroup_WXB',
+          component: () => import('@/views/other/customgroup'),
+          meta: { title: '自定义组', permission: [ 'WXB' ] }
+        }  
+      ]
+    },
+    {
+      component: RouteView,
+      path: '/list/SZS',
+      name: 'SZS',
+      redirect: {name:'Phonelist_SZS'},
+      meta: { title: '史志室', permission: [ 'SZS' ] },
+      children:[
+        {        
+          path: '/list/UserPhonelist/166',
+          name: 'Phonelist_SZS',
+          component: () => import('@/views/list/UserPhonelist'),
+          meta: { title: '通信录', permission: [ 'SZS' ] }
+        },
+        {
+          path: '/list/CustomGroup/166',          
+          name: 'CustomGroup_SZS',
+          component: () => import('@/views/other/customgroup'),
+          meta: { title: '自定义组', permission: [ 'SZS' ] }
+        }  
+      ]
+    },
+    {
+      component: RouteView,
+      path: '/list/RMTZX',
+      name: 'RMTZX',
+      redirect: {name:'Phonelist_RMTZX'},
+      meta: { title: '融媒体中心', permission: [ 'RMTZX' ] },
+      children:[
+        {        
+          path: '/list/UserPhonelist/167',
+          name: 'Phonelist_RMTZX',
+          component: () => import('@/views/list/UserPhonelist'),
+          meta: { title: '通信录', permission: [ 'RMTZX' ] }
+        },
+        {
+          path: '/list/CustomGroup/167',          
+          name: 'CustomGroup_RMTZX',
+          component: () => import('@/views/other/customgroup'),
+          meta: { title: '自定义组', permission: [ 'RMTZX' ] }
+        }  
+      ]
+    },
+    {
+      component: RouteView,
+      path: '/list/ZRZYJ',
+      name: 'ZRZYJ',
+      redirect: {name:'Phonelist_RMTZX'},
+      meta: { title: '自然资源局', permission: [ 'ZRZYJ' ] },
+      children:[
+        {        
+          path: '/list/UserPhonelist/168',
+          name: 'Phonelist_ZRZYJ',
+          component: () => import('@/views/list/UserPhonelist'),
+          meta: { title: '通信录', permission: [ 'ZRZYJ' ] }
+        },
+        {
+          path: '/list/CustomGroup/168',          
+          name: 'CustomGroup_ZRZYJ',
+          component: () => import('@/views/other/customgroup'),
+          meta: { title: '自定义组', permission: [ 'ZRZYJ' ] }
+        }  
+      ]
+    },
+    {
+      component: RouteView,
+      path: '/list/TYJRSWJ',
+      name: 'TYJRSWJ',
+      redirect: {name:'Phonelist_TYJRSWJ'},
+      meta: { title: '退役军人事物局', permission: [ 'TYJRSWJ' ] },
+      children:[
+        {        
+          path: '/list/UserPhonelist/169',
+          name: 'Phonelist_TYJRSWJ',
+          component: () => import('@/views/list/UserPhonelist'),
+          meta: { title: '通信录', permission: [ 'TYJRSWJ' ] }
+        },
+        {
+          path: '/list/CustomGroup/169',          
+          name: 'CustomGroup_TYJRSWJ',
+          component: () => import('@/views/other/customgroup'),
+          meta: { title: '自定义组', permission: [ 'TYJRSWJ' ] }
+        }  
+      ]
+    },
+    {
+      component: RouteView,
+      path: '/list/YLBZJ',
+      name: 'YLBZJ',
+      redirect: {name:'Phonelist_YLBZJ'},
+      meta: { title: '医疗保障局', permission: [ 'YLBZJ' ] },
+      children:[
+        {        
+          path: '/list/UserPhonelist/170',
+          name: 'Phonelist_YLBZJ',
+          component: () => import('@/views/list/UserPhonelist'),
+          meta: { title: '通信录', permission: [ 'YLBZJ' ] }
+        },
+        {
+          path: '/list/CustomGroup/170',          
+          name: 'CustomGroup_YLBZJ',
+          component: () => import('@/views/other/customgroup'),
+          meta: { title: '自定义组', permission: [ 'YLBZJ' ] }
+        }  
+      ]
+    },
+    {
+      component: RouteView,
+      path: '/list/ZFFZYJZX',
+      name: 'ZFFZYJZX',
+      redirect: {name:'Phonelist_ZFFZYJZX'},
+      meta: { title: '政府发展研究中心', permission: [ 'ZFFZYJZX' ] },
+      children:[
+        {        
+          path: '/list/UserPhonelist/171',
+          name: 'Phonelist_ZFFZYJZX',
+          component: () => import('@/views/list/UserPhonelist'),
+          meta: { title: '通信录', permission: [ 'ZFFZYJZX' ] }
+        },
+        {
+          path: '/list/CustomGroup/171',          
+          name: 'CustomGroup_ZFFZYJZX',
+          component: () => import('@/views/other/customgroup'),
+          meta: { title: '自定义组', permission: [ 'ZFFZYJZX' ] }
+        }  
+      ]
+    },
+    {
+      component: RouteView,
+      path: '/list/GJNYKJY',
+      name: 'GJNYKJY',
+      redirect: {name:'Phonelist_GJNYKJY'},
+      meta: { title: '国家农业科技园', permission: [ 'GJNYKJY' ] },
+      children:[
+        {        
+          path: '/list/UserPhonelist/172',
+          name: 'Phonelist_GJNYKJY',
+          component: () => import('@/views/list/UserPhonelist'),
+          meta: { title: '通信录', permission: [ 'GJNYKJY' ] }
+        },
+        {
+          path: '/list/CustomGroup/172',          
+          name: 'CustomGroup_GJNYKJY',
+          component: () => import('@/views/other/customgroup'),
+          meta: { title: '自定义组', permission: [ 'GJNYKJY' ] }
+        }  
+      ]
+    }
+  ]
+},
+{
   path: '/list/QT',
   name: 'QT',   
   redirect: {name:'Phonelist_QT'},
@@ -1629,8 +1849,6 @@ let res= [ {
     },
   ]
 },
-
-
   {
     path: '/DepartmentManager',
     name: 'DepartmentManager',

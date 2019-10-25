@@ -65,7 +65,7 @@ const Validate={
 ///^[a-zA-Z\u4e00-\u9fa5]+$/
 checkZHZM(rule, value, callback)
 {
-  let reg=/^[a-zA-Z\u4e00-\u9fa5]+$/
+  let reg=/^[a-zA-Z_、\u4e00-\u9fa5]+$/
   
   if(!value)
   {
@@ -223,21 +223,22 @@ checkUsername(rule,value,callback)
    callback();
 
 },
-async checkPhoneallowNull(rule, value, callback){
+async checkPhoneallowNull(rule, value, callback)
+{
    let reg=/^0?1(3|4|5|7|8|9)\d{9}$/;   
+   let reg2=/^(\(\d{3,4}\)|\d{3,4}-|\s)?\d{7,14}$/;//检测座机
    if(!value)
    {
      callback();
      return
    }
-   else if(!reg.test(value))
+   else if (!reg.test(value) && !reg2.test(value))
    {
      callback('请正确填写手机号')  
      return       
    }
    else
-   {
-       
+   {       
     let s =await Validate.ValidatePhone(value,store.state.user.UserPhoneID)
         console.log(s)   
         if(s.code==-3)
@@ -252,12 +253,13 @@ async checkPhoneallowNull(rule, value, callback){
    }
 },
 async checkPhone(rule, value, callback) {  
-    var reg = /^0?1(3|4|5|7|8|9)\d{9}$/;   
-    if (!reg.test(value)) {
-       callback('请输入正确的手机号');              
+    var reg = /^0?1(3|4|5|7|8|9)\d{9}$/;   //检测手机
+    let reg2=/^(\(\d{3,4}\)|\d{3,4}-|\s)?\d{7,14}$/;//检测座机
+    if (!reg.test(value) && !reg2.test(value)) {
+       callback('请输入正确的手机号/座机号');              
        return;
     } 
-     else
+     else     
     {
      
       let s =await Validate.ValidatePhone(value,"-1")
@@ -273,7 +275,16 @@ async checkPhone(rule, value, callback) {
             store.commit('SET_ReferenceStatus',false);  
             callback();
           }               
-    }            
+    }   
+  //   if (!reg2.test(value)) {
+  //     callback('请输入正确的座机号码如：07395396272');              
+  //     return;
+  //  }          
+  //  else
+  //  {
+  //    callback();
+  //    return ;
+  //  }
   },
 
   async checkListPhone(value)

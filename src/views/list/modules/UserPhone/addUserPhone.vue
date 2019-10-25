@@ -10,7 +10,11 @@
       <a-spin :spinning="confirmLoading">
         <a-row>
           <a-col :span="4"></a-col>
-          <a-col :span="16"><a-cascader placeholder="选择部门类别" v-decorator="['DepKeylist',{initialValue:this.DepValue,rules: [{ required: true, message: '部门不能为空！' }]}]" :showSearch="{filter}" :options="options" @change="onChangeDeplist"/></a-col>
+          <a-col :span="16">
+            <a-cascader placeholder="选择部门类别" :options="options" @change="onChangeDeplist" :showSearch="{ filter }" :defaultValue="DepValue" />
+            <!-- <a-cascader placeholder="选择部门类别" v-decorator="['DepKeylist',{initialValue:this.DepValue,rules: [{ required: true, message: '部门不能为空！' }]}]" :showSearch="{filter}" :options="options" @change="onChangeDeplist"/>
+             -->
+          </a-col>
           <a-col :span="4"></a-col>
           <!-- ReferenceStatus -->
         </a-row>    
@@ -121,24 +125,22 @@
         </a-form>
       </a-spin>
     </a-modal> 
-     <a-modal
+    <a-modal
       title="选择人员"
       :width="680"
       v-model="userVisible"    
       :confirmLoading="confirmLoading"
+      :footer="null"
     >
-    <a-table :columns="columns" :dataSource="AddUserData">
-    <a slot="name" slot-scope="text" href="javascript:;">{{text}}</a>
-    <span slot="customTitle"><a-icon type="smile-o" /> 姓名</span>
- 
-    <span slot="action" slot-scope="text, record">
-   
-      <a @click="chele(record)">选择</a>
-      <a-divider type="vertical" />
-     
-    </span>
-  </a-table>
-     </a-modal>
+      <a-table :columns="columns" :dataSource="AddUserData">
+        <a slot="name" slot-scope="text" href="javascript:;">{{ text }}</a>
+        <span slot="customTitle"><a-icon type="smile-o" /> 姓名</span>      
+        <span slot="action" slot-scope="text, record">   
+          <a @click="chele(record)">选择</a>
+          <a-divider type="vertical" />     
+        </span>
+      </a-table>
+    </a-modal>
   </div>  
 </template>
 <script>
@@ -158,14 +160,7 @@ export default {
   name: 'AdduserModal', 
   data () {
     return {   
-                    AddUserData : [{
-                    key: '1',
-                    name: '刘勃',
-                    sex: 1,
-                    Abbreviation: '区人民政府',
-                    cellPhone:'15243990018'
-                    // tags: ['nice', 'developer'],
-                  }],
+                   AddUserData : [],
                    columns : [{
                     dataIndex: 'name',
                     key: 'name',
@@ -245,8 +240,7 @@ export default {
         V_name:state=>state.user.name,
         UserPhoneID:state=>state.user.UserPhoneID,
         ReferenceStatus:state=>state.user.ReferenceStatus,
-        ReferenceUserId:state=>state.user.ReferenceUserId
-            
+        ReferenceUserId:state=>state.user.ReferenceUserId            
       })    
     },
    watch: {
@@ -270,15 +264,17 @@ export default {
     chele(record){      
         this.userVisible=false;
         setTimeout(() => {
-           this.form.setFieldsValue({
+        this.form.setFieldsValue({
           UserName:record.name,
           cellphone: record.cellPhone,
           UJOB: record.UJOB,
           tel: record.tel,   
           Abbreviation:record.Abbreviation,
-          Sex:record.Sex+''
-        })
-        }, 1000);
+          Sex:record.Sex+'',
+        
+        })  
+            this.form.validateFields(['cellphone']);
+        }, 1000);    
     },
      async GetUserByUserName(e)
     {
@@ -306,6 +302,7 @@ export default {
           Abbreviation:res.res.data[0].Abbreviation, 
           Sex:res.res.data[0].Sex+''
         })
+          this.form.validateFields(['cellphone']);
         //  tel: res.res.data[0].cellphone,
         //    UJOB: res.res.data[0].cellphone,
         //   UJOB
@@ -318,7 +315,9 @@ export default {
     },
   
     AddReference(){
-      this.Referencevisible=true;     
+      this.Referencevisible=true;  
+      console.log(this.DepValue);   
+
     },
     setDepkey(){
 
@@ -442,7 +441,8 @@ export default {
         new Promise ((resolve)=>{
              setTimeout(async () => {
                console.log(_this.mdl);
-                 const res=await ReferenceAdd({UserPhoneID:_this.ReferenceUserId,DepID:_this.mdl[1]})             
+               console.log(_this.DepValue);
+                 const res=await ReferenceAdd({UserPhoneID:_this.ReferenceUserId,DepID:_this.DepValue[1]})             
                  resolve(res);     
             // this.Referencevisible=false;
             // this.PhoneVisible=false;

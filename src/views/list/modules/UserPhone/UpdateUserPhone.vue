@@ -290,10 +290,10 @@ export default {
       const roleslist= await getUserrolesbyAdminID({AdminID:userid.AdminID})//根据管理员ID 获取到RolesID 可能是一个也可以能是多个      
           for (let x in roleslist.roles)
           {
-             let result=await  Select_PermissionsByRolesID({ID:roleslist.roles[x]})//根据rolesID 拿到Permissionlist 返回字符串类型  
+             let result=await Select_PermissionsByRolesID({ID:roleslist.roles[x]})//根据rolesID 拿到Permissionlist 返回字符串类型  
              _arr.push(result.res)          
           }
-           console.log(_arr)
+         console.log(_arr)
          let arr=[]       
           _arr.forEach(v => {
             for(let x in v)
@@ -357,7 +357,7 @@ export default {
       this.mdl = Object.assign({}, record)
      
       this.PhoneVisible = true
-     
+      console.log(record);
       this.$nextTick(() => {
         setTimeout(() => {
         this.form.setFieldsValue({

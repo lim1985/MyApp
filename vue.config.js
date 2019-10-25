@@ -66,7 +66,7 @@ module.exports = {
 },
 //显示项目架构
  
-// configureWebpack: {
+//  configureWebpack: {
     // performance: {
     //   hints:false
     // }
@@ -83,7 +83,7 @@ module.exports = {
     //     return assetFilename.endsWith('.js');
     //   }
     // }
-  // },
+  // },  
   chainWebpack: (config) => {
     config.resolve.alias
       .set('@$', resolve('src'))

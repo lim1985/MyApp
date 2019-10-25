@@ -107,7 +107,7 @@ import { GetCustomGroupByDepID,FindAllUserByGroupID ,DeleteGroupUser,DeleteGroup
 
 //  getOrgTree,getServiceList,GetALLDep,GetAllPhoneuser,GetByDepIDAndPermissionKey,DepTreelist,PostByDepIDPermissionKey
 export default {
-  name: 'TreeList',  
+  name: 'Cusomgroup',  
   components: {
     PhoneModal,
     STable,

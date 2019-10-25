@@ -1,5 +1,5 @@
 import { Menu, Icon, Input } from 'ant-design-vue'
-
+import _ from 'lodash'
 import Validate from '@/tools/Validate/index'
 const { Item, ItemGroup, SubMenu } = Menu
 const { Search } = Input
@@ -70,8 +70,24 @@ export default {
     }
   },
   methods: {
+     lodashSearch:_.debounce(async function(val){
+      const { value} = val.target  
+      let _value=value
+      let isok=await Validate.CheckPhoneNumAndchanese(_value)       
+        if(isok)
+        {      
+          this.$emit('ReturnValue',_value);         
+         // this.reqCount++        
+        } 
+        else if (_value=='')
+        {        
+          this.$emit('ReturnValue',_value);          
+        } 
+     },500),
     async handleSearch(val){   
-     const { value} = val.target       
+
+     const { value} = val.target   
+    
      let _value=value
      let isok=await Validate.CheckPhoneNumAndchanese(_value)       
        if(isok)
@@ -116,7 +132,7 @@ export default {
     renderSearch () {
       return (
         <Search
-          {...{on:{change:(v)=>this.handleSearch(v)}}}
+          {...{on:{change:(v)=>this.lodashSearch(v)}}}
           placeholder="可按单位名或姓名搜索..."
           style="width: 100%; margin-bottom: 1rem">               
           </Search>                      
@@ -137,8 +153,9 @@ export default {
     },
     renderAddUsers(item) {
       return (
-        <a class="btn" style="width: 20px;z-index:1300" {...{ on: { click: () => this.handlePlus(item) } }}>
-        <a-icon type="plus"/>         
+        <a class="btn" style="width: 80px;z-index:1300" {...{ on: { click: () => this.handlePlus(item) } }}>
+        {/* <a-icon type="plus"/>          */}
+       <a-button type="primary" size="small">添加联系人</a-button>
           </a>    
       )
     },

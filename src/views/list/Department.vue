@@ -237,7 +237,7 @@
   this.selectedRows.forEach(async v => {
           //  console.log(v)               
              let res= await DelDePartment(v)     
-         
+            console.log(res)
               if(!res.code)
               {
                  this.$message.error(res.message);    
@@ -270,7 +270,7 @@
       
       
         const res=await DelDePartment(this.Mymdl)
-      
+        console.log(res);
           if(!res.code)
               {
                  this.$message.error(res.message);    

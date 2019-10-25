@@ -164,6 +164,7 @@
 
 <script>
   import md5 from "md5"
+ 
   // import api from '@/api'
   import TwoStepCaptcha from '@/components/tools/TwoStepCaptcha'
   import { GetVerificatCode ,GetUserInformation} from '@/api/manage' 
@@ -205,7 +206,19 @@
       // console.log(window.location.href);
      
     },
-   async created () {
+  //     beforeCreate () {
+  //   this.form = this.$form.createForm(this)
+  //   console.log('form::', this.form)
+  // },
+   async created () {   
+      //  if(_Logins!='')
+      //  {
+
+      //  }
+      // this.form.setFieldsValue({
+      //     username: _Logins[0],
+      //     password: _Logins[1]
+      //   })
       let url=window.location;
       console.log(url.search);
       if(url.search)
@@ -362,6 +375,17 @@
               loginParams[!that.loginType ? 'email' : 'username'] = values.username
               loginParams.password = md5(values.password)
               console.log(loginParams);
+              if(loginParams.remember_me)
+              {
+                // password:"52979899"
+                // username:"admin"
+               let userObj={
+                 username:values.username,
+                 passowrd:values.password
+               };
+            
+                localStorage.setItem("UserLogins",JSON.stringify(userObj));
+              }
             }
           })
           

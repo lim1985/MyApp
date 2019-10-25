@@ -14,7 +14,7 @@ const api = {
   GetPermissionAll:'http://59.230.230.40/api/getAllPermissAndDeplist',//返回所有权限和部门DepCardList.vue RoleList.vue 使用该接口
   GetDepTreelist:'http://59.230.230.40/api/getAllDepTreeList',//返回部门树//src\views\other\TreeList.vue页面使用了该接口
   UpdataPermissionInformation:'http://59.230.230.40/api/UpdataPermissionInformation',
-  // GetAllPermissionList:'http://59.230.230.40/api/PermissionList',
+  //GetAllPermissionList:'http://59.230.230.40/api/PermissionList',
   
 
   //角色接口
@@ -29,6 +29,7 @@ const api = {
   GetPermissionByroleID:'http://59.230.230.40/api/getPermissionbyroleID',//获取权限
   GetrolesbyAdminID:'http://59.230.230.40/api/GetrolesbyAdminID',//获取管理员权限
   GetAllPermissionInformationByRoleId:'http://59.230.230.40/api/GetAllPermissionInformationByRolesID',//999
+  GetDyNamicRoutes:'http://59.230.230.40/api/GetDyNamicRoutesByAdminID',
   //'http://59.230.230.40/api/rolesAdd?RoleValue=1&Description=111'
   //部门管理接口列表
   AddParment:'http://59.230.230.40/api/AddParment',
@@ -102,6 +103,14 @@ const api = {
 }
 
 export default api
+//通过省里平台获取用户信息
+export function GetDyNamicRoutes (parameter) {
+  return axios({
+    url: api.GetDyNamicRoutes,
+    method: 'get',
+    params: parameter  
+  })
+}
 //通过省里平台获取用户信息
 export function GetUserInformation (parameter) {
   return axios({

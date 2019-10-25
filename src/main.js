@@ -3,7 +3,7 @@ import App from './App.vue'
 import Storage from 'vue-ls'
 import router from './router'
 import store from './store/'
-
+// import debounce from 'lodash.debounce'
 import { VueAxios } from "@/utils/request"
 // import './mock'
 
@@ -18,6 +18,8 @@ import {User_ID, ACCESS_TOKEN, DEFAULT_COLOR, DEFAULT_THEME, DEFAULT_LAYOUT_MODE
 import config from '@/defaultConfig'
 import moment from 'moment'//导入文件
 import LUbox from '@/assets/js/LIm_UBOX'
+//  var debounce = require('lodash.debounce');
+// import PhoneModal from '@/views/list/modules/PhoneMsg/Phone'
 Vue.prototype.$moment = moment;//赋值使用
 Vue.prototype.$LUBOX = LUbox;//赋值使用
 Vue.config.productionTip = false
@@ -26,10 +28,17 @@ Vue.use(Storage, config.storageOptions)
 Vue.use(Antd)
 Vue.use(VueAxios, router)
 Vue.use(Viser)
+// Vue.use(debounce)
 
+// Vue.component('PhoneModal', PhoneModal)
 new Vue({
   router,
   store,
+  // components: {  
+  //   PhoneModal,  
+  //   // Myselect
+  //   // OrgModal
+  // },
   mounted () {
     
     store.commit('SET_SIDEBAR_TYPE', Vue.ls.get(SIDEBAR_TYPE, false))

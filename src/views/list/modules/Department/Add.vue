@@ -9,6 +9,22 @@
       <a-form :form="form">
         <a-form-item
           v-bind="formItemLayout"
+          label='状态'
+          hasFeedback    
+        >
+          <!-- <a-input placeholder='填正确填写部门简称' v-model="Mymdl.Abbreviation" id='Abbreviation' /> -->
+          <a-select  
+            @select="selectStatus"     
+            showSearch
+            placeholder="选择部门类别" 
+            v-decorator="['status',{rules: [{ required: true }]}]"
+          >
+            <a-select-option value='1'>显示</a-select-option>
+            <a-select-option value='0'>隐藏</a-select-option> 
+          </a-select>
+        </a-form-item>
+        <a-form-item
+          v-bind="formItemLayout"
           label='部门类别'
           hasFeedback          
         >
@@ -21,7 +37,7 @@
           >
             <!-- <a-select-option value="-1">请选择部门</a-select-option> -->
             <template v-for="(item,index) in DepName">
-              <a-select-option :key="index" :value="item.value">{{ item.label }}</a-select-option>
+              <a-select-option :key="index" :PID="item.PID" :value="item.value">{{ item.label }}</a-select-option>
             </template>
             <!-- <a-select-option v-for="item,key in DepName" value='1'>Option 1</a-select-option>
             <a-select-option value='2'>Option 2</a-select-option>
@@ -51,6 +67,7 @@
             v-decorator="['Abbreviation',{rules: [{ required: true, message: '部门简称不能为空！' },{validator:v().checkjob}]}]"
           /> 
         </a-form-item>
+      
         <a-form-item
           v-bind="formItemLayout"
           label='部门标识'
@@ -125,7 +142,8 @@ export default {
         },
       },
       visible: false,
-      confirmLoading: false
+      confirmLoading: false,
+      PID:''
      
      
     }
@@ -150,7 +168,15 @@ export default {
     //    console.log(this.options)    
     },
   methods:  {
-   
+   selectStatus(e){
+        this.$nextTick(() => {
+                    setTimeout(() => {
+                    this.form.setFieldsValue({
+                    status:e,                
+                });
+                }, 100);          
+      })    
+   },
   deteleObject(arr,attr,value) {
             var uniques = [];
             var _arrs=[]   
@@ -186,9 +212,12 @@ export default {
       }) 
 
       },
-          DepOnChange(e)//根据输入的文字变成拼音首字母
+          DepOnChange(e,obj)//根据输入的文字变成拼音首字母
         {
             this.Tips=e
+            console.log(obj.data.attrs.PID)
+            console.log(e);
+            this.PID=obj.data.attrs.PID
             this.$nextTick(() => {
                     setTimeout(() => {
                     this.form.setFieldsValue({
@@ -215,6 +244,7 @@ export default {
                   for(let x in ress)
                   {  
                       let _ar=await  Select_PermissionsByRolesID({ID:ress[x]})
+                      console.log(_ar);
                       _temp.push(_ar.res)
                   }
                  console.log('1111111111111111')
@@ -277,7 +307,9 @@ export default {
         let _this=this
           _this.form.validateFields(async(err, values) => {
           if (!err) {
-            console.log(values)
+           
+            values.PID=_this.PID;
+             console.log(values)
           const res=await AddParment(values)
           if(res.code==-1)
           {
@@ -286,9 +318,9 @@ export default {
           else
           {
             //  this.$refs.mytable.refresh()
-             this.$message.success('添加单位成功。'); 
-            
-             this.AddDEPVisible = false        
+             this.$message.success('添加单位成功。');  
+             this.$emit('ok');           
+             this.AddVisible = false        
           }
         
           // console.log(this.Mymdl)

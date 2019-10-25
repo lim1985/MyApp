@@ -13,27 +13,42 @@ const whiteList = ['/user/login', '/user/register', '/user/register-result']// n
 
 router.beforeEach((to, from, next) => {
   NProgress.start() // start progress bar
-  // console.log(ACCESS_TOKEN)
+   console.log(ACCESS_TOKEN)
   if (Vue.ls.get(ACCESS_TOKEN)) {
+      console.log(Vue.ls.get(ACCESS_TOKEN));
    //console.log('生成的token是'+Vue.ls.get(ACCESS_TOKEN));
     /* has token */     
     if (to.path === '/user/login') {
      next({ path: '/views/DepTreelist' })     
       // next({ path: '/dashboard/workplace' })
-     //  next({ path: '/myform/basic-form' })    
+     //  next({ path: '/myform/basic-form' })   
+     console.log('本地有token 可以登录') 
       NProgress.done()
-    } else {
-      if (store.getters.roles.length === 0) {
+    } 
+    else 
+    {
+      if (store.getters.roles.length === 0 ) {
 
      let  userid= {AdminID:Vue.ls.get(User_ID)}
      
       //  console.log(`userID：`+userid)
         store.dispatch('myGetInfo',userid).then(res => {
-          // console.log(res)
-          const roles = res.result && res.result.role
-       
+          console.log(res)
+          let roles
+          if(res.code==1 && !res.result.RolesID)
+          {
+            roles=[]           
+          }
+          else
+          {
+            roles = res.result && res.result.role
+          }
+           
+          console.log(roles)
           store.dispatch('GenerateRoutes', { roles }).then(() => { // 根据roles权限生成可访问的路由表
             // console.log(store.getters.addRouters)
+
+            console.log(store.getters.addRouters)
             router.addRoutes(store.getters.addRouters) // 动态添加可访问路由表
             next({ ...to, replace: true }) // hack方法 确保addRoutes已完成 ,set the replace: true so the navigation will not leave a history record
           }) 
@@ -44,7 +59,8 @@ router.beforeEach((to, from, next) => {
           })
         })
 
-      } else {
+      } 
+      else {
         next()
       }
     }

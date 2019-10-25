@@ -36,7 +36,8 @@
    import Validate from '@/tools/Validate/index'
   //GetALLByDepID,asyncValidateTel
 export default {
-  name: 'PhoneMsgModal', 
+  name: 'TableList', 
+ 
   data () {
   return {    
       formItemLayout: {

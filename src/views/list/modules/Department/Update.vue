@@ -20,13 +20,29 @@
         </a-form-item>
         <a-form-item
           v-bind="formItemLayout"
+          label='状态'
+          hasFeedback    
+        >
+          <!-- <a-input placeholder='填正确填写部门简称' v-model="Mymdl.Abbreviation" id='Abbreviation' /> -->
+          <!-- @select="selectStatus"    -->
+          <a-select             
+            showSearch
+            placeholder="部门状态" 
+            v-decorator="['status',{rules: [{ required: true }]}]"
+          >
+            <a-select-option value='1'>显示</a-select-option>
+            <a-select-option value='0'>隐藏</a-select-option> 
+          </a-select>
+        </a-form-item>
+        <a-form-item
+          v-bind="formItemLayout"
           label='部门类别'
           hasFeedback          
         >
           <!-- :fieldDecoratorOptions="{rules: [{ required: true, message: '请先选择部门类别' }]}"     -->
           <!-- @select="DepOnChange"   -->
           <a-select  
-             
+          
             showSearch
             placeholder="选择部门类别" 
             v-decorator="['Permission_Key',{rules: [{ required: true, message: '部门不能为空！' }]}]"
@@ -268,15 +284,18 @@ export default {
     },
     add (s) {       
 // PermissionList DepFullName Abbreviation UploadDir Priority 
+  console.log(s)
       this.edit({
             Abbreviation:s.Abbreviation,
             DepartmentId:s.DepartmentId,
             DepartmentName:s.DepartmentName,
-            PermissionList:[s.Permission_Key,s.Permission_name],
+            PermissionList:[s.Permission_key,s.Permission_name],
             ID:s.ID,
+            status:s.status,
+            PID:s.PID,
             OrderID:s.OrderID,
             ParentDepartmentId:s.ParentDepartmentId,
-            Permission_Key:s.Permission_Key,
+            Permission_Key:s.Permission_key,
             Permission_name:s.Permission_name,
             Priority:s.Priority,
             RoleID:s.RoleID,
@@ -287,21 +306,24 @@ export default {
     },
     edit (record) {
       // this.mdl = Object.assign({}, record)      
-      this.UpdateVisible = true
      
+     console.log(record)
       this.$nextTick(() => {
         setTimeout(() => {
         this.form.setFieldsValue({
         DepartmentId:record.DepartmentId,
+        status:record.status,
+        PID:record.PID,
         Permission_Key:record.Permission_Key,
         DepartmentName:record.DepartmentName,
         Abbreviation:record.Abbreviation,
         Priority:record.Priority,
         UploadDir:record.UploadDir,
-         });
-        }, 100);
-          
+         });         
+        }, 200);
+           
       })
+      this.UpdateVisible = true
     },
     close () {
          this.$emit('close')
@@ -317,6 +339,7 @@ export default {
           _this.confirmLoading = true
             new Promise((resolve) => {          
           setTimeout(async () => {
+            console.log(values)
               const res=await UpdatePartment(values)             
                  resolve(res);    
           }, 1000)          

@@ -2,7 +2,7 @@
   <a-locale-provider :locale="locale">
     <div id="app">
       <router-view/>
-      <PhoneModal ref="PhoneModal"/>
+      <!-- <AppPhoneModal ref="PhoneModal"/> -->
     </div>
    
   </a-locale-provider>
@@ -13,7 +13,7 @@
   import zhCN from 'ant-design-vue/lib/locale-provider/zh_CN'
   import enquireScreen from '@/utils/device'
   import { AppDeviceEnquire } from '@/utils/mixin'
-  import PhoneModal from '@/views/list/modules/PhoneMsg/Phone'
+  // import AppPhoneModal from '@/views/list/modules/PhoneMsg/Phone'
   // import Vue from 'vue'  
   import { mapState} from 'vuex'
   export default {
@@ -24,14 +24,13 @@
       }
     },
     components: {
-    PhoneModal      
+    //  AppPhoneModal      
     },
      computed:{
       ...mapState({
          handleID:state=>state.L_Ubox.HandleID,
          event:state=>state.L_Ubox.Event
-      }),
-    
+      }),    
     },
    
     mounted(){

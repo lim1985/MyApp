@@ -35,14 +35,14 @@
             v-decorator="['status',{rules: [{ required: true }]}]"
           />       -->
         </a-form-item>  
-        <a-form-item         
+        <a-form-item       
           :colon="false"
           label="类别标识"
           :labelCol="{lg: {span: 7}, sm: {span: 7}}"
           :wrapperCol="{lg: {span: 10}, sm: {span: 17} }"  
         >
-          <a-input    
-            disabled         
+          <a-input          
+            disabled        
             placeholder='大类别唯一标识' 
             v-decorator="['Permissionskey',{rules: [{ required: true },{validator:v().checkZHZM}]}]" 
           />
@@ -81,8 +81,9 @@
           :labelCol="{lg: {span: 7}, sm: {span: 7}}"
           :wrapperCol="{lg: {span: 10}, sm: {span: 17} }"  
         >
+          <!-- @change="InputpOnChange"    -->
           <a-input   
-            @change="InputpOnChange"              
+                      
             placeholder='请输入类别名' 
             v-decorator="['PermissionName',{rules: [{ required: true },{validator:v().checkZHZM}]}]"
           />       
@@ -153,16 +154,16 @@
         if (!err) {
         UpdataPermission(values).then(res=>{
           console.log(res)
-          if(res.code===1)
+            if(res.code===1)
             {
-                this.$message.success(res.msg)
+                this.$message.success(res.message)
                 this.UpdatePre_model=false
                 this.form.resetFields()  
                 this.$emit('ok')
             }
             else
             {              
-                this.$message.error(res.msg);  
+                this.$message.error(res.message);  
                 //this.Updateform.resetFields()
             }
         })  
@@ -196,7 +197,7 @@
       },
      edit (record) {
       // this.mdl = Object.assign({}, record)      
-
+        console.log(record);
      
       this.$nextTick(() => {
         setTimeout(() => {
@@ -207,7 +208,7 @@
         Areakey:record.areakey,
         OrderID:record.OrderID,
         PermissionName:record.Permission_name,
-        description:record.UploadDir,
+        description:record.description,
          });
         }, 100);          
       })

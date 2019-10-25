@@ -140,7 +140,19 @@ const user = {
       getAdminInfo(UserID).then(response => {          
         const result = response
       //  console.log('来自user.js')
-      //  console.log(result.result.role)
+      console.log(result)
+      if(result.code==1)
+      {
+         
+          commit('SET_ROLES', result.result.RolesID)
+          commit('SET_INFO', result.result)
+          commit('SET_USERINFO',  result.result.AdminName)
+          commit('SET_NAME', { name: result.result.AdminName, welcome: welcome() })
+          commit('SET_AVATAR', result.result.avatar)
+          resolve(response)
+          console.log('89898989')
+        return 
+      }
         if (result.result.role && result.result.role.permissions.length > 0) {
           const role = result.result.role
           // console.log(role)
@@ -159,7 +171,9 @@ const user = {
           commit('SET_ROLES', result.result.role)
           commit('SET_INFO', result.result)
           commit('SET_USERINFO',  result.result.username)
-        } else {
+        } 
+        else 
+        {
           reject('getInfo: roles must be a non-null array !')
         }
         commit('SET_NAME', { name: result.result.name, welcome: welcome() })
