@@ -177,7 +177,8 @@ export default {
       },
       handleSaveOk(){
          this.form.validateFields(async(err,values)=>{
-         
+           
+           console.log(values.search);
           let num=values.search;
           let res=await Validate.Vuex_findByUserInformation(num);
            console.log(res);

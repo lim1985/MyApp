@@ -1,8 +1,13 @@
 <template>
   <div class="user-wrapper">
     <span class="action">
-      <a-icon type="question-circle-o"></a-icon>
+      <!-- <a-icon type="mail"></a-icon> -->
+      短信余额：{{ smscount()+'条' }}
+      
     </span>
+    <span class="action">
+      <a-icon type="question-circle-o"></a-icon>
+    </span>  
     <header-notice class="action"/>
     <a-dropdown>
       <span class="action ant-dropdown-link user-dropdown-menu">
@@ -47,9 +52,9 @@
     components: {
       HeaderNotice
     },
-    methods: {
+    methods: {     
       ...mapActions(["Logout"]),
-      ...mapGetters(["nickname", "avatar"]),
+      ...mapGetters(["nickname", "avatar","smscount"]),
       handleLogout() {
         const that = this
         const hostName=location.hostname;

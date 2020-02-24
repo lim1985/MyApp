@@ -102,6 +102,18 @@
           /> 
           <!-- <a-input placeholder='填写权重最大为：100' v-model="Mymdl.Priority" @keyup="loadNumber($event)" id='Priority' /> -->
         </a-form-item>
+        <a-form-item
+          v-bind="formItemLayout"
+          label='短信条数'
+          hasFeedback                
+        >
+          <a-input                 
+            placeholder='部门建立时的短信条数，默认为0' 
+            v-decorator="['smsCount',{rules: [{ required: false, message: '' },{validator:v().checkNums}]}]"
+          /> 
+          <!-- <a-input placeholder='填写权重最大为：100' v-model="Mymdl.Priority" @keyup="loadNumber($event)" id='Priority' /> -->
+        </a-form-item>
+
       </a-form>
     </a-spin>
   </a-modal>  
@@ -302,6 +314,7 @@ export default {
             UploadDir:s.UploadDir,
             description:s.description,
             optioncode:s.optioncode,
+            smsCount:s.SMSCount,           
       });
     },
     edit (record) {
@@ -319,6 +332,7 @@ export default {
         Abbreviation:record.Abbreviation,
         Priority:record.Priority,
         UploadDir:record.UploadDir,
+        smsCount:record.smsCount
          });         
         }, 200);
            

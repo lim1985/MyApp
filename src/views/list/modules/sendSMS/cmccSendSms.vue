@@ -199,7 +199,16 @@ export default {
 }    ,
    send(){
     let nowtime=this.GetDate(2);
-    let data={secretKey:'52979899',soucers:1,ecName:'邵阳市红旗路街道办事处',apId:'dxqzfb',mobiles:'15243990018,13973990779,13807399838',content:`移动改变生活。${nowtime}`,sign:'',addSerial:''}
+    let data={
+      secretKey:'52979899',
+      soucers:1,
+      ecName:'邵阳市红旗路街道办事处',
+      apId:'dxqzfb',
+      mobiles:'15243990018,13973990779,13807399838',
+      content:`大祥区人民政府，http://www.dxzc.gov.cn移动改变生活。${nowtime}`,
+      sign:'',
+      addSerial:''
+      }
     let res =CMCCSendSMS(data).then(ress=>{
        return ress
     })
@@ -207,6 +216,7 @@ export default {
    }
   }
 }
+///sendCMCCStatus
 </script>
 <style>
 .demo-infinite-container {

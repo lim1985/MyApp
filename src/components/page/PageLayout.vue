@@ -19,8 +19,39 @@
       <slot slot="extra" name="extra"></slot>
       <div slot="pageMenu">
         <div class="page-menu-search" v-if="search">
-          <a-input-search style="width: 80%; max-width: 522px;" placeholder="请输入..." size="large" enterButton="搜索" />
+          <div>
+            <a-input-search style="width: 80%; max-width: 522px;" @change="Search" placeholder="请输入联系人姓名或者手机号..." size="large" enterButton="搜索" />
+          </div>
+          <div v-if="showDepListSearch" class="ant-input-affix-wrapper ant-input-affix-wrapper-lg ant-input-search ant-input-search-enter-button ant-input-search-large">
+            <div class="ant-input-affix-wrapper ant-input-affix-wrapper-sm ant-input-search ant-input-search-enter-button ant-input-search-large" style="width:38%;min-width:512px">
+              <ul class="search-list" >          
+                <li class="global-search-item">侠岚</li>
+                <li class="global-search-item">夏朗</li>
+                <li class="global-search-item">下拉菜单怎么设置</li>
+              </ul>
+            <!-- <div class="bdsug-feedback-wrap"><span class="bdsug-feedback">反馈</span>
+            </div> -->
+            </div>   
+          </div>     
         </div>
+              
+        <!-- <ul style="width: 80%; max-width: 522px;" class="ant-input-affix-wrapper ant-input-affix-wrapper-lg ant-input-search ant-input-search-enter-button ant-input-search-large">
+         
+            <div class="search-list  ant-input ant-input-lg">
+                <li class="global-search-item">
+                 <span class="global-search-item-desc">
+            大祥区人社局
+            </span>
+            </li>
+                   <li class="global-search-item">
+                 <span class="global-search-item-desc">
+            大祥区发改局
+            </span>
+            </li>
+            </div>
+          </ul> -->
+
+
         <div class="page-menu-tabs" v-if="tabs && tabs.items">
           <!-- @change="callback" :activeKey="activeKey" -->
           <a-tabs :tabBarStyle="{margin: 0}" @change="tabs.callback" :activeKey="tabs.active()">
@@ -39,7 +70,7 @@
 
 <script>
   import PageHeader from './PageHeader'
-
+  import _ from 'lodash'
   export default {
     name: "LayoutContent",
     components: {
@@ -79,17 +110,65 @@
         type: Boolean,
         default: false
       },
+      showDepListSearch:{
+        type: Boolean,
+        default: false
+      },
       tabs: {
         type: Object,
         default: () => {}
       }
     },
-    methods: {
+    //  data () {
+    //   return {       
+    //     showDepListSearch:false             
+    //   }
+    // },
+    // computed:{
+    //   showDepList(){
+    //     return this.showDepListSearch
+    //   }
+    // },
+    mounted(){
+      console.log(this.showDepListSearch);
+    },
+    methods: {   
+       Search:_.debounce(function(val){
+       const { value} = val.target  
+       console.log(value)  
+       if(value)
+       {        
+         this.$emit('ischange',value)
+       
+       }
+            
+      //  if(value)
+      //  {
+      //    this.isSearch=true    
+      //    this.queryParam.data=value; 
+      //    this.$refs.mytable.refresh()  
+      //    console.log(this.queryParam);   
+      //  }
+      //  else
+      //  {
+      //    this.isSearch=false
+      //    this.queryParam.data=value
+      //    this.$refs.mytable.refresh()  
+      //  }
+      },1000),
     }
   }
 </script>
 
 <style lang="scss" scoped>
+   .search-list
+   {
+
+   }
+  .search-list li{
+     width: 100%;
+    text-align: left;
+}
   .content {
     margin: 24px 24px 0;
 

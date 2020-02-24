@@ -72,7 +72,7 @@
                 {{ text }} <a-icon type="down" />
               </a>
               <a-menu slot="overlay">
-                <a-menu-item>
+                <a-menu-item v-if="IsSendSms.length">
                   <a @click="sendsms(record)">发短信</a>
                 </a-menu-item>
                 <a-menu-item>
@@ -103,11 +103,16 @@
               </a-menu>
             </a-dropdown>
           </span>
+          <template slot="jiucuo" slot-scope="text">
+            <!-- <a-icon :style="{ fontSize: '22px', color: '#F56C6C' }" type="question-circle" /> -->
+            <a @click="jiucuo(text)">提交</a>
+          </template>
         </s-table>
       </a-col>
     </a-row>
     <SendsmsModal ref="SendsmsModal" :Pupuarr="Pupu" @ok="handleSaveOk" @close="handleSaveClose"/>
     <PhoneModal ref="PhoneModal"/>
+    <ErrorInfoModal ref="ErrorInfoModal" @ok="handleSaveOk" @close="handleSaveClose"/>
     <!-- <Myselect ref="Myselect"/> -->
 
     
@@ -117,6 +122,7 @@
 
 <script>
 
+import { mapState} from 'vuex'
 import STree from '@/components/Tree/Tree'
 import STable  from '@/components/newTable'
 // import OrgModal from './modules/OrgModal'
@@ -124,6 +130,7 @@ import { DepTreelist, PostByDepIDPermissionKey,SelectDepslistsbyLike} from '@/ap
 import Validate from '@/tools/Validate/index'
 import PhoneModal from '@/views/list/modules/PhoneMsg/Phone'
 import SendsmsModal from '@/views/list/modules/sendSMS/sendsms'
+import ErrorInfoModal from '@/views/list/modules/ErrorInformation/addErrorInfo'
 // import Myselect from '@/views/other/Select'
 // import { Promise } from 'q';
 //  getOrgTree,getServiceList,GetALLDep,GetAllPhoneuser,GetByDepIDAndPermissionKey
@@ -134,9 +141,15 @@ export default {
     STree,
     PhoneModal,
     SendsmsModal,
+    ErrorInfoModal
     // Myselect
     // OrgModal
   },
+     computed:{
+      ...mapState({
+        IsSendSms:state=>state.user.SendSmsList            
+      })    
+    },
   data () {
     return {
       // data2,
@@ -183,6 +196,12 @@ export default {
           dataIndex: 'Abbreviation',
           // sorter: true
         },
+         {
+          title: '纠错信息',
+          dataIndex: 'ID',
+          scopedSlots: { customRender: 'jiucuo' },
+          // sorter: true
+        },
       
         // {
         //   table: '操作',
@@ -194,7 +213,8 @@ export default {
       // 加载数据方法 必须为 Promise 对象
        loadData: (parameter) => {  
          if(this.isSearch)
-         {                
+         {      
+           console.log('开始关键字查找')          
              this.paramss.push(this.SearchValue)            
              let _arrs= Validate.unique(this.paramss)         
              this.pp=_arrs[_arrs.length-1]          
@@ -202,18 +222,19 @@ export default {
               data:this.pp,
               parameter
             }
+            //Object.assign(parameter,_obj)
             console.log(data)
             // this.data=Object.assign(parameter,this.pp)
-            //     console.log(this.data)
-            return Validate.findbyUserInformation(data)
+            console.log(this.data)
+            console.log(this.SearchValue);
+            return Validate.findbyUserInformation(Object.assign(parameter,{data:this.SearchValue}))
             .then(res=>{ 
               if(res.code==1)
               {        
                 console.log(res.res)                      
                 this.Pupu=res.res.data.map(item=>{
                   return {Phone:item.cellphone,username:item.UserName,DPname:item["ResferecDep.Abbreviation"],ID:item.ID,UJOB:item.UJOB,checked:false}
-                }) 
-                              
+                })                               
                 console.log(this.Pupu)           
                 return res.res
               }
@@ -246,7 +267,7 @@ export default {
             let _arr=[]
             _arr.push(this.queryParam)
             _obj.param=_arr;
-            
+            console.log(Object.assign(parameter,_obj));
           return PostByDepIDPermissionKey(Object.assign(parameter,_obj))
             .then(res => {
               console.log(res.result)
@@ -261,7 +282,7 @@ export default {
            
         return DepTreelist()
           .then(res => {
-       
+       console.log(res)
             return res.result
           }).then(r=>{          
           let _arr=[]
@@ -293,6 +314,7 @@ export default {
              console.log(this.queryParam);            
             return PostByDepIDPermissionKey(Object.assign(parameter,this.queryParam))
           .then(res => {
+            console.log(res)
             console.log(`000000999999`)             
                this.Pupu=res.result.data.map(item=>{
              return {Phone:item.cellphone,username:item.UserName,DPname:item.DepartmentName,ID:item.ID,UJOB:item.UJOB,checked:false}
@@ -324,6 +346,10 @@ export default {
       console.log(this.DepTree)
   },
   methods: {
+    jiucuo(val){
+      
+       this.$refs.ErrorInfoModal.add(val)   
+    },
    //搜索框方法
   // async Searchs(val){
   //    let _value=val;

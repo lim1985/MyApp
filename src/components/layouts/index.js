@@ -4,4 +4,6 @@ import BasicLayout from '@/components/layouts/BasicLayout'
 import RouteView from '@/components/layouts/RouteView'
 import PageView from '@/components/layouts/PageView'
 import TreeList from '@/views/other/TreeList'
-export {TreeList, UserLayout, BasicLayout, BlankLayout, RouteView, PageView }
+import AcUserLayout from '@/components/layouts/AcUserLayout'
+
+export {AcUserLayout,TreeList, UserLayout, BasicLayout, BlankLayout, RouteView, PageView }

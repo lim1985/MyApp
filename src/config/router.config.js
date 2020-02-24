@@ -1,4 +1,4 @@
-import { UserLayout, BasicLayout, RouteView, PageView ,TreeList} from '@/components/layouts'
+import { AcUserLayout,UserLayout, BasicLayout, RouteView, PageView ,TreeList} from '@/components/layouts'
 
 
 import {GetDyNamicRoutes} from '@/api/manage'
@@ -15,6 +15,7 @@ export const NewAsyncDyNamicRouter=(params)=>{
     
   }, 500);
       GetDyNamicRoutes(params).then(res=>{     
+        console.log(res)
       DyNamicRoute.push(res.DyNamicRoutes);
       resolve(DyNamicRoute);
       })      
@@ -46,7 +47,9 @@ export const NewAsyncDyNamicRouter=(params)=>{
 export const newasyncRoterMap=(params)=>{
   console.log(`----------------------`)
   console.log(params)
-let res= [ {
+let res= [ 
+  
+  {
  path: '/',
  name: 'index',
  component: BasicLayout,
@@ -2355,7 +2358,37 @@ export const constantRouterMap = [
       }
     ]
   },
-
+  {
+    path:'/yquser',
+    component:UserLayout,
+    redirect:'/yquser/login',
+    hidden:true,
+    children:[
+      {
+        path: 'login',
+        name: 'login',
+        component: () => import(/* webpackChunkName: "user" */ '@/views/list/YuQingfenxi/Login')
+      },
+    ]
+  }
+, {
+  path:'/AC',
+  component:AcUserLayout,
+  redirect:'/AC/login',
+  hidden:true,
+  children:[
+    {
+      path: 'login',
+      name: 'login',
+      component: () => import(/* webpackChunkName: "user" */ '@/views/Acuser/Login')
+    },
+    {
+      path: 'ACregister',
+      name: 'ACregister',
+      component: () => import(/* webpackChunkName: "user" */ '@/views/Acuser/Register')
+    },
+  ]
+},
   {
     path: '/404',
     component: () => import(/* webpackChunkName: "fail" */ '@/views/exception/404')

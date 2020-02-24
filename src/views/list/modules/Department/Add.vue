@@ -91,7 +91,17 @@
           /> 
           <!-- <a-input placeholder='填写权重最大为：100' v-model="Mymdl.Priority" @keyup="loadNumber($event)" id='Priority' /> -->
         </a-form-item>
-       
+        <a-form-item
+          v-bind="formItemLayout"
+          label='短信条数'
+          hasFeedback                
+        >
+          <a-input                 
+            placeholder='部门建立时的短信条数，默认为0' 
+            v-decorator="['smsCount',{ initialValue: 0 },{rules: [{ required: false, message: '' },{validator:v().checkNum100to2000}]}]"
+          /> 
+          <!-- <a-input placeholder='填写权重最大为：100' v-model="Mymdl.Priority" @keyup="loadNumber($event)" id='Priority' /> -->
+        </a-form-item>
 
       </a-form>
     </a-spin>
@@ -311,6 +321,7 @@ export default {
             values.PID=_this.PID;
              console.log(values)
           const res=await AddParment(values)
+          console.log(res);
           if(res.code==-1)
           {
              this.$message.error(res.message);   

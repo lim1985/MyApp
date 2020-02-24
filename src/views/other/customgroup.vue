@@ -1,8 +1,7 @@
 <template>
   <a-card :bordered="false">
     <a-row :gutter="8">
-      <a-col :span="5">
-       
+      <a-col :span="5">       
         <!-- :dataSource="DepTree"         
           :openKeys.sync="openKeys"
           :search="true"
@@ -30,16 +29,21 @@
          
       </a-col>
       <a-col :span="19">
-        <div class="table-operator">    
-          <a-dropdown v-if="selectedRowKeys.length > 0">
+        <div class="table-operator">  
+          <!-- v-if="selectedRowKeys.length > 0"   -->
+          <a-dropdown>
             <a-menu slot="overlay">
               <a-menu-item key="1" @click="sendsms(selectedRows)"><a-icon type="mobile" />发短信</a-menu-item>
+              <a-menu-item key="3" @click="CusTomGroupsortUser(selectedRows)"><a-icon id="swap-i" type="swap" />排序</a-menu-item>
             </a-menu>
             <a-button style="margin-left: 8px">
               批量操作 <a-icon type="down" />
             </a-button>
           </a-dropdown>
-          
+          <a-input-search 
+            placeholder="输入姓名进行检索当前组" 
+            style="width:320px;float: right;padding-bottom: 5px;padding-right: 10px;" 
+            @change="onSearchPhoneUser" />
         </div>
         <s-table
           ref="mytable"
@@ -87,9 +91,11 @@
     <UserToGroupModal ref="UserToGroupmodal" @ok="handleSaveOk" @close="handleSaveClose" />
     <SendsmsModal ref="SendsmsModal" :Pupuarr="Pupu" @ok="handleSaveOk" @close="handleSaveClose"/>
     <PhoneModal ref="PhoneModal"/>
+    <CustomGroupUserSortModal ref="CustomGroupSortModal" @ok="handleSortOK"/>
     <!-- <ConfirmModal ref="ConfirmModal" @ok="handleSaveOk" @close="handleSaveClose"/> -->
     <!-- <org-modal ref="modal" @ok="handleSaveOk" @close="handleSaveClose" /> -->
   </a-card>
+    
 </template>
 
 <script>
@@ -100,7 +106,8 @@ import UserToGroupModal from './modules/UserToGroupAdd'
 import SendsmsModal from '@/views/list/modules/sendSMS/sendsms'
 // import ConfirmModal from './modules/ConfirmModal'
 import PhoneModal from '@/views/list/modules/PhoneMsg/Phone'
-
+import CustomGroupUserSortModal from '@/views/list/modules/UserSort/CustomGroupUserSort'
+import _ from 'lodash'
 import { mapState} from 'vuex'
 // import OrgModal from './modules/OrgModal'
 import { GetCustomGroupByDepID,FindAllUserByGroupID ,DeleteGroupUser,DeleteGroup,SelectDepslistsbyLike} from '@/api/manage'
@@ -114,6 +121,7 @@ export default {
     STree,
     CustomGroupModal,
     UserToGroupModal,
+    CustomGroupUserSortModal,
     SendsmsModal,
     // ConfirmModal
     // OrgModal
@@ -168,16 +176,28 @@ export default {
       // 加载数据方法 必须为 Promise 对象
        UserloadData:(parameter)=>{
         //  console.log(Object.assign(parameter,this.QueryUserParam))
+        console.log(this.QueryUserParam)
          return FindAllUserByGroupID(Object.assign(parameter,this.QueryUserParam)).then(res=>{         
 
            this.Pupu=res.result.data.map(item=>{
             return {Phone:item.cellphone,username:item.UserName,DPname:item.Permission_name,ID:item.ID,UJOB:item.UJOB,checked:false}
             })  
-           console.log(res.result)
-           return res.result
-         
+          // if(res.result.totalCount==0&& this.isSearch)
+          // {
+          //    this.$message.info('当前自定义组查询不到该联系人，请重试')
+          // }
+          //  console.log(res.result)
+          //     console.log(this.QueryUserParam)
+          //     this.Userlist.GroupID=this.QueryUserParam;
+          this.Userlist=res.result.data
+          //  this.Userlist=Object.assign(res.result.data,this.QueryUserParam)
+          
+           console.log(this.Userlist);
+          
+           return res.result         
          })
-       },          
+       },     
+      Userlist:[],
       DepArrParam:[],
       DepTree:[],
       orgTree: [],
@@ -188,6 +208,7 @@ export default {
         pageSize:10
       },
       onclick:false,
+      isSearch:false,
       Grouplist:[],
       QueryUserParam:{}
    
@@ -209,6 +230,44 @@ export default {
       "$route": "getCustomGroup",
   },
   methods: { 
+
+    handleSortOK(){
+        console.log('sortOK')
+        
+            this.$refs.mytable.refresh();
+            this.selectedRows=[];
+            // this.$refs.mytable.onClearSelected();            
+        },
+      CusTomGroupsortUser(val)
+      {
+        console.log(val)
+        if(val.length==0)
+       {
+       this.$refs.CustomGroupSortModal.show(this.Userlist);           
+       }   
+       else
+       {
+       this.$refs.CustomGroupSortModal.show(val);         
+       }    
+      },
+      onSearchPhoneUser:_.debounce(function(val){
+       const { value} = val.target  
+       console.log(value)  
+       if(value)
+       {
+
+         this.isSearch=true;
+         this.QueryUserParam.UserName=value; 
+         this.$refs.mytable.refresh()  
+         console.log(this.QueryUserParam);   
+       }
+       else
+       {        
+        console.log(this.QueryUserParam);
+         this.getCustomGroup();
+       }
+      
+      },1000),
     async GetUsersList(val)
      {
 
@@ -313,16 +372,37 @@ export default {
          this.Grouplist= res.data.rows.map(v=>{    
          
           return {title:v.GroupName,key:v.GroupID,icon:'null'}
-          })   
-          if(this.Grouplist.length>0)
+          })
+          if(!this.Grouplist.length)
           {
-         this.QueryUserParam ={
-           GroupID:this.Grouplist[0].key
+            this.$message.error('当前部门还未添加自定义组，请先添加自定义组')
+            return;
           }
-           this.$refs.mytable.refresh(true)
-          }
-          console.log(this.Grouplist);
-   
+       
+          if(!this.QueryUserParam.GroupID)
+          {
+             this.QueryUserParam={
+            GroupID:this.Grouplist[0].key
+          }          
+         }
+         
+          // if(!this.QueryUserParam.GroupID)   
+          // {
+          //    if(this.Grouplist.length>0)
+          //   {
+          // this.QueryUserParam ={
+          //   GroupID:this.Grouplist[0].key
+          //   }
+          //   this.isSearch=false;
+           
+          //   }
+          // }
+          // else
+          // {
+          //   this.QueryUserParam.UserName='';          
+          // }
+          this.$refs.mytable.refresh(true)
+          console.log(this.Grouplist);   
         })
    
      
@@ -345,6 +425,7 @@ export default {
       return true;
     },
    handleClick (e) {
+  
         this.onclick=true;
         this.QueryUserParam ={
         GroupID:e.key
@@ -383,6 +464,18 @@ export default {
 </script>
 
 <style lang="less">
+#swap-i
+{
+  transform: rotate(90deg); 
+}
+.content .table-operator
+{
+  margin-bottom:0px;
+}
+p
+{
+  margin-top:10px;
+}
   .custom-tree {
     /deep/ .ant-menu-item-group-title {
       position: relative;

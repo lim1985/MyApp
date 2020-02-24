@@ -9,8 +9,12 @@ const getters = {
   roles: state => state.user.roles,
   userInfo: state => state.user.info,
   addRouters: state => state.permission.addRouters,
-  userId:state=> state.user.userid
-  
+  userId:state=> state.user.userid,
+  smscount:state=> state.user.smscount
+
+ 
+  // smscount:state=>state.user.SendSmsList.depcount[0].SMSCount?state.user.SendSmsList.depcount[0].SMSCount:0
+ 
 }
 
 export default getters

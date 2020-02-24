@@ -33,7 +33,6 @@ module.exports = {
  //打包配置开始
  configureWebpack: config => {
   const plugins = [];
-
  // 启用代码压缩
   plugins.push(
     new TerserPlugin({
@@ -113,7 +112,17 @@ module.exports = {
   devServer: {
     open: true,
     port: 8080,
+   
     proxy: {
+      //https://daxiang-wap.rednet.cn
+      '/getrednetlive': {
+        target: 'https://daxiang-wap.rednet.cn/live/index.html?liveid=1691',  // target host
+        ws: true,  // proxy websockets 
+        changeOrigin: true,  // needed for virtual hosted sites
+        pathRewrite: {
+            '^/getrednetlive': ''  // rewrite path
+        }
+    },
         '/apis': {
             target: 'http://zwfw.hunan.gov.cn/hnvirtualhall/yzCertificatenodo.jsp',  // target host
             ws: true,  // proxy websockets 
@@ -122,6 +131,35 @@ module.exports = {
                 '^/apis': ''  // rewrite path
             }
         },
+        '/api': {
+          target: 'https://www.hnroger.com/',  // target host
+          ws: true,  // proxy websockets 
+          changeOrigin: true,  // needed for virtual hosted sites
+          secure:true,
+          pathRewrite: {
+              '^/api': 'user/auth'  // rewrite path
+          }
+      },
+      '/getCode':{
+        target:'https://www.hnroger.com/user/getcode',
+        ws:true,
+        changeOrigin: true,  // needed for virtual hosted sites
+        secure:true,
+        pathRewrite: {
+            '^/getCode': ''  // rewrite path
+        }
+      },
+      '/yuqinglogin': {
+        target: 'https://www.hnroger.com/',  // target host
+        ws: true,  // proxy websockets 
+        changeOrigin: true,  // needed for virtual hosted sites
+        // secure:true,
+        pathRewrite: {
+            '^/yuqinglogin': ''  // rewrite path
+        }
+    },
+
+      //https://jiance.hnroger.com
       //   '/ProxyLogin': {
       //     target: 'http://172.20.8.28:3001/api/login',  // target host
       //     ws: true,  // proxy websockets 

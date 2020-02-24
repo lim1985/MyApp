@@ -16,6 +16,16 @@ const api = {
   UpdataPermissionInformation:'http://59.230.230.40/api/UpdataPermissionInformation',
   //GetAllPermissionList:'http://59.230.230.40/api/PermissionList',
   
+  //纠错模块
+  submitErrorInfo:'http://59.230.230.40/api/submitErrorInfo',
+  selectErrorInfo:'http://59.230.230.40/api/selectErrorInfo',
+  UpdateErrorInfo:'http://59.230.230.40/api/UpdateErrorInfo',
+
+//舆情模块
+  yuqinglogin:'http://info.dxzc.gov.cn:8080/api',
+  // getCode:'http://info.dxzc.gov.cn:8080/getCode',
+
+
 
   //角色接口
   addRole: 'http://59.230.230.40/api/rolesAdd',
@@ -30,6 +40,8 @@ const api = {
   GetrolesbyAdminID:'http://59.230.230.40/api/GetrolesbyAdminID',//获取管理员权限
   GetAllPermissionInformationByRoleId:'http://59.230.230.40/api/GetAllPermissionInformationByRolesID',//999
   GetDyNamicRoutes:'http://59.230.230.40/api/GetDyNamicRoutesByAdminID',
+  
+
   //'http://59.230.230.40/api/rolesAdd?RoleValue=1&Description=111'
   //部门管理接口列表
   AddParment:'http://59.230.230.40/api/AddParment',
@@ -39,9 +51,14 @@ const api = {
   SelectAllDepchild:'http://59.230.230.40/api/selectAlldepartmentBykey',
   SelectDepartmentByID:'http://59.230.230.40/api/DepartmentGetByID',
   SelectDepslistsbyLike:'http://59.230.230.40/api/SelectDepslistsbyLike', 
+  selectDepSmsCount:'http://59.230.230.40/api/selectDepSmsCount',//查询单位短信条数
+  selectSmsAccounts:'http://info.dxzc.gov.cn:3001/api/selectSmsAccounts',//查询单位发短信接口参数。接口停用
+  updateDepSmsCount:'http://59.230.230.40/api/updateDepSmsCount',//更新单位发送条数
+                   //http://info.dxzc.gov.cn:3001/api/selectSmsAccounts
   //通讯录管理接口
   //通讯录人员添加
-
+ 
+  ChangeToQita:'http://59.230.230.40/api/ChangeToQita',
   GetAllUserList:'http://59.230.230.40/api/userlist',
   UpdateUserPhone:'http://59.230.230.40/api/UpdatePhoneUser',
   asyncValidateTel:'http://59.230.230.40/api/asyncValidateTel',
@@ -49,7 +66,7 @@ const api = {
   GetAllPhoneUserByPermissionKey:'http://59.230.230.40/api/AllPhoneUserByPermissionkey',
   GetByDepIDAndPermissionKey:'http://59.230.230.40/api/GetDepIDAndPermissionKey',
   PostDepIDAndPermissionKey:'http://59.230.230.40/api/PostDepIDAndPermissionKey',
-  DeleteUserByUID:'http://59.230.230.40/api/DeleteUser',
+  DeleteUserByUID:'http://59.230.230.40/api/DeleteUser',//其实并不删除，只是将该联系人放到 其他 特定栏目中去
   GetuserInformationByTelNum:'http://59.230.230.40/api/GetuserInformationbyTelNum',//获取用户信息By手机号
   GetuserInformationbyname:'http://59.230.230.40/api/GetuserInformationbyname',//获取用户信息By用户名
   GetUserInformationByUserNameLIke:'http://59.230.230.40/api/GetUserInformationByUserNameLIke',//获取用户信息By用户名  自定义组 和 首页搜索里用了该接口
@@ -85,6 +102,8 @@ const api = {
    FindAllUserByGroupID:'http://59.230.230.40/api/FindAllUserByGroupID',
    DeleteGroupUser:'http://59.230.230.40/api/DeleteGroupUser',
    DeleteGroup:'http://59.230.230.40/api/DeleteGroup',
+   SortCustomGroupUsers:'http://59.230.230.40/api/SortCustomGroupUserPhoneList',
+
   //上传xlsx文件
    Uploadfiles:'http://59.230.230.39:3002/api/upload',
    //省里发短信地址
@@ -103,6 +122,100 @@ const api = {
 }
 
 export default api
+//自定义组的通讯录人员排序
+
+
+//获取验证码
+// export function YQGetCode (parameter) {
+//   return axios({
+//     url: api.getCode,
+//     method: 'get',
+//     params: parameter  
+//   })
+// }
+
+export function UpdateDepSmsCount (parameter) {
+  return axios({
+    url: api.updateDepSmsCount,
+    method: 'get',
+    params: parameter  
+  })
+}
+
+export function SelectSmsAccounts (parameter) {
+  return axios({
+    url: api.selectSmsAccounts,
+    method: 'POST',
+    data:parameter,
+    async:false,
+    headers : {
+			'Accept' : 'application/json',
+			'Content-Type' : 'application/json; charset=utf-8'
+		},
+  })
+}
+export function yuqingLogin (parameter) {
+  return axios({
+    url: api.yuqinglogin,
+    method: 'POST',
+    data:parameter,
+    async:false,
+    headers : {
+			'Accept' : 'application/json',
+			'Content-Type' : 'application/json; charset=utf-8'
+		},
+  })
+}
+//修改纠错信息
+export function UpdateErrorInfo (parameter) {
+  return axios({
+    url: api.UpdateErrorInfo,
+    method: 'get',
+    params: parameter  
+  })
+}
+//查询纠错信息
+export function selectErrorInfo (parameter) {
+  return axios({
+    url: api.selectErrorInfo,
+    method: 'get',
+    params: parameter  
+  })
+}
+//提交纠错信息
+export function submitErrorInfo (parameter) {
+  return axios({
+    url: api.submitErrorInfo,
+    method: 'get',
+    params: parameter  
+  })
+}
+//查询部门短信条数
+export function SelectDepSmsCount (parameter) {
+  return axios({
+    url: api.selectDepSmsCount,
+    method: 'POST',
+    data:parameter,
+  })
+}
+
+//自定义组的通讯录人员排序
+export function SortCustomGroupUsers (parameter) {
+  return axios({
+    url: api.SortCustomGroupUsers,
+    method: 'POST',
+    data:parameter,
+  })
+}
+//将用户转到其他栏目替代删除
+export function changeUserToQita (parameter) {
+  return axios({
+    url: api.ChangeToQita,
+    method: 'get',
+    params: parameter  
+  })
+}
+
 //通过省里平台获取用户信息
 export function GetDyNamicRoutes (parameter) {
   return axios({
@@ -330,8 +443,8 @@ export function SmsSucceedcount (parameter) {
 export function SmsAddrecord (parameter) {
   return axios({
     url: api.SmsAddRecord,
-    method: 'get',
-    params: parameter
+    method: 'post',
+    data:parameter 
   })
 }
 export function SmsStatus (parameter) {

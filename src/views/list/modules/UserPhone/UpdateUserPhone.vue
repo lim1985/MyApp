@@ -209,6 +209,7 @@ export default {
    
   data () {
     return {     
+      EID:'',
       tel:'',
       Isvalidate:false,     
       Tips:'',
@@ -333,13 +334,15 @@ export default {
     },
   
     add (s) {   
+      console.log(s);
+       this.EID=!s.EID?'':s.EID
        this.$store.commit('SET_UserPhoneID', s.ID)
          this.edit({
          ID:s.ID,
          DepKeylist:[s.Permission_Key,s.Department_ID],
          Email:s.Email,
          UJOB:s.UJOB,
-         status:s.Ustatus,
+         status:s.Ustatus,      
          Sex:s.Sex,
          BirthDay:s.BirthDay,
          UserName: s.UserName,
@@ -354,11 +357,12 @@ export default {
      
     },
      edit (record) {
+       console.log(record);
       this.mdl = Object.assign({}, record)
      
-      this.PhoneVisible = true
-      console.log(record);
-      this.$nextTick(() => {
+        this.PhoneVisible = true
+        console.log(record);
+        this.$nextTick(() => {
         setTimeout(() => {
         this.form.setFieldsValue({
         ID:record.ID,
@@ -414,12 +418,12 @@ export default {
                  
           }, 1000)          
           }).then(function (r) {
-            console.log(r)
+         
            if(r.code==-1)
            {
               _this.$message.success('修改人员信息成功'); 
               _this.PhoneVisible = false   
-              _this.$emit('ok')        
+              _this.$emit('ok',_this.EID)        
            }
            else if(r.code==-4)
            {

@@ -70,7 +70,7 @@ export default {
     }
   },
   methods: {
-     lodashSearch:_.debounce(async function(val){
+     lodashSearch:_.debounce(async function(val){//通过子组件的输入框录入数据，判断以后传给父组件
       const { value} = val.target  
       let _value=value
       let isok=await Validate.CheckPhoneNumAndchanese(_value)       

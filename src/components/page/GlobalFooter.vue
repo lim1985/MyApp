@@ -11,7 +11,7 @@
     <div class="copyright">
       Copyright
       <a-icon type="copyright"/>
-      2018 <span>大祥区电政办技术组出品</span>
+      2018 <span>大祥区信息中心技术支持</span>
     </div>
   </div>
 </template>

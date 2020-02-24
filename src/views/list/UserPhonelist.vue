@@ -63,10 +63,11 @@
 
     <div class="table-operator">
       <a-row :gutter="2">
-        <a-col :xs="{ span: 24}" :lg="{ span: 8 }" :xl="{span: 8 }" :xxl="{ span: 6}"><a-button type="primary" @click="addphone()" :style="{ fontSize: '18px' }" icon="user-add">添加联系人</a-button>     
+        <a-col :xs="{ span: 24}" :lg="{ span: 8 }" :xl="{span: 8 }" :xxl="{ span: 6}">
+          <a-button type="primary" @click="addphone()" :style="{ fontSize: '18px' }" icon="user-add">添加联系人</a-button>     
           <a-dropdown>
             <a-menu slot="overlay">
-              <a-menu-item key="3" @click="sendsms(selectedRows)"><a-icon type="lock" />发短信</a-menu-item>
+              <a-menu-item key="3" v-if="IsSendSms.length" @click="sendsms(selectedRows)"><a-icon type="lock" />发短信</a-menu-item>
               <a-menu-item key="1" @click="sortUser(selectedRows)"><a-icon id="swap-i" type="swap" />排序</a-menu-item>
               <!-- <a-menu-item key="1"><a-icon type="delete" />删除</a-menu-item> -->
               <!-- lock | unlock -->
@@ -102,6 +103,7 @@
     
   
     <s-table
+     
       ref="mytable"
       size="default"
       :loading="loading"
@@ -121,7 +123,7 @@
             {{ text }} <a-icon type="down" />
           </a>
           <a-menu slot="overlay">
-            <a-menu-item>
+            <a-menu-item v-if="IsSendSms.length">
               <a @click="sendsms(record)">发短信</a>
             </a-menu-item>
             <a-menu-item>
@@ -137,7 +139,7 @@
             {{ text }} <a-icon type="down" />
           </a>
           <a-menu slot="overlay">
-            <a-menu-item>
+            <a-menu-item v-if="IsSendSms.length">
               <a @click="sendsmstwo(record)">发短信</a>
             </a-menu-item>
             <a-menu-item>
@@ -158,6 +160,7 @@
         </a-dropdown>
         <!-- <a @click="GetUboxToTel(text)">{{ text }}</a> -->
       </template>
+      <!-- 7是前台不可见状态，9为前台可见状态 -->
       <span slot="action" slot-scope="text, record">
         <a v-show="record.Ustatus==9 || record.Ustatus==7" @click="handleEdit(record)">编辑</a>
         <a-divider type="vertical" />
@@ -178,9 +181,9 @@
             <a-menu-item v-show="record.Ustatus==9 || record.Ustatus==7|| record.Ustatus==6">
               <a-popconfirm
                 v-if="loadData.length"
-                title="确定删除该联系人么?"
+                title="移除后可从【其他】节点下的通讯录中修改单位找回，是否移除?"
                 @confirm="() => onDelete(record)">
-                <a href="javascript:;">删除</a>
+                <a href="javascript:;">移除</a>
               </a-popconfirm>
             </a-menu-item>
           </a-menu>
@@ -202,7 +205,8 @@
   import AInput from "ant-design-vue/es/input/Input"
   import { mapState} from 'vuex'
   import _ from 'lodash'
-  import {GetALLByDepID,AddPhoneUser,DeleteUser,ReferenceDelete,SelectDepByID,GetUserInformationByUserNameLIke} from '@/api/manage'
+  //DeleteUser
+  import {GetALLByDepID,AddPhoneUser,ReferenceDelete,SelectDepByID,GetUserInformationByUserNameLIke,changeUserToQita} from '@/api/manage'
   import UserModal from './modules/UserPhone/addUserPhone'
   import UpdateUserModal from './modules/UserPhone/UpdateUserPhone'
   import SendsmsModal from './modules/sendSMS/sendsms'
@@ -211,6 +215,7 @@
   export default {
     name: "TableList",
     components: {
+    
       SortModal,
       PhoneModal,
       AInput,
@@ -220,13 +225,15 @@
       UpdateUserModal,
       SendsmsModal  
     },
-    computed:{
+    computed:{    
       ...mapState({
-        S_DEPKEY:state=>state.user.DEPKEY
+        S_DEPKEY:state=>state.user.DEPKEY,
+        IsSendSms:state=>state.user.SendSmsList        
       })    
     },
     data () {
       return {    
+       
         Search:false,
         Userlist:[],
         loading:false,
@@ -372,14 +379,12 @@
                    v.Department_ID=this.$route.fullPath.split('/')[3]        
                    v.Ustatus=v.Rstatus                 
                 }
-            });          
-          
+            });    
            this.Pupu=data.data.map(item=>{
              return {Phone:item.cellphone,username:item.UserName,DPname:item.DepartmentName,ID:item.ID,UJOB:item.UJOB,checked:false}
            })              
            this.Userlist=data.data
-           console.log(this.$route);
-           console.log(data)
+           console.log(this.$route);     
            this.allRows=data;
            return data
          })           
@@ -427,17 +432,14 @@
       //   console.log(val)
       // },500),
       sortUser(val)
-      {
-      
+      {      
         if(val!='')
-        {
-       
+        {       
            this.$refs.SortModal.show(val); 
         }   
         else
         {
-           this.$refs.SortModal.show(this.Userlist); 
-         
+           this.$refs.SortModal.show(this.Userlist);          
         }    
       },
        GetUboxToTel(e)
@@ -476,8 +478,14 @@
         else
         {
           console.log('删除本单位的人')
-          this.loading=true;
-          DeleteUser(data).then(res=>{
+          this.loading=true;//changeUserToQita
+          console.log(data)
+          let body={
+            ID:data.ID,
+            DepID:163
+          }
+          changeUserToQita(body).then(res=>{
+            console.log(res)
             if(res.code==1)
             {
               setTimeout(() => {
@@ -502,7 +510,7 @@
        _obj.DepartmentName=IDs.DepartmentName;
        _obj.Hcellphone=IDs.H_cellphone;
        _obj.ID=IDs.ID;
- this.$refs.SendsmsModal.get(_obj); 
+       this.$refs.SendsmsModal.get(_obj); 
     },
       sendsms(IDs)
       {
@@ -574,7 +582,7 @@
             // })
         },
       handleEdit (record) {
-       
+       console.log(record);
         setTimeout(() => {
             this.$refs.UpdateUserPhonemodal.add(record);  
         }, 100);
@@ -597,6 +605,7 @@
 
       },
       toggleAdvanced () {
+      
         this.advanced = !this.advanced
       }      
     },
@@ -646,8 +655,10 @@
   }
 </script>
 <style scoped>
+
 #swap-i
 {
+  
   transform: rotate(90deg); 
 }
 .content .table-operator

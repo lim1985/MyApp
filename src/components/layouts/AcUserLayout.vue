@@ -5,7 +5,7 @@
         <div class="header">
           <a href="/">
             <img src="~@/assets/logo.svg" class="logo" alt="logo">
-            <span class="title">强国智能通讯录系统</span>
+            <span class="title">大祥疫情登记系统</span>
           </a>
         </div>
         <div class="desc">

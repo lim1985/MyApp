@@ -18,10 +18,15 @@
       title="发送短信"
       :width="1100"
       v-model="Sendvisible"
-      @ok="sendsms()"  
+      @ok="CmccSendSMS()"  
       :confirmLoading="confirmLoading"
     >
       <a-spin :spinning="confirmLoading">
+        <a-row type="flex" justify="start">
+          <a-col :offset="1" :xs="20" :sm="20" :md="16" :lg="16" :xl="16">
+            <p class="height-100"><strong style="color:red">温馨提示</strong>：批量发送可以从右边列表直接勾选联系人。</p>
+          </a-col>
+        </a-row>
         <a-row type="flex" justify="end">
           <a-col :xs="20" :sm="20" :md="16" :lg="16" :xl="16"> <a-textarea v-model="vmodelContent" placeholder="输入短信内容" :rows="18"/></a-col>
           <a-col :span="1"> </a-col>
@@ -58,10 +63,11 @@
 
 <script>
   import Vue from 'vue'  
-  import { mapState} from 'vuex'
-  import {SendSMS ,SmsAddrecord,SmsSucceedcount} from '@/api/manage' 
+  import { mapState } from 'vuex'
+  import {SendSMS ,SmsAddrecord,SmsSucceedcount,CMCCSendSMS ,UpdateDepSmsCount } from '@/api/manage' 
   import { User_ID } from "@/store/mutation-types" 
   import { clearInterval, setInterval } from 'timers';
+
   
 
 
@@ -110,8 +116,8 @@ export default {
       GuID:0,     
       AdminID:0,
       InervalTime:null,
-      sendedCount:0
-     
+      sendedCount:0,
+      smsAccounts:{}
     }
   },
   beforeCreate () {
@@ -122,8 +128,11 @@ export default {
     
   },
     computed:{
+    
       ...mapState({
-        S_DEPKEY:state=>state.user.DEPKEY,               
+        S_DEPKEY:state=>state.user.DEPKEY,    
+        IsSendSms:state=>state.user.SendSmsList,
+        SmsCount:state=>state.user.smscount                
       }),
        sendcount(){
          return this.sendedCount;
@@ -131,13 +140,18 @@ export default {
     },
   
   async mounted(){   
-  
+
+      console.log(this.SmsCount);
+      console.log(this.IsSendSms);
+      // let Accounts=await SelectSmsAccounts({DepID:this.IsSendSms[0]});
+      // this.smsAccounts=Accounts;
       // let _arr=await this.GetDepnameAndchild()     
       // this.options=this.QuChongFuObject(_arr);  
       // this.setDepkey();
 
     },
   methods:  {
+    
     ClearInterval(){
       clearInterval(this.InervalTime);
       this.InervalTime=null;
@@ -145,7 +159,7 @@ export default {
     },
   
       sendsmsstatus(){
-
+          // console.log(this.IsSendSms[0]);
         return !this.sending? '发送成功。':'短信发送中...'          
       },
       onChange (e,checkedList) { 
@@ -186,6 +200,128 @@ export default {
     genID(length){//生成唯一组ID
       return Number(Math.random().toString().substr(3,length) + Date.now()).toString(36);
     },  
+   async CmccSendSMS()
+   {
+    //  CMCCSendSMS
+     if(this.countSms==0)
+       {
+         alert('请选择联系人')
+         return 
+       }   
+       this.sendedCount=0
+       this.sending=true
+       this.ClearInterval();
+       this.AdminID= {AdminID:Vue.ls.get(User_ID)} 
+       this.processvisible=true;
+       this.GuID=this.genID(1);     
+       let params={}  
+       let mobilesArr=[]
+       
+      //  this.smsAccounts= await SelectSmsAccounts({DepID:this.IsSendSms[0]});
+      //  console.log(this.AdminID)
+      //  console.log(this.GuID)
+      //  console.log(this.Pupuarr)
+      //  console.log(this.IsSendSms)
+      //  console.log(this.smsAccounts)
+      console.log(this.Pupuarr)
+         for(let x in this.Pupuarr)
+      {
+          if(!this.Pupuarr[x].checked==false)      
+        {            // params.mobiles
+            mobilesArr.push(this.Pupuarr[x].Phone)            
+        }
+      }
+      let strMobiles=mobilesArr.join(',');
+      
+      params.mobiles=strMobiles
+      params.content=this.vmodelContent
+      params.DepID=this.IsSendSms[0]
+      params.soucers=1
+     
+
+    
+      console.log(params)
+         CMCCSendSMS(params).then(r=>{         
+           let _json= JSON.parse(r.res)  
+           let _smsArr=[]  
+              
+        if(_json.rspcod=='success' && _json.success==true)
+        {   for(let x in this.Pupuarr)
+          {
+          if(!this.Pupuarr[x].checked==false)      
+        {            // params.mobiles
+
+         let data={//组成一条发送记录插入数据库
+                GuID:this.GuID,//唯一组ID 
+                TID:_json.msgGroup,//短信宝返回的唯一发送ID
+                UID:this.Pupuarr[x].ID,//发送的用户ID
+                AdminID:this.AdminID.AdminID,//发送的 管理员ID
+                time:this.$moment().format("YYYY-MM-DD HH:mm:ss"),//发送的时间
+                status:'0',//发送的状态短信宝返回的状态
+                SMSContent:this.vmodelContent,//发送的内容
+                UserName:this.Pupuarr[x].username//接收短信的人
+              }
+        
+             _smsArr.push(data)
+               console.log(_smsArr)
+        }
+       
+       }      
+        }
+   
+        //"{"msgGroup":"0129002605000000904249","rspcod":"success","success":true}"
+       return _smsArr
+      })
+      .then(r=>{
+        let newSmsCount=0
+        newSmsCount =this.SmsCount-r.length
+        console.log(params.DepID)
+        console.log(r.length)
+        console.log(newSmsCount)
+ UpdateDepSmsCount({DepID:params.DepID,SMSCount:newSmsCount})
+ this.$store.commit("SET_COUNT", newSmsCount);   
+ SmsAddrecord(r).then(res=>{//写入本地数据库以后记录 返回 GUID 
+                console.log(res)
+                let _GUID= this.GuID
+                let _Data={
+                    GUID:_GUID
+                  }            
+               return _Data
+             }).then(r=>{
+                this.ClearInterval();     //清空计时器         
+                this.InervalTime=setInterval(() => {//开启计时器
+                     SmsSucceedcount(r).then(count=>{//根据唯一的GUID 查询短信发送的状态返回成功的条数
+                       console.log(count.result.count);//打印条数
+                       this.sendedCount=count.result.count//将发送成功的条数绑定模板显示
+                       if(this.sendedCount===this.countSms)//如果需要发送的条数等于发送成功的条数
+                       {
+                         this.sending=false   //发送窗口关闭并且提示显示发送成功
+                         this.ClearInterval(); //清除计时器，计时器不清除会不断消耗内存
+                       }                                         
+                     })                 
+                }, 4000);      //4秒执行一次查询        
+             })
+
+      })
+     
+      //   let ParamData={
+      // secretKey:'52979899',
+      // soucers:1,
+      // ecName:'邵阳市红旗路街道办事处',
+      // apId:'dxqzfb',
+      // mobiles:'15243990018,13973990779,13807399838',
+      // content:`大祥区人民政府，http://www.dxzc.gov.cn移动改变生活。${nowtime}`,
+      // sign:'',
+      // addSerial:''
+      // }
+      //  for(let x in this.Pupuarr)
+      //  {
+      //     if(!this.Pupuarr[x].checked==false)
+      //     {
+
+      //     }
+      //  }
+   },
    async sendsms()
    {    
        if(this.countSms==0)
@@ -223,7 +359,7 @@ export default {
        .then(r=>{
         //  console.log(r)
          let _arr= r.code.split(/[\s\n]/)
-        //  console.log(_arr)
+          console.log(_arr)
        let data={//组成一条发送记录插入数据库
                 GuID:this.GuID,//唯一组ID 
                 TID:_arr[1],//短信宝返回的唯一发送ID

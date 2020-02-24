@@ -16,6 +16,7 @@ const Validate={
         
         console.log(obj)
         if(reg.test(obj.data)){
+          console.log('是电话 到这了')
           let res = await GetUserInformationByTelnum(obj);
         
           console.log(res)
@@ -24,6 +25,7 @@ const Validate={
         }
         else if(reg2.test(obj.data))
         { 
+          console.log(obj);
           let res = await GetUserInformationByUserNameLIke(obj);
           // if(res==-1)
           // {
@@ -34,6 +36,7 @@ const Validate={
         }
         else
         {
+          
           let res = await GetuserInformationbyName(obj)
           resolve(res)
         }
@@ -107,6 +110,36 @@ checkZHZM(rule, value, callback)
     else if(!reg.test(value))
     {
       callback('权重只能输入1-100的数字')
+      return
+    }
+    callback();
+  },
+  checkNum100to2000(rule, value, callback)
+  {
+    let reg=/^(2000|[1-9]\d|\d)$/
+    
+    if(!value)
+    {
+      callback();
+    }
+    else if(!reg.test(value))
+    {
+      callback('只能输入1-2000的数字')
+      return
+    }
+    callback();
+  },
+  checkNums(rule, value, callback)
+  {
+    let reg=/^[-+]?\d*$/;  
+    
+    if(!value)
+    {
+      callback();
+    }
+    else if(!reg.test(value))
+    {
+      callback('只能输入数字')
       return
     }
     callback();
@@ -464,12 +497,23 @@ async checkPhone(rule, value, callback) {
         // callback('该手机号或姓名不存在，请直接添加');                 
         return;
       }         
-        obj.username=_s.res.UserName,
+     
+        // obj.username=_s.res.UserName,
+        // obj.code=_s.code         
+        // obj.id=_s.res.ID,      
+        // obj.tel=_s.res.cellphone,   
+        // obj.showAdd=false   
+        console.log(obj);
+        obj.username=_s.res.data[0].UserName,
         obj.code=_s.code         
-        obj.id=_s.res.ID,      
-        obj.tel=_s.res.cellphone,   
+        obj.id=_s.res.data[0].ID,      
+        obj.Abbreviation=_s.res.data[0]['Abbreviation']
+        obj.tel=_s.res.data[0].cellphone,   
+        obj.UJOB=_s.res.data[0].UJOB,   
         obj.showAdd=false   
+        console.log(obj);
         store.commit('SET_PhoneUSERINFO',obj); 
+        // store.commit('SET_PhoneUSERINFO',obj); 
   } 
 }
 export default Validate

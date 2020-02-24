@@ -2,6 +2,13 @@
   <a-card :bordered="false">
     <div class="table-page-search-wrapper">
       <a-form layout="inline">
+        <a-row type="flex" justify="space-between" align="bottom">
+          <a-col :md="8" :sm="24">
+            <p class="height-100"> 
+              <a-button type="primary" @click="addAdmin()" :style="{ fontSize: '18px' }" icon="user-add">添加管理员</a-button>
+            </p>
+          </a-col>     
+        </a-row>    
         <a-row :gutter="48">
           <a-col :md="8" :sm="24">
             <a-form-item label="角色ID">
@@ -32,6 +39,7 @@
       size="default"
       :columns="columns"
       :data="myloadData"
+      :rowKey="myloadData=>myloadData.AdminID"
     >
       <div
         slot="expandedRowRender"
@@ -286,6 +294,7 @@
     //  this.loadRoleslist()
   },
     methods: {
+      addAdmin(){},
     handleUpdateRoles()
     {
         // console.log(this.targetkeys)

@@ -20,6 +20,10 @@ export default file => {
    UserList: () => import('@/views/list/UserList.vue'),
    RoleList: () => import('@/views/list/RoleList.vue'),
    PermissionList: () => import('@/views/list/PermissionList.vue'),
+   GlobalSearch: () => import('@/views/list/search/GlobalSearch.vue'),
+   jiucuoList: () => import('@/views/list/jiucuo/jiucuo.vue'),
+
+
 
 
 

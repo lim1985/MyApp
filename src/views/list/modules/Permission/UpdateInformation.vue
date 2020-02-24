@@ -38,7 +38,7 @@
           label='选择权限'        
           fieldDecoratorId="PremissionValue"> 
           <a-row :gutter="24">
-            <a-col :span="16"> 
+            <a-col :span="12"> 
               单位名称
             </a-col>
             <a-col :span="4"> 
@@ -47,10 +47,13 @@
             <a-col :span="4"> 
               修改
             </a-col>
+            <a-col :span="4"> 
+              操作短信
+            </a-col>
           </a-row> 
           <!-- 正常模板开始 -->
           <a-row :gutter="24" :key="index" v-for="(item,index) in Mymdl.permissions">
-            <a-col :span="16"> 
+            <a-col :span="12"> 
               <h2>{{ item.label }}</h2>              
             </a-col>              
             <a-col :span="4"> 
@@ -60,18 +63,25 @@
             <a-col :span="4"> 
               <a-checkbox :disabled="!item.IsView" v-model="Mymdl.permissions[index].IsEdit" @change="v=>changeBox(v,2,item,index)" :value="item.IsView" ></a-checkbox>
             </a-col>
+            <a-col :span="4"> 
+              <a-checkbox :disabled="true"></a-checkbox>
+            </a-col>
             <a-row :gutter="24" :key="indexs" v-for="(childItem,indexs) in item.actionOptions">
-              <a-col :span="16"> 
+              <a-col :span="24"> 
                 <h3>{{ childItem.Abbreviation }}</h3>
               </a-col>
-              <a-col :span="4"> 
+              <a-col :offset="12" :span="4"> 
                 <a-checkbox @change="v=>childbox(v,1,childItem,indexs)" v-model="Mymdl.permissions[index].actionOptions[indexs].IsView" :value="childItem.IsView" ></a-checkbox>     
               </a-col>
               <a-col :span="4"> 
                 <a-checkbox @change="v=>childbox(v,2,childItem,indexs)" :disabled="!childItem.IsView" v-model="Mymdl.permissions[index].actionOptions[indexs].IsEdit" :value="childItem.IsEdit" ></a-checkbox>     
               </a-col>
+              <a-col :span="4"> 
+                <a-checkbox @change="v=>childbox(v,3,childItem,indexs)" :disabled="!childItem.IsView" v-model="Mymdl.permissions[index].actionOptions[indexs].IsSendSms" :value="childItem.IsSendSms" ></a-checkbox>  
+              </a-col> 
+              <a-divider />
             </a-row>
-            <a-divider />
+            <!-- <a-divider /> -->
           </a-row> 
         </a-form-item> 
       </a-form> 
@@ -314,14 +324,17 @@ export default {
       
         if(v==1)
         {          
-          item['IsView']=ev.target.checked   
-        
+          item['IsView']=ev.target.checked  
           item['IsParent']=false
         }
-        else
+        else if(v==2)
         {
-          item['IsEdit']=ev.target.checked
-        
+          item['IsEdit']=ev.target.checked        
+          item['IsParent']=false
+        }
+        else if(v==3)
+        {
+          item['IsSendSms']=ev.target.checked        
           item['IsParent']=false
         }
        

@@ -3,6 +3,9 @@ import { login, getAdminInfo, getInfo,logout } from "@/api/login"
 import { ACCESS_TOKEN ,User_ID} from "@/store/mutation-types"
 import { welcome } from "@/utils/util"
 
+import { SelectDepSmsCount } from '@/api/manage'
+
+
 const user = {
   state: {
     token: '',
@@ -18,7 +21,8 @@ const user = {
     ReferenceStatus:false,
     ReferenceUserId:'',
     DepId:'',
-    UserInformation:''
+    UserInformation:'',
+    smscount:'不可用'
   },
 
   mutations: {
@@ -34,6 +38,12 @@ const user = {
     },
     SET_AVATAR: (state, avatar) => {
       state.avatar = avatar
+    },
+    SET_SENDSMS: (state,SendSmsList) => {
+      state.SendSmsList = SendSmsList
+    },
+    SET_COUNT: (state,count) => {
+      state.smscount = count
     },
     SET_ROLES: (state, roles) => {
       state.roles = roles
@@ -137,25 +147,28 @@ const user = {
   myGetInfo({ commit },UserID) {
     console.log(UserID)
     return new Promise((resolve, reject) => {
-      getAdminInfo(UserID).then(response => {          
+      getAdminInfo(UserID).then(async response => {          
         const result = response
       //  console.log('来自user.js')
       console.log(result)
-      if(result.code==1)
+      if(result.code==1)//没有设置roleid 的情况下
       {
          
           commit('SET_ROLES', result.result.RolesID)
           commit('SET_INFO', result.result)
           commit('SET_USERINFO',  result.result.AdminName)
           commit('SET_NAME', { name: result.result.AdminName, welcome: welcome() })
-          commit('SET_AVATAR', result.result.avatar)
+          commit('SET_AVATAR', result.result.RolesID.avatar)
+          commit('SET_SENDSMS', result.result.RolesID.SendsmsList)
+
+        // console.log(result.result.RolesID.SendsmsList)
           resolve(response)
           console.log('89898989')
         return 
       }
         if (result.result.role && result.result.role.permissions.length > 0) {
           const role = result.result.role
-          // console.log(role)
+         console.log(result)
           role.permissions = result.result.role.permissions
           role.permissions.map(per => {
             if (per.actionEntitySet != null && per.actionEntitySet.length > 0) {
@@ -165,12 +178,35 @@ const user = {
           })
           role.permissionList = role.permissions.map(permission => { return permission.permissionId });
           // commit('SET_USERID','8')  
+          // let smscount
+          //   if(!result.result.SendsmsList || result.result.SendSmsList===undefined)
+          // {
+         console.log(result.result.SendsmsList);
+        
+         if(result.result.SendsmsList.length>0)
+         {
+           //权限内勾选了可发短信选项
+          console.log('勾选了发短息权限')
+          let smscount= await SelectDepSmsCount(result.result.SendsmsList)
+          console.log(smscount);
+          if(smscount)
+          {
+            commit('SET_COUNT', smscount.depcount[0].SMSCount)
+          }         
+         }
+         else
+         {
+          //没有发短信权限
+          console.log('没有发短息权限')
+         }
+     
           console.log(result.result.role)  
           console.log(`1-1-1-1-1-1-1-1-`)      
           console.log(role.permissionList)      
           commit('SET_ROLES', result.result.role)
           commit('SET_INFO', result.result)
           commit('SET_USERINFO',  result.result.username)
+          commit('SET_SENDSMS', result.result.SendsmsList)
         } 
         else 
         {
