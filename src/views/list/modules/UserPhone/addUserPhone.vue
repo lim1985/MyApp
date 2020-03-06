@@ -50,7 +50,8 @@
           >
             <a-select v-decorator="['status',{initialValue:'7',rules: [{ required: false }]}]">
               <a-select-option value="9">前台显示</a-select-option>
-              <a-select-option value="7">前台不显示</a-select-option>               
+              <a-select-option value="7">前台不显示</a-select-option>  
+              <a-select-option value="8">社区网格员</a-select-option>               
             </a-select>           
           </a-form-item> 
           <a-form-item
@@ -151,6 +152,7 @@
   import { Promise } from 'q';
   import Validate from '@/tools/Validate/index'
   import { error } from 'util';
+  import _ from 'lodash'
    //状态说明 [LIM_UsersPhone] 9 前台显示 7 前台不现实   
    //[LIM_ResferenceAndDep] 6 引用状态 -1 默认
 
@@ -276,7 +278,24 @@ export default {
             this.form.validateFields(['cellphone']);
         }, 1000);    
     },
-     async GetUserByUserName(e)
+       onSearchPhoneUser:_.debounce(function(val){
+       const { value} = val.target  
+       console.log(value)  
+       if(value)
+       {
+         this.isSearch=true    
+         this.queryParam.data=value; 
+         this.$refs.mytable.refresh()  
+         console.log(this.queryParam);   
+       }
+       else
+       {
+         this.isSearch=false
+         this.queryParam.data=value
+         this.$refs.mytable.refresh()  
+       }
+      },1000),
+     GetUserByUserName:_.debounce(async function(e)
     {
        const { value } = e.target
         let reg = /^[\u0391-\uFFE5]{0,1}$/;
@@ -310,9 +329,7 @@ export default {
       }
       return;
     }
-
-
-    },
+    },1500),
   
     AddReference(){
       this.Referencevisible=true;  

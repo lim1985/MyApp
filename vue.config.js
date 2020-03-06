@@ -6,13 +6,17 @@ const path = require('path')
 //压缩代码并去掉console
  const TerserPlugin = require("terser-webpack-plugin");
 //代码打包zip
- const CompressionWebpackPlugin = require("compression-webpack-plugin");
- const productionGzipExtensions = /\.(js|css|json|txt|html|ico|svg)(\?.*)?$/i;
-//
+//  const CompressionWebpackPlugin = require("compression-webpack-plugin");
+//  const productionGzipExtensions = /\.(js|css|json|txt|html|ico|svg)(\?.*)?$/i;
+// //
+//  const isProduction = process.env.NODE_ENV === 'production'
  const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
-function resolve (dir) {
+ function resolve (dir) {
   return path.join(__dirname, dir)
 }
+
+const isProd = process.env.NODE_ENV === 'production'
+
 
 // vue.config.js
 module.exports = {
@@ -202,5 +206,6 @@ module.exports = {
     //   //   }
     //   // }
     // }
-  }
+  } 
+  
 }

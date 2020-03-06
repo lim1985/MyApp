@@ -22,13 +22,7 @@ export default file => {
    PermissionList: () => import('@/views/list/PermissionList.vue'),
    GlobalSearch: () => import('@/views/list/search/GlobalSearch.vue'),
    jiucuoList: () => import('@/views/list/jiucuo/jiucuo.vue'),
-
-
-
-
-
-
-
+   yqdata: () => import('@/views/list/yqdata/yqdata.vue')
 //    {
 //     path: '/DepartmentManager',
 //     name: 'DepartmentManager',

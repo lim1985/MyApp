@@ -5,111 +5,114 @@ const api = {
   service: '/service',
   orgTree: '/org/tree',
   permission: '/permission',
+  //片区人员管理接口
+  
+  selectByJdId: '/api/selectByJdId',
   //权限接口
-  addPermission: 'http://59.230.230.40/api/PermissionAdd',//添加权限//src\views\list\PermissionList.vue页面使用了该接口
-  UpdataPermission: 'http://59.230.230.40/api/PermissionUpdata',//修改权限//src\views\list\PermissionList.vue页面使用了该接口
-  DelPermission: 'http://59.230.230.40/api/PermissionDel',//修改权限//src\views\list\PermissionList.vue页面使用了该接口
-  GetAllPermissionList:'http://59.230.230.40/api/PermissionList',//未找到使用页面
-  GetPermissionInfo:'http://59.230.230.40/api/Permissionbykey',//使用页面src\views\list\Department.vue
-  GetPermissionAll:'http://59.230.230.40/api/getAllPermissAndDeplist',//返回所有权限和部门DepCardList.vue RoleList.vue 使用该接口
-  GetDepTreelist:'http://59.230.230.40/api/getAllDepTreeList',//返回部门树//src\views\other\TreeList.vue页面使用了该接口
-  UpdataPermissionInformation:'http://59.230.230.40/api/UpdataPermissionInformation',
-  //GetAllPermissionList:'http://59.230.230.40/api/PermissionList',
+  addPermission: '/api/PermissionAdd',//添加权限//src\views\list\PermissionList.vue页面使用了该接口
+  UpdataPermission: '/api/PermissionUpdata',//修改权限//src\views\list\PermissionList.vue页面使用了该接口
+  DelPermission: '/api/PermissionDel',//修改权限//src\views\list\PermissionList.vue页面使用了该接口
+  GetAllPermissionList:'/api/PermissionList',//未找到使用页面
+  GetPermissionInfo:'/api/Permissionbykey',//使用页面src\views\list\Department.vue
+  GetPermissionAll:'/api/getAllPermissAndDeplist',//返回所有权限和部门DepCardList.vue RoleList.vue 使用该接口
+  GetDepTreelist:'/api/getAllDepTreeList',//返回部门树//src\views\other\TreeList.vue页面使用了该接口
+  UpdataPermissionInformation:'/api/UpdataPermissionInformation',
+  //GetAllPermissionList:'/api/PermissionList',
   
   //纠错模块
-  submitErrorInfo:'http://59.230.230.40/api/submitErrorInfo',
-  selectErrorInfo:'http://59.230.230.40/api/selectErrorInfo',
-  UpdateErrorInfo:'http://59.230.230.40/api/UpdateErrorInfo',
+  submitErrorInfo:'/api/submitErrorInfo',
+  selectErrorInfo:'/api/selectErrorInfo',
+  UpdateErrorInfo:'/api/UpdateErrorInfo',
 
 //舆情模块
-  yuqinglogin:'http://info.dxzc.gov.cn:8080/api',
-  // getCode:'http://info.dxzc.gov.cn:8080/getCode',
+  yuqinglogin:'http://api.dxzc.gov.cn:8080/api',
+  // getCode:'http://api.dxzc.gov.cn:8080/getCode',
 
 
 
   //角色接口
-  addRole: 'http://59.230.230.40/api/rolesAdd',
-  getrolelist:'http://59.230.230.40/api/roleslist',
+  addRole: '/api/rolesAdd',
+  getrolelist:'/api/roleslist',
 
   //管理员用户接口
-  UpdataAdminRoles:'http://59.230.230.40/api/ActionUpdataAdmin',  //修改管理员角色
-  GetAdmininfo:'http://59.230.230.40/api/userInfo', //查询管理员信息
-  Delrole:'http://59.230.230.40/api/rolesdel',//删除角色
-  addrolePermission:'http://59.230.230.40/api/rolesAddPermission',//添加管理员角色
-  GetPermissionByroleID:'http://59.230.230.40/api/getPermissionbyroleID',//获取权限
-  GetrolesbyAdminID:'http://59.230.230.40/api/GetrolesbyAdminID',//获取管理员权限
-  GetAllPermissionInformationByRoleId:'http://59.230.230.40/api/GetAllPermissionInformationByRolesID',//999
-  GetDyNamicRoutes:'http://59.230.230.40/api/GetDyNamicRoutesByAdminID',
+  UpdataAdminRoles:'/api/ActionUpdataAdmin',  //修改管理员角色
+  GetAdmininfo:'/api/userInfo', //查询管理员信息
+  Delrole:'/api/rolesdel',//删除角色
+  addrolePermission:'/api/rolesAddPermission',//添加管理员角色
+  GetPermissionByroleID:'/api/getPermissionbyroleID',//获取权限
+  GetrolesbyAdminID:'/api/GetrolesbyAdminID',//获取管理员权限
+  GetAllPermissionInformationByRoleId:'/api/GetAllPermissionInformationByRolesID',//999
+  GetDyNamicRoutes:'/api/GetDyNamicRoutesByAdminID',
   
 
-  //'http://59.230.230.40/api/rolesAdd?RoleValue=1&Description=111'
+  //'/api/rolesAdd?RoleValue=1&Description=111'
   //部门管理接口列表
-  AddParment:'http://59.230.230.40/api/AddParment',
-  UpdatePartment:'http://59.230.230.40/api/UpdateDEPartment',  
-  DeleteDEPartment:'http://59.230.230.40/api/DeleteDEPartment',  
-  QueryAllDeplist:'http://59.230.230.40/api/DepartmentQueryALL',
-  SelectAllDepchild:'http://59.230.230.40/api/selectAlldepartmentBykey',
-  SelectDepartmentByID:'http://59.230.230.40/api/DepartmentGetByID',
-  SelectDepslistsbyLike:'http://59.230.230.40/api/SelectDepslistsbyLike', 
-  selectDepSmsCount:'http://59.230.230.40/api/selectDepSmsCount',//查询单位短信条数
-  selectSmsAccounts:'http://info.dxzc.gov.cn:3001/api/selectSmsAccounts',//查询单位发短信接口参数。接口停用
-  updateDepSmsCount:'http://59.230.230.40/api/updateDepSmsCount',//更新单位发送条数
-                   //http://info.dxzc.gov.cn:3001/api/selectSmsAccounts
+  AddParment:'/api/AddParment',
+  UpdatePartment:'/api/UpdateDEPartment',  
+  DeleteDEPartment:'/api/DeleteDEPartment',  
+  QueryAllDeplist:'/api/DepartmentQueryALL',
+  SelectAllDepchild:'/api/selectAlldepartmentBykey',
+  SelectDepartmentByID:'/api/DepartmentGetByID',
+  SelectDepslistsbyLike:'/api/SelectDepslistsbyLike', 
+  selectDepSmsCount:'/api/selectDepSmsCount',//查询单位短信条数
+  selectSmsAccounts:'http://api.dxzc.gov.cn:3001/api/selectSmsAccounts',//查询单位发短信接口参数。接口停用
+  updateDepSmsCount:'/api/updateDepSmsCount',//更新单位发送条数
+                   //http://api.dxzc.gov.cn:3001/api/selectSmsAccounts
   //通讯录管理接口
   //通讯录人员添加
  
-  ChangeToQita:'http://59.230.230.40/api/ChangeToQita',
-  GetAllUserList:'http://59.230.230.40/api/userlist',
-  UpdateUserPhone:'http://59.230.230.40/api/UpdatePhoneUser',
-  asyncValidateTel:'http://59.230.230.40/api/asyncValidateTel',
-  AddPhoneUser:'http://59.230.230.40/api/AddPhoneUser',
-  GetAllPhoneUserByPermissionKey:'http://59.230.230.40/api/AllPhoneUserByPermissionkey',
-  GetByDepIDAndPermissionKey:'http://59.230.230.40/api/GetDepIDAndPermissionKey',
-  PostDepIDAndPermissionKey:'http://59.230.230.40/api/PostDepIDAndPermissionKey',
-  DeleteUserByUID:'http://59.230.230.40/api/DeleteUser',//其实并不删除，只是将该联系人放到 其他 特定栏目中去
-  GetuserInformationByTelNum:'http://59.230.230.40/api/GetuserInformationbyTelNum',//获取用户信息By手机号
-  GetuserInformationbyname:'http://59.230.230.40/api/GetuserInformationbyname',//获取用户信息By用户名
-  GetUserInformationByUserNameLIke:'http://59.230.230.40/api/GetUserInformationByUserNameLIke',//获取用户信息By用户名  自定义组 和 首页搜索里用了该接口
-  GetAllPhoneuser:'http://59.230.230.40/api/GetAllPhoneuser',
-  GetALLByDepID:'http://59.230.230.40/api/GetAllByDepID',//DepID=70 用于UserPhoneList页面获取通讯录用户数据用
-  GetUserByNameAndDepID:'http://59.230.230.40/api/GetUserByNameAndDepID',//批量检查999
-  importUsersList:'http://59.230.230.40/api/importUsersList',//批量导入999
-  SortUserPhoneList:'http://59.230.230.40/api/SortUserPhoneList',//排序
+  ChangeToQita:'/api/ChangeToQita',
+  GetAllUserList:'/api/userlist',
+  UpdateUserPhone:'/api/UpdatePhoneUser',
+  asyncValidateTel:'/api/asyncValidateTel',
+  AddPhoneUser:'/api/AddPhoneUser',
+  GetAllPhoneUserByPermissionKey:'/api/AllPhoneUserByPermissionkey',
+  GetByDepIDAndPermissionKey:'/api/GetDepIDAndPermissionKey',
+  PostDepIDAndPermissionKey:'/api/PostDepIDAndPermissionKey',
+  DeleteUserByUID:'/api/DeleteUser',//其实并不删除，只是将该联系人放到 其他 特定栏目中去
+  GetuserInformationByTelNum:'/api/GetuserInformationbyTelNum',//获取用户信息By手机号
+  GetuserInformationbyname:'/api/GetuserInformationbyname',//获取用户信息By用户名
+  GetUserInformationByUserNameLIke:'/api/GetUserInformationByUserNameLIke',//获取用户信息By用户名  自定义组 和 首页搜索里用了该接口
+  GetAllPhoneuser:'/api/GetAllPhoneuser',
+  GetALLByDepID:'/api/GetAllByDepID',//DepID=70 用于UserPhoneList页面获取通讯录用户数据用
+  GetUserByNameAndDepID:'/api/GetUserByNameAndDepID',//批量检查999
+  importUsersList:'/api/importUsersList',//批量导入999
+  SortUserPhoneList:'/api/SortUserPhoneList',//排序
 
   
 
  //引用表操作
-  ReferenceAdd:'http://59.230.230.40/api/ReferenceAdd',//用于list/modules/UserPhone/addUserPhone
-  ReferenceDelete:'http://59.230.230.40/api/ReferenceDelete',//用于list/modules/UserPhone/addUserPhone
-  IsReference:'http://59.230.230.40/api/IsReference',//用于判断该单位是否引用过该用户{DEPid，userid}999
+  ReferenceAdd:'/api/ReferenceAdd',//用于list/modules/UserPhone/addUserPhone
+  ReferenceDelete:'/api/ReferenceDelete',//用于list/modules/UserPhone/addUserPhone
+  IsReference:'/api/IsReference',//用于判断该单位是否引用过该用户{DEPid，userid}999
   
  //发短信接口
-   sendsms:'http://info.dxzc.gov.cn:3000/api/sendsms',
-   GetVerificatCode:'http://59.230.230.40/api/GetVerificatCode',   
-   smsstatus:'http://info.dxzc.gov.cn:3000/api/status',
-   SmsAddRecord:'http://info.dxzc.gov.cn:3000/api/smsAddrecord',
-   smssucceedcount:'http://info.dxzc.gov.cn:3000/api/GetSmsSucceedCount',
-   ChinaCMCCSendSMS:'http://info.dxzc.gov.cn:3000/api/sendCMCC',
+   sendsms:'http://api.dxzc.gov.cn:3000/api/sendsms',
+   GetVerificatCode:'/api/GetVerificatCode',   
+   smsstatus:'http://api.dxzc.gov.cn:3000/api/status',
+   SmsAddRecord:'http://api.dxzc.gov.cn:3000/api/smsAddrecord',
+   smssucceedcount:'http://api.dxzc.gov.cn:3000/api/GetSmsSucceedCount',
+   ChinaCMCCSendSMS:'http://api.dxzc.gov.cn:3000/api/sendCMCC',
 //通过省里的深度融合接口返回数据
    //http://api.dxzc.gov.cn:3000/api/getalluserinfo
    GetUserInformation:'http://api.dxzc.gov.cn:3000/api/getalluserinfo',
    //添加自定义组
-   CreateCustomGroup:'http://59.230.230.40/api/createGroup',
-   GetCustomGroup:'http://59.230.230.40/api/GetGroup',
-   GetAllDepUser:'http://59.230.230.40/api/GetAllDepUser',
-   AddUserToGroup:'http://59.230.230.40/api/adduserTogroup',
-   InGroupUsersID:'http://59.230.230.40/api/InGroupUsersID',
-   FindAllUserByGroupID:'http://59.230.230.40/api/FindAllUserByGroupID',
-   DeleteGroupUser:'http://59.230.230.40/api/DeleteGroupUser',
-   DeleteGroup:'http://59.230.230.40/api/DeleteGroup',
-   SortCustomGroupUsers:'http://59.230.230.40/api/SortCustomGroupUserPhoneList',
+   CreateCustomGroup:'/api/createGroup',
+   GetCustomGroup:'/api/GetGroup',
+   GetAllDepUser:'/api/GetAllDepUser',
+   AddUserToGroup:'/api/adduserTogroup',
+   InGroupUsersID:'/api/InGroupUsersID',
+   FindAllUserByGroupID:'/api/FindAllUserByGroupID',
+   DeleteGroupUser:'/api/DeleteGroupUser',
+   DeleteGroup:'/api/DeleteGroup',
+   SortCustomGroupUsers:'/api/SortCustomGroupUserPhoneList',
 
   //上传xlsx文件
    Uploadfiles:'http://59.230.230.39:3002/api/upload',
    //省里发短信地址
    HuNansms:'https://auth.zwfw.hunan.gov.cn/aip/v1/gov/person/sms',
    GetPhoneNum:'http://localhost:8080/apis'
-//  axios.get('http://info.dxzc.gov.cn:3000/api/sendsms', {
+//  axios.get('http://api.dxzc.gov.cn:3000/api/sendsms', {
 //   params: {
 //   u:'limannlee',
 //   p:'d8a341b329a63c4f0789511ae8a81fec',
@@ -133,6 +136,16 @@ export default api
 //     params: parameter  
 //   })
 // }
+
+//居民用户信息查询
+export function selectByJdId (parameter) {
+  return axios({
+    url: api.selectByJdId,
+    method: 'get',
+    params: parameter  
+  })
+}
+
 
 export function UpdateDepSmsCount (parameter) {
   return axios({

@@ -217,67 +217,55 @@ export default {
        let params={}  
        let mobilesArr=[]
        
-      //  this.smsAccounts= await SelectSmsAccounts({DepID:this.IsSendSms[0]});
-      //  console.log(this.AdminID)
-      //  console.log(this.GuID)
-      //  console.log(this.Pupuarr)
-      //  console.log(this.IsSendSms)
-      //  console.log(this.smsAccounts)
-      console.log(this.Pupuarr)
+       console.log(this.Pupuarr)
+     
          for(let x in this.Pupuarr)
       {
-          if(!this.Pupuarr[x].checked==false)      
+          if(!this.Pupuarr[x].checked==false)     //选出为ture的电话号码 
         {            // params.mobiles
             mobilesArr.push(this.Pupuarr[x].Phone)            
         }
       }
-      let strMobiles=mobilesArr.join(',');
-      
+      let strMobiles=mobilesArr.join(',');    //生成发送号码串  
       params.mobiles=strMobiles
       params.content=this.vmodelContent
-      params.DepID=this.IsSendSms[0]
-      params.soucers=1
-     
-
-    
-      console.log(params)
-         CMCCSendSMS(params).then(r=>{         
+      params.DepID=this.IsSendSms[0]//选出权限内第一个单位的部门ID
+      params.soucers=1  //普通短信发送  
+      console.log(params);
+         CMCCSendSMS(params).then(r=>{  
+           console.log(r)       
            let _json= JSON.parse(r.res)  
            let _smsArr=[]  
               
         if(_json.rspcod=='success' && _json.success==true)
         {   for(let x in this.Pupuarr)
           {
-          if(!this.Pupuarr[x].checked==false)      
-        {            // params.mobiles
+              if(!this.Pupuarr[x].checked==false)      
+            {            // params.mobiles
 
-         let data={//组成一条发送记录插入数据库
-                GuID:this.GuID,//唯一组ID 
-                TID:_json.msgGroup,//短信宝返回的唯一发送ID
-                UID:this.Pupuarr[x].ID,//发送的用户ID
-                AdminID:this.AdminID.AdminID,//发送的 管理员ID
-                time:this.$moment().format("YYYY-MM-DD HH:mm:ss"),//发送的时间
-                status:'0',//发送的状态短信宝返回的状态
-                SMSContent:this.vmodelContent,//发送的内容
-                UserName:this.Pupuarr[x].username//接收短信的人
-              }
-        
-             _smsArr.push(data)
-               console.log(_smsArr)
-        }
-       
-       }      
-        }
-   
+              
+                  let data={//组成一条发送记录插入数据库
+                          DepID:params.DepID,                         
+                          mobile:this.Pupuarr[x].Phone,
+                          GuID:this.GuID,//唯一组ID 
+                          TID:_json.msgGroup,//短信宝返回的唯一发送ID
+                          UID:this.Pupuarr[x].ID,//发送的用户ID
+                          AdminID:this.AdminID.AdminID,//发送的 管理员ID
+                          time:this.$moment().format("YYYY-MM-DD HH:mm:ss"),//发送的时间
+                          status:'0',//发送的状态短信宝返回的状态 未回复时默认为0
+                          SMSContent:this.vmodelContent,//发送的内容
+                          UserName:this.Pupuarr[x].username//接收短信的人
+                        }        
+                _smsArr.push(data)              
+            }       
+          }      
+        }   
         //"{"msgGroup":"0129002605000000904249","rspcod":"success","success":true}"
        return _smsArr
       })
       .then(r=>{
         let newSmsCount=0
-        newSmsCount =this.SmsCount-r.length
-        console.log(params.DepID)
-        console.log(r.length)
-        console.log(newSmsCount)
+        newSmsCount =this.SmsCount-r.length      
  UpdateDepSmsCount({DepID:params.DepID,SMSCount:newSmsCount})
  this.$store.commit("SET_COUNT", newSmsCount);   
  SmsAddrecord(r).then(res=>{//写入本地数据库以后记录 返回 GUID 
@@ -298,7 +286,7 @@ export default {
                          this.sending=false   //发送窗口关闭并且提示显示发送成功
                          this.ClearInterval(); //清除计时器，计时器不清除会不断消耗内存
                        }                                         
-                     })                 
+                     })
                 }, 4000);      //4秒执行一次查询        
              })
 
@@ -326,7 +314,7 @@ export default {
    {    
        if(this.countSms==0)
        {
-         alert('请选择联系人')
+         alert('短信条数余额为0，请购买短信。')
          return 
        }   
        this.sendedCount=0
@@ -448,7 +436,7 @@ export default {
       _this.smsContent= _this.vmodelContent
       // console.log(_this.vmodelContent)
       // console.log(_this.smsContent)
-       console.log(_this.Pupuarr)
+     
     },
   
     

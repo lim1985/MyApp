@@ -5,11 +5,11 @@
         <div class="header">
           <a href="/">
             <img src="~@/assets/logo.svg" class="logo" alt="logo">
-            <span class="title">强国智能通讯录系统</span>
+            <span class="title">强国智能政务系统</span>
           </a>
         </div>
         <div class="desc">
-          星星之火，可以燎原
+          紧紧依靠人民群众，坚决打赢疫情防控阻击战。
         </div>
       </div>
 

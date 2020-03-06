@@ -162,7 +162,7 @@
       </template>
       <!-- 7是前台不可见状态，9为前台可见状态 -->
       <span slot="action" slot-scope="text, record">
-        <a v-show="record.Ustatus==9 || record.Ustatus==7" @click="handleEdit(record)">编辑</a>
+        <a v-show="record.Ustatus==9 || record.Ustatus==7 || record.Ustatus==8" @click="handleEdit(record)">编辑</a>
         <a-divider type="vertical" />
         <a-dropdown>
           <a class="ant-dropdown-link">
@@ -175,10 +175,10 @@
             <a-menu-item>
               <a href="javascript:alert('该功能尚未完成');">详情</a>
             </a-menu-item>
-            <a-menu-item v-show="record.Ustatus==9 || record.Ustatus==7">
+            <a-menu-item v-show="record.Ustatus==9 || record.Ustatus==7 || record.Ustatus==8">
               <a href="javascript:alert('该功能尚未完成');">禁用</a>
             </a-menu-item>
-            <a-menu-item v-show="record.Ustatus==9 || record.Ustatus==7|| record.Ustatus==6">
+            <a-menu-item v-show="record.Ustatus==9 || record.Ustatus==7|| record.Ustatus==6 || record.Ustatus==8">
               <a-popconfirm
                 v-if="loadData.length"
                 title="移除后可从【其他】节点下的通讯录中修改单位找回，是否移除?"
@@ -214,8 +214,7 @@
   import SortModal from '@/views/list/modules/UserSort/userSort'
   export default {
     name: "TableList",
-    components: {
-    
+    components: {    
       SortModal,
       PhoneModal,
       AInput,
@@ -282,6 +281,9 @@
               }else if(text==6)
               {
                 return '引用'
+              } else if(text==8)
+              {
+                return '网格管理员'
               }
             
             }) 
@@ -380,8 +382,8 @@
                    v.Ustatus=v.Rstatus                 
                 }
             });    
-           this.Pupu=data.data.map(item=>{
-             return {Phone:item.cellphone,username:item.UserName,DPname:item.DepartmentName,ID:item.ID,UJOB:item.UJOB,checked:false}
+           this.Pupu=data.data.map(item=>{         
+             return {DepID:item.Department_ID,Phone:item.cellphone,username:item.UserName,DPname:item.DepartmentName,ID:item.ID,UJOB:item.UJOB,checked:false}
            })              
            this.Userlist=data.data
            console.log(this.$route);     
@@ -443,9 +445,9 @@
         }    
       },
        GetUboxToTel(e)
-    {
-      this.$refs.PhoneModal.get(e)          
-    },
+      {
+        this.$refs.PhoneModal.get(e)          
+      },
       onDelete (data) {
         console.log(data)
         if(data.Rstatus==6)

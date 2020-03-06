@@ -13,7 +13,7 @@
     props: {
       title: {
         type: String,
-        default: '强国智能通讯录 v1.2',
+        default: '强国智能政务 v1.2',
         required: false
       },
       showTitle: {

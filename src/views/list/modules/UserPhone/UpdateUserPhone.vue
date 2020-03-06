@@ -88,7 +88,8 @@
             >
               <a-select style="width: 120px" v-decorator="['status',{rules: [{ required: false }]}]">
                 <a-select-option value="9">前台显示</a-select-option>
-                <a-select-option value="7">前台不显示</a-select-option>               
+                <a-select-option value="7">前台不显示</a-select-option>    
+                <a-select-option value="8">社区网格员</a-select-option>              
               </a-select>            
             </a-form-item>   
           </a-col>          
@@ -339,7 +340,7 @@ export default {
        this.$store.commit('SET_UserPhoneID', s.ID)
          this.edit({
          ID:s.ID,
-         DepKeylist:[s.Permission_Key,s.Department_ID],
+         DepKeylist:[s.Permission_Key,s.Department_ID==undefined?s['ResferecDep.LIM_ResferenceAndDep.DepID']:s.Department_ID],
          Email:s.Email,
          UJOB:s.UJOB,
          status:s.Ustatus,      
