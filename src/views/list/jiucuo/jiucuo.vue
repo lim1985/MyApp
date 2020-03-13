@@ -206,8 +206,7 @@
                 Ustatus:item.status,
                 Tel:item.Tel,
                 avatar:item.avatar,
-                }
-             
+                }             
             })
           
           }

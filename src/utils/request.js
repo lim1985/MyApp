@@ -8,9 +8,8 @@ import { ACCESS_TOKEN } from "@/store/mutation-types"
 // 创建 axios 实例
 // axios.defaults.withCredentials=true;
 const service = axios.create({
-  baseURL: 'http://59.230.230.40/', // api base_url http://127.0.0.1:3001/api //172.20.8.28:3001
-  timeout: 6000 // 请求超时时间   
- 
+  baseURL: 'http://172.20.8.28:3001', // api base_url http://127.0.0.1:3001/api //172.20.8.28:3001 正式环境//http://59.230.230.40/
+  timeout: 6000 // 请求超时时间     
 })
 
 const err = (error) => {

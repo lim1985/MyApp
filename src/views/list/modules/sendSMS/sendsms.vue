@@ -64,7 +64,7 @@
 <script>
   import Vue from 'vue'  
   import { mapState } from 'vuex'
-  import {SendSMS ,SmsAddrecord,SmsSucceedcount,CMCCSendSMS ,UpdateDepSmsCount } from '@/api/manage' 
+  import {SendSMS ,SmsAddrecord, SmsSucceedcount, UpdateDepSmsCount, newChinaCMCCSendSMS } from '@/api/manage' //CMCCSendSMS
   import { User_ID } from "@/store/mutation-types" 
   import { clearInterval, setInterval } from 'timers';
 
@@ -232,7 +232,7 @@ export default {
       params.DepID=this.IsSendSms[0]//选出权限内第一个单位的部门ID
       params.soucers=1  //普通短信发送  
       console.log(params);
-         CMCCSendSMS(params).then(r=>{  
+         newChinaCMCCSendSMS(params).then(r=>{  
            console.log(r)       
            let _json= JSON.parse(r.res)  
            let _smsArr=[]  
@@ -251,7 +251,7 @@ export default {
                           TID:_json.msgGroup,//短信宝返回的唯一发送ID
                           UID:this.Pupuarr[x].ID,//发送的用户ID
                           AdminID:this.AdminID.AdminID,//发送的 管理员ID
-                          time:this.$moment().format("YYYY-MM-DD HH:mm:ss"),//发送的时间
+                          time:this.$moment().format('YYYY-MM-DDTHH:mm:ss.SSS[Z]'),//发送的时间
                           status:'0',//发送的状态短信宝返回的状态 未回复时默认为0
                           SMSContent:this.vmodelContent,//发送的内容
                           UserName:this.Pupuarr[x].username//接收短信的人

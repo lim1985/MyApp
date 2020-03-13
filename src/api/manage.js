@@ -55,8 +55,16 @@ const api = {
   SelectDepartmentByID:'/api/DepartmentGetByID',
   SelectDepslistsbyLike:'/api/SelectDepslistsbyLike', 
   selectDepSmsCount:'/api/selectDepSmsCount',//查询单位短信条数
-  selectSmsAccounts:'http://api.dxzc.gov.cn:3001/api/selectSmsAccounts',//查询单位发短信接口参数。接口停用
   updateDepSmsCount:'/api/updateDepSmsCount',//更新单位发送条数
+  //短信接口配置参数
+  selectSmsAccounts:'/api/selectSmsAccounts',//'http://api.dxzc.gov.cn:3001/api/selectSmsAccounts',//查询单位发短信接口参数。
+  updateSmsAccounts:'/api/updateSmsAccounts',//'http://api.dxzc.gov.cn:3001/api/selectSmsAccounts',//查询单位发短信接口参数。
+  AddSmsAccounts:'/api/AddSmsAccounts',//'http://api.dxzc.gov.cn:3001/api/selectSmsAccounts',//查询单位发短信接口参数。
+
+  // .post('/updateSmsAccounts',SMSAccount.updateDepAccounts) 
+  // //新增部门短信发送账号信息
+  // .post('/AddSmsAccounts',SMSAccount.AddDepAccounts)
+ 
                    //http://api.dxzc.gov.cn:3001/api/selectSmsAccounts
   //通讯录管理接口
   //通讯录人员添加
@@ -93,6 +101,11 @@ const api = {
    SmsAddRecord:'http://api.dxzc.gov.cn:3000/api/smsAddrecord',
    smssucceedcount:'http://api.dxzc.gov.cn:3000/api/GetSmsSucceedCount',
    ChinaCMCCSendSMS:'http://api.dxzc.gov.cn:3000/api/sendCMCC',
+   newChinaCMCCSendSMS:'http://api.dxzc.gov.cn:3000/api/newsendCMCC',
+   GetSmsRecord:'http://172.20.8.28:3000/api/getsmsrecord',
+   GetSmsmo:'http://172.20.8.28:3000/api/getsmsmo',
+  //  172.20.8.28:3000/api/getsmsmo?DepID=158
+   
 //通过省里的深度融合接口返回数据
    //http://api.dxzc.gov.cn:3000/api/getalluserinfo
    GetUserInformation:'http://api.dxzc.gov.cn:3000/api/getalluserinfo',
@@ -154,7 +167,30 @@ export function UpdateDepSmsCount (parameter) {
     params: parameter  
   })
 }
-
+export function AddSmsAccounts (parameter) {
+  return axios({
+    url: api.AddSmsAccounts,
+    method: 'POST',
+    data:parameter,
+    async:false,
+    headers : {
+			'Accept' : 'application/json',
+			'Content-Type' : 'application/json; charset=utf-8'
+		},
+  })
+}
+export function updateSmsAccounts (parameter) {
+  return axios({
+    url: api.updateSmsAccounts,
+    method: 'POST',
+    data:parameter,
+    async:false,
+    headers : {
+			'Accept' : 'application/json',
+			'Content-Type' : 'application/json; charset=utf-8'
+		},
+  })
+}
 export function SelectSmsAccounts (parameter) {
   return axios({
     url: api.selectSmsAccounts,
@@ -280,6 +316,14 @@ export function HuNansms (parameter) {
 export function CMCCSendSMS (parameter) {
   return axios({
     url: api.ChinaCMCCSendSMS,
+    method: 'post',
+    data:parameter  
+  })
+}
+//新CMCC发短信，增加了动态调用不同部门的短信发送账户密码
+export function newChinaCMCCSendSMS (parameter) {
+  return axios({
+    url: api.newChinaCMCCSendSMS,
     method: 'post',
     data:parameter  
   })
@@ -460,9 +504,21 @@ export function SmsAddrecord (parameter) {
     data:parameter 
   })
 }
-export function SmsStatus (parameter) {
+
+// GetSmsRecord:'http://api.dxzc.gov.cn:3000/api/getsmsrecord',
+// GetSmsmo:'http://api.dxzc.gov.cn:3000/api/getsmsmo',
+//获取短信发送记录
+export function GetSmsRecord (parameter) {
   return axios({
-    url: api.smsstatus,
+    url: api.GetSmsRecord,
+    method: 'get',
+    params: parameter
+  })
+}
+//获取短信回复记录
+export function GetSmsmo (parameter) {
+  return axios({
+    url: api.GetSmsmo,
     method: 'get',
     params: parameter
   })

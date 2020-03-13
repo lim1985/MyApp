@@ -87,11 +87,15 @@
       <span slot="action" slot-scope="text, record">
         <a @click="handleEdit(record)">编辑</a>
         <a-divider type="vertical" />
+        
         <a-dropdown>
           <a class="ant-dropdown-link">
             更多 <a-icon type="down" />
           </a>
           <a-menu slot="overlay">
+            <a-menu-item>            
+              <a @click="CmccSmsDepAccounts(record)">短信配置</a>            
+            </a-menu-item>
             <a-menu-item>
               <a href="javascript:;">详情</a>
             </a-menu-item>
@@ -101,15 +105,17 @@
             <a-menu-item>
               <a-popconfirm title="是否要删除此行？" @confirm="handleDEL(record)">
                 <a>删除</a>
-              </a-popconfirm>
-             
+              </a-popconfirm>             
             </a-menu-item>
           </a-menu>
         </a-dropdown>
+      
+        
       </span>
     </s-table>
     <Add-Modal ref="AddModal" @ok="handleSaveOk" @close="handleSaveClose"/>
     <Update-Modal ref="UpdateModal" @ok="handleSaveOk" @close="handleSaveClose"/>
+    <cmccDepAccounts-Modal ref="cmccDepAccountsModal" @ok="handleSaveOk" @close="handleSaveClose"/>
    
   </a-card>
 </template>
@@ -122,6 +128,7 @@
   import { QueryAllDeplist,DelDePartment} from '@/api/manage'
   import AddModal from './modules/Department/Add'
   import UpdateModal from './modules/Department/Update'
+  import cmccDepAccountsModal from './modules/Department/cmccDepAccounts'
 //getRoleList,
 // GetPermissioninfobyKey
   export default {
@@ -131,7 +138,8 @@
       ATextarea,
       STable,
       AddModal,
-      UpdateModal
+      UpdateModal,
+      cmccDepAccountsModal
     },
   
     data () {
@@ -218,6 +226,10 @@
 
     },
     methods: {
+      CmccSmsDepAccounts(s){
+         this.$refs.cmccDepAccountsModal.add(s);    
+        console.log(s);
+      },
         handleSaveClose(){
           this.$refs.mytable.refresh()
     },
