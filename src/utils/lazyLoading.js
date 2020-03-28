@@ -23,7 +23,8 @@ export default file => {
    GlobalSearch: () => import('@/views/list/search/GlobalSearch.vue'),
    jiucuoList: () => import('@/views/list/jiucuo/jiucuo.vue'),
    smsrecord: () => import('@/views/list/smsrecord/smsrecord.vue'),
-   yqdata: () => import('@/views/list/yqdata/yqdata.vue')
+   yqdata: () => import('@/views/list/yqdata/yqdata.vue'),
+   meeting: () => import('@/views/list/meeting/index.vue')
 //    {
 //     path: '/DepartmentManager',
 //     name: 'DepartmentManager',

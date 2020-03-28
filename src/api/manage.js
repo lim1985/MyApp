@@ -5,8 +5,10 @@ const api = {
   service: '/service',
   orgTree: '/org/tree',
   permission: '/permission',
-  //片区人员管理接口
-  
+  //会议管理模块
+  createMeet: '/api/createMeet',
+  selectmeetingByDepID: '/api/selectmeetingByDepID',  
+  //片区人员管理接口  
   selectByJdId: '/api/selectByJdId',
   //权限接口
   addPermission: '/api/PermissionAdd',//添加权限//src\views\list\PermissionList.vue页面使用了该接口
@@ -102,9 +104,9 @@ const api = {
    smssucceedcount:'http://api.dxzc.gov.cn:3000/api/GetSmsSucceedCount',
    ChinaCMCCSendSMS:'http://api.dxzc.gov.cn:3000/api/sendCMCC',
    newChinaCMCCSendSMS:'http://api.dxzc.gov.cn:3000/api/newsendCMCC',
-   GetSmsRecord:'http://172.20.8.28:3000/api/getsmsrecord',
-   GetSmsmo:'http://172.20.8.28:3000/api/getsmsmo',
-  //  172.20.8.28:3000/api/getsmsmo?DepID=158
+   GetSmsRecord:'http://api.dxzc.gov.cn:3000/api/getsmsrecord',
+   GetSmsmo:'http://api.dxzc.gov.cn:3000/api/getsmsmo',
+  //  api.dxzc.gov.cn:3000/api/getsmsmo?DepID=158
    
 //通过省里的深度融合接口返回数据
    //http://api.dxzc.gov.cn:3000/api/getalluserinfo
@@ -138,6 +140,27 @@ const api = {
 }
 
 export default api
+
+//获取会议list by depid
+export function selectmeetingByDepID (parameter) {
+  return axios({
+    url: api.selectmeetingByDepID,
+    method: 'get',
+    params: parameter  
+  })
+}
+export function createMeet (parameter) {
+  return axios({
+    url: api.createMeet,
+    method: 'POST',
+    data:parameter,
+    async:false,
+    headers : {
+			'Accept' : 'application/json',
+			'Content-Type' : 'application/json; charset=utf-8'
+		},
+  })
+}
 //自定义组的通讯录人员排序
 
 
