@@ -6,7 +6,24 @@
     :search="search" 
     :tabs="tabs" 
     @ischange="ok" 
+    @getDep="getDep"
+    :Deplists="Deplists"
     :showDepListSearch="showDepListSearch">
+    <!-- <s-tree
+      :dataSource="DepTree"         
+      :openKeys.sync="openKeys"
+      :search="true"
+      :addgroup="false"
+      :DepsDataSource="Deplists"
+      :showDeplist="showListSearch"
+      @click="handleClick"
+      @SearchDepslist="handleSearchDeps"
+      @add="handleAdd"
+      :showDepTree="true"
+      @ReturnValue="GetUsersList"
+      @titleClick="handleTitleClick"
+    >
+    </s-tree> -->
     <div slot="extra" class="extra-img">
       <img :src="extraImage"/>
     </div>
@@ -17,6 +34,7 @@
 </template>
 
 <script>
+  // import STree from '@/components/Tree/Tree'
   import PageLayout from '../page/PageLayout'
   import RouteView from './RouteView'
   // import GlobalSearch from '@views/list/search/GlobalSearch'
@@ -24,12 +42,24 @@
   export default {
     name: "PageContent",
     components: {
+      // STree,
       RouteView,
       PageLayout,
       // GlobalSearch
     },
+      // props: {
+      //   showDepListSearch:{
+      //   type: Boolean,
+      //   default: false
+      // },
+      // },
+ 
     data () {
       return {
+        openKeys:[],
+        DepTree:[],
+        Deplists:[],
+        showListSearch:false,
         title: '',
         description: '',
         linkList: [],
@@ -41,7 +71,14 @@
       }
     },  
   
-    watch:{
+       watch:{
+    
+      },
+      // showDepListSearch(newval,oldval)
+      // {
+      //   console.log(newval)
+      //       console.log(oldval)
+      // }
       //   search:{
       //   handler:function(val,oldval){
       //     console.log(val)
@@ -53,17 +90,19 @@
     //   // showDepListSearch(newval){
     //   //   console.log(newval);
     //   // }
-    },
+   
     created(){
      
     },
     mounted () {
-        this.getPageHeaderInfo()
+      console.log(`调用了mounted 方法`)
+      this.getPageHeaderInfo()
      
     },
     updated () {
       console.log('调用了pageview的update')
       this.getPageHeaderInfo()
+      this.showDeplist()
     },
     computed: {
     //  ListSearch() {
@@ -83,30 +122,58 @@
 
     },
     methods: {
-  
-      ok(val){
-          console.log('送上来的是'+`${val}`)
-            const content = this.$refs.content && this.$refs.content.$children[0]
-            content.ok(val);          
-            // this.$emit('toSearch',val);               
+      handleClick(){},
+      handleSearchDeps(){},
+      handleAdd(){},
+      GetUsersList(){},
+      handleTitleClick(){},
+      getDep(val)
+      {
+        console.log(`点了以后`)
+        console.log(val)
+         const content = this.$refs.content && this.$refs.content.$children[0]    
+         content.getDep(val)
+      },
+     ok(val){
+         console.log(val)
+         const content = this.$refs.content && this.$refs.content.$children[0]    
+         content.ok(val)
+        // setTimeout(() => {
+        //   this.showDeplist()
+        // }, 500);
+        // content.showDepListSearch=val.val=='isnull'?false:true   
+        // this.showDeplist(content)
+        //  if(val.val=='isnull')       
+        //  {
+        //     content.showDepListSearch=false;
+        //  }
+        //  else
+        //  {
+        //     content.showDepListSearch=true;
+        //     this.Deplists=content.Deplists
+        //     content.ok(val)            
+        //  }
+        //  this.$nextTick(function(){
+        // this.showDeplist() 
+        //  })                                         
+      },
+      showDeplist()
+      {
+         const content = this.$refs.content && this.$refs.content.$children[0]        
+         if(content)
+         {            
+           console.log(content)
+            this.showDepListSearch = content.showDepListSearch == true ? true : false    
+            this.Deplists=content.Deplists   
+            console.log(this.Deplists)   
+         }
       },
       getPageHeaderInfo () {
         // eslint-disable-next-line
-        this.title = this.$route.meta.title     
-        // // console.log(this.$route.meta.permission[0] ) 
-        //   if(this.$route.meta.permission[0]||!this.$route.meta.permission[0]=='Admin')
-        //   {
-        //      this.$store.commit('SET_DEPKEY',this.$route.meta.permission[0]);
-        //   }
-        // this.depkey= this.$route.meta.permission[0]  
-        // if(this.depkey)
-        // {
-        //    this.$store.commit('SET_DEPKEY',this.depkey);
-        // }
-        // console.log(this.depkey)
-        //  console.log(this.title)        
+        this.title = this.$route.meta.title         
         // 因为套用了一层 route-view 所以要取 ref 对象下的子节点的第一个对象
-        const content = this.$refs.content && this.$refs.content.$children[0]       
+        const content = this.$refs.content && this.$refs.content.$children[0]  
+        console.log(content)     
         if (content)
         {
           console.log(content.search);
@@ -115,7 +182,6 @@
           this.extraImage = content.extraImage
           this.search = content.search == true ? true : false
           this.tabs = content.tabs
-          this.showDepListSearch = content.showDepListSearch == true ? true : false
           // console.log(this.showDepListSearch);
           // console.log(this.showDepListSearch);
           // this.depkey= this.$route.meta.permission[0]     

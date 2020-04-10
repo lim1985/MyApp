@@ -97,8 +97,7 @@
           <!-- <a-col :span="24"><p class="height-50"><span>温馨提示：通讯录里添加的联系人将会出现在通讯录的主目录。</span></p></a-col> -->
      
         </a-row>
-      </div>
- 
+      </div> 
     </div>
     
   

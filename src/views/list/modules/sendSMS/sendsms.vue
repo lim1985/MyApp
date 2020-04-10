@@ -140,10 +140,7 @@ export default {
     },
   
   async mounted(){   
-
-      console.log(this.SmsCount);
-      console.log(this.IsSendSms);
-      // let Accounts=await SelectSmsAccounts({DepID:this.IsSendSms[0]});
+        // let Accounts=await SelectSmsAccounts({DepID:this.IsSendSms[0]});
       // this.smsAccounts=Accounts;
       // let _arr=await this.GetDepnameAndchild()     
       // this.options=this.QuChongFuObject(_arr);  
@@ -192,7 +189,7 @@ export default {
      setTimeout(() => {
       let _arr=[]  
       !i.length? _arr.push(i): _arr=i
-    
+        console.log(_arr)
         this.initSms(_arr);
      }, 100);
     },
@@ -203,11 +200,18 @@ export default {
    async CmccSendSMS()
    {
     //  CMCCSendSMS
+      // console.log(this.SmsCount-1000<=0)
+     
      if(this.countSms==0)
        {
          alert('请选择联系人')
          return 
        }   
+      if(this.SmsCount==0)
+    {
+        this.$message.error('您的短信余额不足，请充值。');
+        return 
+    }
        this.sendedCount=0
        this.sending=true
        this.ClearInterval();
@@ -216,7 +220,7 @@ export default {
        this.GuID=this.genID(1);     
        let params={}  
        let mobilesArr=[]
-       
+       console.log(this.AdminID)       
        console.log(this.Pupuarr)
      
          for(let x in this.Pupuarr)
@@ -242,7 +246,6 @@ export default {
           {
               if(!this.Pupuarr[x].checked==false)      
             {            // params.mobiles
-
               
                   let data={//组成一条发送记录插入数据库
                           DepID:params.DepID,                         
@@ -251,7 +254,7 @@ export default {
                           TID:_json.msgGroup,//短信宝返回的唯一发送ID
                           UID:this.Pupuarr[x].ID,//发送的用户ID
                           AdminID:this.AdminID.AdminID,//发送的 管理员ID
-                          time:this.$moment().format('YYYY-MM-DDTHH:mm:ss.SSS[Z]'),//发送的时间
+                          time:this.$moment().format('YYYY-MM-DD HH:mm:ss'),//发送的时间
                           status:'0',//发送的状态短信宝返回的状态 未回复时默认为0
                           SMSContent:this.vmodelContent,//发送的内容
                           UserName:this.Pupuarr[x].username//接收短信的人
@@ -265,7 +268,9 @@ export default {
       })
       .then(r=>{
         let newSmsCount=0
-        newSmsCount =this.SmsCount-r.length      
+
+        newSmsCount =this.SmsCount-r.length<=0?0:this.SmsCount-r.length    
+        console.log(newSmsCount)
  UpdateDepSmsCount({DepID:params.DepID,SMSCount:newSmsCount})
  this.$store.commit("SET_COUNT", newSmsCount);   
  SmsAddrecord(r).then(res=>{//写入本地数据库以后记录 返回 GUID 
@@ -291,24 +296,6 @@ export default {
              })
 
       })
-     
-      //   let ParamData={
-      // secretKey:'52979899',
-      // soucers:1,
-      // ecName:'邵阳市红旗路街道办事处',
-      // apId:'dxqzfb',
-      // mobiles:'15243990018,13973990779,13807399838',
-      // content:`大祥区人民政府，http://www.dxzc.gov.cn移动改变生活。${nowtime}`,
-      // sign:'',
-      // addSerial:''
-      // }
-      //  for(let x in this.Pupuarr)
-      //  {
-      //     if(!this.Pupuarr[x].checked==false)
-      //     {
-
-      //     }
-      //  }
    },
    async sendsms()
    {    
@@ -409,9 +396,7 @@ export default {
      {
       _this.Pupuarr[x].checked=false
       for(let y in IDs)
-      {       
-       
-     
+      {         
         if(_this.Pupuarr[x].ID==IDs[y].ID)
         {     
           // _this.Pupuarr.Phone=IDs.

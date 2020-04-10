@@ -20,21 +20,21 @@
       <div slot="pageMenu">
         <div class="page-menu-search" v-if="search">
           <div>
-            <a-input-search style="width: 80%; max-width: 522px;" @change="Search" placeholder="请输入联系人姓名或者手机号..." size="large" enterButton="搜索" />
+            <a-input-search style="width:60%; max-width: 522px;" @change="Search" placeholder="请输入联系人姓名或者手机号..." size="large" enterButton="搜索" />
           </div>
-          <div v-if="showDepListSearch" class="ant-input-affix-wrapper ant-input-affix-wrapper-lg ant-input-search ant-input-search-enter-button ant-input-search-large">
-            <div class="ant-input-affix-wrapper ant-input-affix-wrapper-sm ant-input-search ant-input-search-enter-button ant-input-search-large" style="width:38%;min-width:512px">
-              <ul class="search-list" >          
-                <li class="global-search-item">侠岚</li>
-                <li class="global-search-item">夏朗</li>
-                <li class="global-search-item">下拉菜单怎么设置</li>
-              </ul>
-            <!-- <div class="bdsug-feedback-wrap"><span class="bdsug-feedback">反馈</span>
-            </div> -->
+          <div v-if="showDepListSearch" style="width:60%; max-width: 522px;" class="ant-input-affix-wrapper ant-input-affix-wrapper-lg ant-input-search ant-input-search-enter-button ant-input-search-large">
+            <div class="ant-input-affix-wrapper ant-input-affix-wrapper-sm ant-input-search ant-input-search-enter-button ant-input-search-large" style="padding-top:8px;width:38%;min-width:512px">
+              <ul style="padding-inline-start:10px;" class="search-list" >    
+                <li v-for="(item,index) in Deplists" @click="GetDep(item)" :key="index" class="global-search-item">{{ item.Depname }}</li>  
+                <!-- <li class="global-search-item">侠岚{{ showDepListSearch }}</li>
+                <li class="global-search-item">夏朗{{ Deplists }}</li> -->
+                <!-- <li class="global-search-item">下拉菜单怎么设置{{ Deplists }}</li> -->
+            
+                
+              </ul>          
             </div>   
           </div>     
-        </div>
-              
+        </div>              
         <!-- <ul style="width: 80%; max-width: 522px;" class="ant-input-affix-wrapper ant-input-affix-wrapper-lg ant-input-search ant-input-search-enter-button ant-input-search-large">
          
             <div class="search-list  ant-input ant-input-lg">
@@ -50,8 +50,6 @@
             </li>
             </div>
           </ul> -->
-
-
         <div class="page-menu-tabs" v-if="tabs && tabs.items">
           <!-- @change="callback" :activeKey="activeKey" -->
           <a-tabs :tabBarStyle="{margin: 0}" @change="tabs.callback" :activeKey="tabs.active()">
@@ -98,6 +96,11 @@
         type: String,
         default: null
       },
+      
+      Deplists: {
+        type: Array,
+        default: null
+      },
       linkList: {
         type: Array,
         default: null
@@ -125,36 +128,43 @@
     //   }
     // },
     // computed:{
-    //   showDepList(){
-    //     return this.showDepListSearch
+    //   DepList(){
+    //     return this.Deplists
     //   }
     // },
+    watch:{
+    //    'Deplists': function (val, oldVal) {
+    //   console.log(val, oldVal,(val== oldVal))
+    // },
+
+      // Deplists(newval,oldval)
+      // {
+      //   console.log(newval)
+      //   console.log(oldval)
+      //   return newval
+      // }
+    },
     mounted(){
       console.log(this.showDepListSearch);
     },
     methods: {   
+       GetDep(item)
+        {
+          console.log(item) 
+           this.$emit('getDep',{val:item})        
+        },
        Search:_.debounce(function(val){
        const { value} = val.target  
        console.log(value)  
+
        if(value)
-       {        
-         this.$emit('ischange',value)
-       
+       {                
+         this.$emit('ischange',{val:value,isshow:true})       
        }
-            
-      //  if(value)
-      //  {
-      //    this.isSearch=true    
-      //    this.queryParam.data=value; 
-      //    this.$refs.mytable.refresh()  
-      //    console.log(this.queryParam);   
-      //  }
-      //  else
-      //  {
-      //    this.isSearch=false
-      //    this.queryParam.data=value
-      //    this.$refs.mytable.refresh()  
-      //  }
+       else
+       {
+         this.$emit('ischange',{val:'isnull'})      
+       }
       },1000),
     }
   }
@@ -168,7 +178,7 @@
   .search-list li{
      width: 100%;
     text-align: left;
-}
+  }
   .content {
     margin: 24px 24px 0;
 

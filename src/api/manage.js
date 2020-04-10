@@ -6,8 +6,15 @@ const api = {
   orgTree: '/org/tree',
   permission: '/permission',
   //会议管理模块
-  createMeet: '/api/createMeet',
+  createMeet: '/api/createMeet',//新增会议
+  createMeetingSubject:'/api/createMeetingSubject',//新增议题
   selectmeetingByDepID: '/api/selectmeetingByDepID',  
+  createmeetingSubjectUsers:'/api/createmeetingSubjectUsers',
+  removeSubmeetingUser:'api/removeSubmeetingUser',
+  selectmeetSubUsers:'api/selectmeetSubUsers',//get params m_submeetID=3
+
+  
+
   //片区人员管理接口  
   selectByJdId: '/api/selectByJdId',
   //权限接口
@@ -116,6 +123,8 @@ const api = {
    GetCustomGroup:'/api/GetGroup',
    GetAllDepUser:'/api/GetAllDepUser',
    AddUserToGroup:'/api/adduserTogroup',
+   newaddUsersToGroup:'/api/newaddUsersToGroup',   
+   isexist:'/api/isexist',
    InGroupUsersID:'/api/InGroupUsersID',
    FindAllUserByGroupID:'/api/FindAllUserByGroupID',
    DeleteGroupUser:'/api/DeleteGroupUser',
@@ -140,6 +149,22 @@ const api = {
 }
 
 export default api
+//获取议题中的联系人集合用来发短信
+export function selectmeetSubUsers (parameter) {
+  return axios({
+    url: api.selectmeetSubUsers,
+    method: 'get',
+    params: parameter  
+  })
+}
+//移除议题里的联系人by meetingPersonID
+export function removeSubmeetingUser (parameter) {
+  return axios({
+    url: api.removeSubmeetingUser,
+    method: 'get',
+    params: parameter  
+  })
+}
 
 //获取会议list by depid
 export function selectmeetingByDepID (parameter) {
@@ -147,6 +172,32 @@ export function selectmeetingByDepID (parameter) {
     url: api.selectmeetingByDepID,
     method: 'get',
     params: parameter  
+  })
+}
+//新增议题
+export function createMeetingSubject(parameter) {
+  return axios({
+    url: api.createMeetingSubject,
+    method: 'POST',
+    data:parameter,
+    async:false,
+    headers : {
+			'Accept' : 'application/json',
+			'Content-Type' : 'application/json; charset=utf-8'
+		},
+  })
+}
+
+export function createSubmeetingUser(parameter) {
+  return axios({
+    url: api.createmeetingSubjectUsers,
+    method: 'POST',
+    data:parameter,
+    async:false,
+    headers : {
+			'Accept' : 'application/json',
+			'Content-Type' : 'application/json; charset=utf-8'
+		},
   })
 }
 export function createMeet (parameter) {
@@ -470,9 +521,16 @@ export function DeleteGroupUser (parameter) {
     params: parameter
   })
 }
-export function FindAllUserByGroupID (parameter) {
+export function FindAllUserByGroupID(parameter) {
   return axios({
     url: api.FindAllUserByGroupID,
+    method: 'get',
+    params: parameter
+  })
+}
+export function isexist (parameter) {
+  return axios({
+    url: api.isexist,
     method: 'get',
     params: parameter
   })
@@ -484,6 +542,14 @@ export function InGroupUsersID (parameter) {
     params: parameter
   })
 }
+export function newaddUsersToGroup (parameter) {
+  return axios({
+    url: api.newaddUsersToGroup,
+    method: 'post',
+    data:parameter  
+  })
+}
+
 export function AddUserToGroup (parameter) {
   return axios({
     url: api.AddUserToGroup,

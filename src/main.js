@@ -18,9 +18,11 @@ import {User_ID, ACCESS_TOKEN, DEFAULT_COLOR, DEFAULT_THEME, DEFAULT_LAYOUT_MODE
 import config from '@/defaultConfig'
 import moment from 'moment'//导入文件
 import LUbox from '@/assets/js/LIm_UBOX'
+
 //  var debounce = require('lodash.debounce');
 // import PhoneModal from '@/views/list/modules/PhoneMsg/Phone'
 Vue.prototype.$moment = moment;//赋值使用
+
 Vue.prototype.$LUBOX = LUbox;//赋值使用
 Vue.config.productionTip = false
 // axios.defaults.withCredentials=true;

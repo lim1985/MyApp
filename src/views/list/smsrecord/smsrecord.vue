@@ -17,6 +17,9 @@
           :scroll="{ y: 680 }"
           :rowKey="record => record.ID"
         >
+          <template slot="F_recordTime" slot-scope="scope">
+            {{ scope|F_formatTime }} 
+          </template>
           <span slot="action" slot-scope="text, record">
             <a @click="RestSend(record)">重发</a>
             <a-divider type="vertical" />
@@ -40,6 +43,9 @@
           :scroll="{ y: 680 }"
           :rowKey="record => record.ID"
         >
+          <template slot="F_recordTime" slot-scope="scope">
+            {{ scope|F_formatTime }} 
+          </template>
           <!-- :rowKey="record => record.ID" -->
           <!-- <span slot="action" slot-scope="text, record">
             <a @click="EditError(record)">编辑</a>
@@ -102,7 +108,8 @@
      {
       title: '发送时间',
       dataIndex: 'time',
-       width: 80,
+      width: 80,
+      scopedSlots: { customRender: 'F_recordTime' },
     },   
      {
        title: '操作',
@@ -161,7 +168,11 @@
      {
       title: '回复时间',
       dataIndex: 'sendtime',
-       width: 120,
+      width: 120,
+        scopedSlots: { customRender: 'F_recordTime' },
+          // customRender:(text=>{
+          //   return text//this.$moment(text).format('YYYY-MM-DD:mm:ss.SSS[Z]');
+          // })
     },   
     //  {
     //    title: '操作',
@@ -183,9 +194,18 @@
   // }
 //  import UpdateUserModal from '@views/list/modules/UserPhone/UpdateUserPhone'
  import {  GetSmsRecord ,GetSmsmo} from '@/api/manage'
+ import moment from 'moment'
 //  import { mapState} from 'vuex'
   export default {
     name:"SmsrecordLayout",
+        filters:{
+       F_formatTime:function(value)
+       {
+            return moment(value).format('YYYY-MM-DD HH:mm:ss') 
+        //  return !value.users?value.Group.GroupName:value.users.UserName       
+       },
+     
+    },
     data () {
       return {
         isloading:true,

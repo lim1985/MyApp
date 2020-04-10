@@ -166,7 +166,8 @@ const user = {
           console.log('89898989')
         return 
       }
-        if (result.result.role && result.result.role.permissions.length > 0) {
+        if (result.result.role && result.result.role.permissions.length > 0) 
+        {
           const role = result.result.role
          console.log(result)
           role.permissions = result.result.role.permissions
@@ -183,22 +184,22 @@ const user = {
           // {
          console.log(result.result.SendsmsList);
         
-         if(result.result.SendsmsList.length>0)
-         {
-           //权限内勾选了可发短信选项
-          console.log('勾选了发短息权限')
-          let smscount= await SelectDepSmsCount(result.result.SendsmsList)
-          console.log(smscount);
-          if(smscount)
+          if(result.result.SendsmsList.length>0)
           {
-            commit('SET_COUNT', smscount.depcount[0].SMSCount)
-          }         
-         }
-         else
-         {
-          //没有发短信权限
-          console.log('没有发短息权限')
-         }
+            //权限内勾选了可发短信选项
+            console.log('勾选了发短息权限')
+            let smscount= await SelectDepSmsCount(result.result.SendsmsList)
+            console.log(smscount);
+            if(smscount)
+            {
+              commit('SET_COUNT', smscount.depcount[0].SMSCount)
+            }         
+          }
+          else
+          {
+            //没有发短信权限
+            console.log('没有发短息权限')
+          }
      
           console.log(result.result.role)  
           console.log(`1-1-1-1-1-1-1-1-`)      

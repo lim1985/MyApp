@@ -29,51 +29,28 @@
       </a-spin>
     </a-modal>
     <a-modal
-      title="创建会议"
+      title="添加参会人员"
       :width="800"
-      v-model="meetingVisible"
+      v-model="submeetingUserVisible"
       @ok="handleOk"  
       :confirmLoading="confirmLoading"
     >
       <a-spin :spinning="confirmLoading">
-        <a-form :form="form">
-          <a-form-item   
-            v-bind="formItemLayout"         
-            label='会议名称'
-            hasFeedback         
-          >
-            <a-input              
-              placeholder='请输入会议名称' 
-              v-decorator="['meetingName',{rules: [{ required: true },{ validator:v().checkcharacter }]}]"
-            /> 
-            <!-- checkUsername asyncCheckUserName -->
-            <!-- <a-input placeholder='联系人姓名' v-model="Mymdl.UserName" id='UserName' /> -->
-          </a-form-item>
-          <!-- <a-form-item   
-            v-show="showID"
-            v-bind="formItemLayout"         
-            label='会议主持人'
-            hasFeedback         
-          >
-            <a-input                    
-              placeholder='请输入会议主持人姓名' 
-              v-decorator="['chairManGroupID',{rules: [{ required: true }]}]"
-            />          
-          </a-form-item> -->
+        <a-form :form="form">   
            <a-form-item   
             v-bind="formItemLayout"         
-            label='会议主持人/组'
+            label='参会人姓名/组'
             hasFeedback         
           >
-            <a-input  
-              @change="onSearchPhoneUser"            
-              placeholder='请输入会议主持人姓名/组' 
-              v-decorator="['chairManGroupName',{rules: [{ required: true },{ validator:v().checkcharacter }]}]">
+          <a-input  
+            @change="onSearchPhoneUser"            
+            placeholder='请输入参会人姓名/组' 
+            v-decorator="['chairManGroupName',{rules: [{ required: true },{ validator:v().checkcharacter }]}]">
           <a-select
             @change="selectGroup"
-          slot="addonBefore"
-          v-decorator="['prefix2', { initialValue: '1' }]"
-          style="width: 80px"
+            slot="addonBefore"
+            v-decorator="['prefix2', { initialValue: '1' }]"
+            style="width: 80px"
         >
           <a-select-option value="1">
            姓名
@@ -85,119 +62,20 @@
               
             </a-input>          
           </a-form-item>
-          <a-form-item   
-            v-bind="formItemLayout"         
-            label='会议出席人/组'
-            hasFeedback         
-          >
-            <a-input   
-              @change="onSearchPhoneUser"            
-              placeholder='请输入会议出席人/组' 
-              v-decorator="['personGroupName',{rules: [{ required: true },{ validator:v().checkcharacter }]}]">
-              <a-select
-              @change="selectGroup"
-          slot="addonBefore"
-          v-decorator="['prefix', { initialValue: '3' }]"
-          style="width: 80px"
-        >
-          <a-select-option value="3">
-           姓名
-          </a-select-option>
-          <a-select-option value="4">
-           组名
-          </a-select-option>
-        </a-select> 
-            </a-input>          
-          </a-form-item>
+         
           <a-form-item
             :colon="false"
             v-bind="formItemLayout"     
-            label='会议类型'   
+            label='参会人类型'   
             hasFeedback                              
           >
-            <a-select v-decorator="['meetingType',{initialValue:'区委常委会',rules: [{ required: false }]}]">
-              <a-select-option value="区委常委会">区委常委会</a-select-option>
-              <a-select-option value="政府常务会">政府常务会</a-select-option>  
+            <a-select v-decorator="['meetingPersonType',{initialValue:'列席人',rules: [{ required: false }]}]">
+              <a-select-option value="主持人">主持人</a-select-option>
+              <a-select-option value="出席人">出席人</a-select-option>
+              <a-select-option value="列席人员">列席人员</a-select-option>  
                         
             </a-select>           
-          </a-form-item> 
-          <a-form-item
-            :colon="false"
-            v-bind="formItemLayout"     
-            label='会议室'   
-            hasFeedback                              
-          >
-            <a-select v-decorator="['room',{initialValue:'区委常委会议室',rules: [{ required: false }]}]">
-              <a-select-option value="区委常委会议室">区委常委会议室</a-select-option>
-              <a-select-option value="政府常务会议室">政府常务会议室</a-select-option>  
-                        
-            </a-select>           
-          </a-form-item> 
-             <!-- <a-form-item   
-              :colon="false"
-              v-bind="formItemLayout"             
-              label='会议时间'  
-              hasFeedback                 
-            >
-              <a-date-picker @change="pickerstartTime" v-decorator="['startTime',{rules: [{ required: false }]}]" />
-          
-            </a-form-item>  -->
-             <a-form-item   
-              :colon="false"
-              v-bind="formItemLayout"             
-              label='会议时间'  
-              hasFeedback                 
-            >
-              <a-range-picker             
-              @change="pickerendTime"
-              v-decorator="['meetingTimes',{rules: [{ required: true }]}]"
-              show-time
-              format="YYYY-MM-DD HH:mm"
-              />
-              <!-- <a-date-picker @change="pickerendTime" v-decorator="['endTime',{rules: [{ required: false }]}]" /> -->
-              <!-- <a-input placeholder='填写联系人的出生日期' v-decorator="['BirthDay',{rules: [{ required: false },{ validator: checkTel }]}]"/> -->
-            </a-form-item> 
-             <a-form-item   
-            v-bind="formItemLayout"         
-            label='会议主题'
-            hasFeedback         
-          >
-            <a-input              
-              placeholder='请输入会议主题' 
-              v-decorator="['meetingZT',{rules: [{ required: false },{ validator:v().checkcharacter }]}]"
-            />          
-          </a-form-item>
-              <a-form-item   
-            v-bind="formItemLayout"         
-            label='记录人'
-            hasFeedback         
-          >
-            <a-input              
-              placeholder='请输入会议记录人员名字' 
-              v-decorator="['RecordMan',{rules: [{ required: false },{ validator:v().checkcharacter }]}]"
-            />          
-          </a-form-item>
-               <a-form-item   
-            v-bind="formItemLayout"         
-            label='会务人员'
-            hasFeedback         
-          >
-            <a-input              
-              placeholder='请输入会务人员名字' 
-              v-decorator="['meetingMan',{rules: [{ required: false },{ validator:v().checkcharacter }]}]"
-            />          
-          </a-form-item>
-              <a-form-item   
-            v-bind="formItemLayout"         
-            label='会风督察人员'
-            hasFeedback         
-          >
-            <a-input              
-              placeholder='请输入会风督察人员名字' 
-              v-decorator="['meetingManager',{rules: [{ required: false },{ validator:v().checkcharacter }]}]"
-            />          
-          </a-form-item>
-        
+          </a-form-item>   
         </a-form>
       </a-spin>
     </a-modal> 
@@ -221,10 +99,9 @@
   </div>  
 </template>
 <script>
-  import Vue from 'vue'  
+ 
   import { mapState} from 'vuex'
-  import { User_ID } from "@/store/mutation-types" 
-  import {GetUserInformationByUserNameLIke,GetCustomGroupByDepID,createMeet} from '@/api/manage'//Select_PermissionsByRolesID,getUserrolesbyAdminID,AddPhoneUser,ReferenceAdd,
+  import {GetUserInformationByUserNameLIke,GetCustomGroupByDepID,createMeet,createSubmeetingUser} from '@/api/manage'//Select_PermissionsByRolesID,getUserrolesbyAdminID,AddPhoneUser,ReferenceAdd,
   import { Promise } from 'q';
   import Validate from '@/tools/Validate/index'
   // import { error } from 'util';
@@ -235,65 +112,17 @@
   //GetALLByDepID,asyncValidateTel
 
 export default {
-  name: 'AdduserModal', 
+  name: 'AddsubmeetuserModal', 
   data () {
     return {   
       selectFlag:0,
       customGroupdata:[],
       Groupvisible:false,
       showID:false,
-      meetingVisible:false,
-                   AddUserData : [],
-                   columns : [{
-                    dataIndex: 'name',
-                    key: 'name',
-                    slots: { title: 'customTitle' },
-                    scopedSlots: { customRender: 'name' },
-                  }, {
-                    title: '性别',
-                    dataIndex: 'sex',
-                    key: 'sex',
-                       customRender: (text=>{
-                        if(text==1)
-                        {
-                          return '男'
-                        }
-                        else              
-                        {
-                          return '女'
-                        }            
-                      }) 
-                  }, {
-                    title: '部门',
-                    dataIndex: 'Abbreviation',
-                    key: 'Abbreviation',
-                  }, {
-                    title: '手机号',
-                    key: 'cellPhone',
-                    dataIndex: 'cellPhone',
-                    scopedSlots: { customRender: 'cellPhone' },
-                  }, {
-                    title: '操作',
-                    key: 'action',
-                    scopedSlots: { customRender: 'action' },
-                  }],
-     
-      userVisible:false,
-       parameter:{
-        pageNo:1,
-        pageSize:20
-      },   
-      getcellphone:'',
+      submeetingUserVisible:false,          
       Referencevisible:false,
       DepValue:[],
-      tel:'',
-      Isvalidate:false,
-      status:'',
-      Tips:'',
-      options:[],
-      selectedRowKeys: [],
-      selectedRows: [],
-      PhoneVisible:false,        
+      tel:'',             
        formItemLayout: {
         labelCol: {
           xs: { span: 20 },
@@ -304,7 +133,7 @@ export default {
           sm: { span: 10 },
         },
       },
-      visible: false,
+    
       confirmLoading: false,
       mdl: {},
 
@@ -352,24 +181,15 @@ export default {
       console.log(val)
       if(this.selectFlag==2)    
        {
-        this.mdl.chairManGroupID=val
+      this.mdl.meetingPersonGroupID=val
+      this.mdl.meetingUserID=''
       this.customGroupdata.forEach(v=>{
              if(v.value==val)
              {
                  this.mdl.chairManGroupname=v.text
              }       
          })
-       }
-      else if(this.selectFlag==4)
-      {
-      this.mdl.personGroupID=val
-          this.customGroupdata.forEach(v=>{
-             if(v.value==val)
-             {
-          this.mdl.personGroupName=v.text
-             }       
-         })
-      }
+       }      
      console.log(this.mdl)
     },
     handleGroupOk()
@@ -381,13 +201,7 @@ export default {
             this.form.setFieldsValue({
                 chairManGroupName:this.mdl.chairManGroupname
             }) 
-          }
-          if(this.selectFlag==4)
-          {
-              this.form.setFieldsValue({
-                personGroupName:this.mdl.personGroupName
-            }) 
-          }
+          }        
            this.Groupvisible=false
       }, 500);
          
@@ -427,7 +241,7 @@ export default {
       //  const { value ,id} = val.target  
       console.log(val)
       this.selectFlag=val;
-      if(val==2 || val==4)
+      if(val==2)
       {
           let _depid=this.$route.fullPath.split('/')[3];
           let data={
@@ -454,7 +268,7 @@ export default {
           console.log(grouplist);
         }     
     },
-        onSearchPhoneUser:_.debounce( function(val){        
+       onSearchPhoneUser:_.debounce( function(val){        
        const { value ,id} = val.target  
        if(value)
        {
@@ -466,14 +280,10 @@ export default {
          {
            if(id=='chairManGroupName')
            {
-             this.mdl.chairManGroupID=phoneUser.res.data[0].ID
+             this.mdl.meetingUserID=phoneUser.res.data[0].ID
              this.mdl.chairManGroupName=''
-           }
-           else
-           {
-            this.mdl.personGroupID=phoneUser.res.data[0].ID
-            this.mdl.personGroupName=''
-           }
+             this.mdl.meetingPersonGroupID=''
+           }        
            console.log(this.mdl)
          }
          else
@@ -484,14 +294,7 @@ export default {
              this.form.setFieldsValue({
                 chairManGroupName:''
             }) 
-           }
-           else
-           {
-            this.$message.error('系统内未找到该联系人，可能姓名输入错误，请重新输入')           
-            this.form.setFieldsValue({
-                personGroupName:''
-            }) 
-           }
+           }       
          }      
          }, 1000);
        }
@@ -512,25 +315,38 @@ export default {
         {
           let _obj=  Object.assign(values,_this.mdl)
           console.log(_obj)
-          let startTime=  _this.$moment(values.meetingTimes[0]).format('YYYY-MM-DD HH:mm')
-          let endTime=  _this.$moment(values.meetingTimes[1]).format('YYYY-MM-DD HH:mm')
-          _obj.startTime=startTime
-          _obj.endTime=endTime
-          _obj.meetingStatus=1
-          _obj.meetingConvenDepID=this.$route.fullPath.split('/')[3];     
-          let addresult=await createMeet(_obj);
-           console.log(addresult)  
-           if(addresult.meetingID)
-           {
-              _this.$message.success('创建会议成功')
-              _this.meetingVisible=false;
-              _this.$refs.mytable.refresh()  
-           }   
+          let _arr=[]
+          _arr.push(_obj)
+          console.log(_arr)
+          let result=await createSubmeetingUser(_arr);
+          console.log(result)
+          if(result.code==1)
+          {
+             _this.$emit('ok')  
+             _this.submeetingUserVisible=false
+             _this.$message.success('添加成功')
+          }
+          // let startTime=  _this.$moment(values.meetingTimes[0]).format('YYYY-MM-DD HH:mm:ss')
+          // let endTime=  _this.$moment(values.meetingTimes[1]).format('YYYY-MM-DD HH:mm:ss')
+          // _obj.startTime=startTime
+          // _obj.endTime=endTime
+          // _obj.meetingStatus=1
+          // _obj.meetingConvenDepID=this.$route.fullPath.split('/')[3];     
+          // let addresult=await createMeet(_obj);
+          //  console.log(addresult)  
+          //  if(addresult.meetingID)
+          //  {
+          //     _this.$message.success('创建会议成功')
+          //     _this.meetingVisible=false;
+          //     _this.$refs.mytable.refresh()  
+          //  }   
         }
       })
     },
-    set(){
-      this.meetingVisible=true;
+    set(record){
+      console.log(record)
+      this.mdl.meetingSubjectID=record
+      this.submeetingUserVisible=true;
     },
       v(){     
         return Validate;

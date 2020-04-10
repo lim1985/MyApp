@@ -1,203 +1,97 @@
 <template>
   <div>
-   <a-modal
-      title="选择自定义组"
-      :width="400"
-      :afterClose="isclose"
-      v-model="Groupvisible"
-      @ok="handleGroupOk"  
-      :confirmLoading="confirmLoading"
-    >
-      <a-spin :spinning="confirmLoading">
-        <a-row>
-          <a-col :span="4"></a-col>
-          <a-col :span="16">
-            <a-select              
-              placeholder="请选择自定义组"
-              style="width: 200px"                     
-              @change="customGrouphandleChange"              
-            >
-    <a-select-option v-for="d in customGroupdata" :key="d.value">{{d.text}}</a-select-option>
-  </a-select>
-            <!-- <a-cascader placeholder="选择部门类别" :options="options" @change="onChangeDeplist" :showSearch="{ filter }" :defaultValue="DepValue" /> -->
-            <!-- <a-cascader placeholder="选择部门类别" v-decorator="['DepKeylist',{initialValue:this.DepValue,rules: [{ required: true, message: '部门不能为空！' }]}]" :showSearch="{filter}" :options="options" @change="onChangeDeplist"/>
-             -->
-          </a-col>
-          <a-col :span="4"></a-col>
-          <!-- ReferenceStatus -->
-        </a-row>    
-      </a-spin>
-    </a-modal>
+  
     <a-modal
-      title="创建会议"
-      :width="800"
-      v-model="meetingVisible"
+      title="添加会议议题"
+      :width="600"
+      v-model="submeetingVisible"
       @ok="handleOk"  
       :confirmLoading="confirmLoading"
     >
       <a-spin :spinning="confirmLoading">
-        <a-form :form="form">
-          <a-form-item   
-            v-bind="formItemLayout"         
-            label='会议名称'
-            hasFeedback         
-          >
-            <a-input              
-              placeholder='请输入会议名称' 
-              v-decorator="['meetingName',{rules: [{ required: true },{ validator:v().checkcharacter }]}]"
-            /> 
-            <!-- checkUsername asyncCheckUserName -->
-            <!-- <a-input placeholder='联系人姓名' v-model="Mymdl.UserName" id='UserName' /> -->
-          </a-form-item>
-          <!-- <a-form-item   
-            v-show="showID"
-            v-bind="formItemLayout"         
-            label='会议主持人'
-            hasFeedback         
-          >
-            <a-input                    
-              placeholder='请输入会议主持人姓名' 
-              v-decorator="['chairManGroupID',{rules: [{ required: true }]}]"
-            />          
-          </a-form-item> -->
+        <a-form :form="form">   
            <a-form-item   
             v-bind="formItemLayout"         
-            label='会议主持人/组'
+            label='议题名称'
             hasFeedback         
           >
-            <a-input  
-              @change="onSearchPhoneUser"            
-              placeholder='请输入会议主持人姓名/组' 
-              v-decorator="['chairManGroupName',{rules: [{ required: true },{ validator:v().checkcharacter }]}]">
-          <a-select
-            @change="selectGroup"
-          slot="addonBefore"
-          v-decorator="['prefix2', { initialValue: '1' }]"
-          style="width: 80px"
-        >
-          <a-select-option value="1">
-           姓名
-          </a-select-option>
-          <a-select-option value="2">
-           组名
-          </a-select-option>
-        </a-select> 
-              
-            </a-input>          
+          <a-input                      
+            placeholder='请输入议题名称' 
+            v-decorator="['meetingSubjectName',{rules: [{ required: true },{ validator:v().checkcharacter }]}]">     
+           </a-input>          
           </a-form-item>
-          <a-form-item   
-            v-bind="formItemLayout"         
-            label='会议出席人/组'
-            hasFeedback         
-          >
-            <a-input   
-              @change="onSearchPhoneUser"            
-              placeholder='请输入会议出席人/组' 
-              v-decorator="['personGroupName',{rules: [{ required: true },{ validator:v().checkcharacter }]}]">
-              <a-select
-              @change="selectGroup"
-          slot="addonBefore"
-          v-decorator="['prefix', { initialValue: '3' }]"
-          style="width: 80px"
-        >
-          <a-select-option value="3">
-           姓名
-          </a-select-option>
-          <a-select-option value="4">
-           组名
-          </a-select-option>
-        </a-select> 
-            </a-input>          
-          </a-form-item>
-          <a-form-item
-            :colon="false"
-            v-bind="formItemLayout"     
-            label='会议类型'   
-            hasFeedback                              
-          >
-            <a-select v-decorator="['meetingType',{initialValue:'区委常委会',rules: [{ required: false }]}]">
-              <a-select-option value="区委常委会">区委常委会</a-select-option>
-              <a-select-option value="政府常务会">政府常务会</a-select-option>  
-                        
-            </a-select>           
-          </a-form-item> 
-          <a-form-item
-            :colon="false"
-            v-bind="formItemLayout"     
-            label='会议室'   
-            hasFeedback                              
-          >
-            <a-select v-decorator="['room',{initialValue:'区委常委会议室',rules: [{ required: false }]}]">
-              <a-select-option value="区委常委会议室">区委常委会议室</a-select-option>
-              <a-select-option value="政府常务会议室">政府常务会议室</a-select-option>  
-                        
-            </a-select>           
-          </a-form-item> 
-             <!-- <a-form-item   
+          <a-form-item 
+          :colon="false"
+          label='汇报单位'
+          hasFeedback
+          v-bind="formItemLayout">
+          <a-cascader :showSearch="{filter}" placeholder="选择部门类别" v-decorator="['DepKeylist',{rules: [{ required: true, message: '部门不能为空！' }]}]" :options="options" @change="onChangeDeplist"/>
+        </a-form-item>   
+         <a-form-item   
               :colon="false"
               v-bind="formItemLayout"             
-              label='会议时间'  
+              label='议题开始时间'  
               hasFeedback                 
             >
-              <a-date-picker @change="pickerstartTime" v-decorator="['startTime',{rules: [{ required: false }]}]" />
-          
-            </a-form-item>  -->
-             <a-form-item   
+            <a-time-picker format="HH:mm"            
+               v-decorator="['startTime',{rules: [{ required: true }]}]"
+             />            
+            </a-form-item>  
+            <a-form-item   
               :colon="false"
               v-bind="formItemLayout"             
-              label='会议时间'  
+              label='议题结束时间'  
               hasFeedback                 
             >
-              <a-range-picker             
-              @change="pickerendTime"
-              v-decorator="['meetingTimes',{rules: [{ required: true }]}]"
-              show-time
-              format="YYYY-MM-DD HH:mm"
-              />
-              <!-- <a-date-picker @change="pickerendTime" v-decorator="['endTime',{rules: [{ required: false }]}]" /> -->
-              <!-- <a-input placeholder='填写联系人的出生日期' v-decorator="['BirthDay',{rules: [{ required: false },{ validator: checkTel }]}]"/> -->
-            </a-form-item> 
-             <a-form-item   
+            <a-time-picker format="HH:mm"           
+               v-decorator="['endTime',{rules: [{ required: true }]}]"
+             />            
+            </a-form-item>    
+     <a-form-item   
+              :colon="false"
+              v-bind="formItemLayout"             
+              label='是否专报'                              
+            >
+             <a-checkbox @change="oncheckbox"
+                v-decorator="['isReport',{rules: [{ required: false }]}]"
+             ></a-checkbox>
+            <!-- <a-time-picker format="HH:mm"
+               v-decorator="['endTime',{rules: [{ required: true }]}]"
+             />             -->
+            </a-form-item>   
+
+            
+          <!-- <a-form-item   
             v-bind="formItemLayout"         
-            label='会议主题'
+            label='汇报单位'
             hasFeedback         
+          >      
+             <a-select    
+               mode="multiple"
+              placeholder="请选择汇报单位"
+              style="width: 200px"  
+              optionLabelProp="label"
+            >
+    <a-select-option  :value="d.value" :label="d.text" v-for="(d,index) in customGroupdata" :key="index">{{d.text}}</a-select-option>
+  </a-select>
+         <a-input                      
+            placeholder='请输入议题名称' 
+            v-decorator="['meetingSubjectName',{rules: [{ required: true },{ validator:v().checkcharacter }]}]">     
+           </a-input>        
+          </a-form-item> -->
+          <!-- <a-form-item
+            :colon="false"
+            v-bind="formItemLayout"     
+            label='参会人类型'   
+            hasFeedback                              
           >
-            <a-input              
-              placeholder='请输入会议主题' 
-              v-decorator="['meetingZT',{rules: [{ required: false },{ validator:v().checkcharacter }]}]"
-            />          
-          </a-form-item>
-              <a-form-item   
-            v-bind="formItemLayout"         
-            label='记录人'
-            hasFeedback         
-          >
-            <a-input              
-              placeholder='请输入会议记录人员名字' 
-              v-decorator="['RecordMan',{rules: [{ required: false },{ validator:v().checkcharacter }]}]"
-            />          
-          </a-form-item>
-               <a-form-item   
-            v-bind="formItemLayout"         
-            label='会务人员'
-            hasFeedback         
-          >
-            <a-input              
-              placeholder='请输入会务人员名字' 
-              v-decorator="['meetingMan',{rules: [{ required: false },{ validator:v().checkcharacter }]}]"
-            />          
-          </a-form-item>
-              <a-form-item   
-            v-bind="formItemLayout"         
-            label='会风督察人员'
-            hasFeedback         
-          >
-            <a-input              
-              placeholder='请输入会风督察人员名字' 
-              v-decorator="['meetingManager',{rules: [{ required: false },{ validator:v().checkcharacter }]}]"
-            />          
-          </a-form-item>
-        
+            <a-select v-decorator="['meetingPersonType',{initialValue:'列席人',rules: [{ required: false }]}]">
+              <a-select-option value="主持人">主持人</a-select-option>
+              <a-select-option value="出席人">出席人</a-select-option>
+              <a-select-option value="列席人员">列席人员</a-select-option>  
+                        
+            </a-select>           
+          </a-form-item>    -->
         </a-form>
       </a-spin>
     </a-modal> 
@@ -224,7 +118,7 @@
   import Vue from 'vue'  
   import { mapState} from 'vuex'
   import { User_ID } from "@/store/mutation-types" 
-  import {GetUserInformationByUserNameLIke,GetCustomGroupByDepID,createMeet} from '@/api/manage'//Select_PermissionsByRolesID,getUserrolesbyAdminID,AddPhoneUser,ReferenceAdd,
+  import {createMeetingSubject,GetUserInformationByUserNameLIke,GetCustomGroupByDepID,createMeet,createSubmeetingUser,Select_PermissionsByRolesID,getUserrolesbyAdminID} from '@/api/manage'//Select_PermissionsByRolesID,getUserrolesbyAdminID,AddPhoneUser,ReferenceAdd,
   import { Promise } from 'q';
   import Validate from '@/tools/Validate/index'
   // import { error } from 'util';
@@ -235,65 +129,23 @@
   //GetALLByDepID,asyncValidateTel
 
 export default {
-  name: 'AdduserModal', 
+  name: 'AddsubmeetuserModal', 
   data () {
     return {   
       selectFlag:0,
-      customGroupdata:[],
+      customGroupdata:[{
+        value:'111',
+        text:'大祥区'
+      },{
+        value:'11122',
+        text:'大祥区人民'
+      }],
       Groupvisible:false,
       showID:false,
-      meetingVisible:false,
-                   AddUserData : [],
-                   columns : [{
-                    dataIndex: 'name',
-                    key: 'name',
-                    slots: { title: 'customTitle' },
-                    scopedSlots: { customRender: 'name' },
-                  }, {
-                    title: '性别',
-                    dataIndex: 'sex',
-                    key: 'sex',
-                       customRender: (text=>{
-                        if(text==1)
-                        {
-                          return '男'
-                        }
-                        else              
-                        {
-                          return '女'
-                        }            
-                      }) 
-                  }, {
-                    title: '部门',
-                    dataIndex: 'Abbreviation',
-                    key: 'Abbreviation',
-                  }, {
-                    title: '手机号',
-                    key: 'cellPhone',
-                    dataIndex: 'cellPhone',
-                    scopedSlots: { customRender: 'cellPhone' },
-                  }, {
-                    title: '操作',
-                    key: 'action',
-                    scopedSlots: { customRender: 'action' },
-                  }],
-     
-      userVisible:false,
-       parameter:{
-        pageNo:1,
-        pageSize:20
-      },   
-      getcellphone:'',
+      submeetingVisible:false,          
       Referencevisible:false,
       DepValue:[],
-      tel:'',
-      Isvalidate:false,
-      status:'',
-      Tips:'',
-      options:[],
-      selectedRowKeys: [],
-      selectedRows: [],
-      PhoneVisible:false,        
+      tel:'',             
        formItemLayout: {
         labelCol: {
           xs: { span: 20 },
@@ -304,10 +156,10 @@ export default {
           sm: { span: 10 },
         },
       },
-      visible: false,
+    
       confirmLoading: false,
       mdl: {},
-
+      options:[]
     }
   },
   beforeCreate () {
@@ -334,8 +186,10 @@ export default {
       // this.$store.commit('SET_DEPKEY',this.$route.meta.permission[0]);     
       
     }
-      },
+      }, 
+   
   async mounted(){   
+      this.options=await this.GetDepnameAndchild()
       // let _arr=await this.GetDepnameAndchild()    
       // console.log("777777777777777")
       // console.log(_arr) 
@@ -345,6 +199,82 @@ export default {
 
     },
   methods:  {
+    gettime(time){
+
+      // initTime(data,format)
+      //   {       
+      //     return  !data?'':this.$moment(data).format(format);
+      //   },
+      console.log(time)
+    },
+        oncheckbox(e){
+            console.log(`checked = ${e.target.checked}`);
+        },
+      deteleObject(arr,attr,value) {
+            var uniques = [];
+            var _arrs=[]   
+            for(let x in arr)
+            {       
+                if(arr[x].IsView==value)
+                {   
+                _arrs.push(arr[x])           
+                }    
+            }
+            var obj = {};
+                for(var i =0; i<_arrs.length; i++){
+                    if(!obj[_arrs[i].value]){
+                        uniques.push(_arrs[i]);
+                        obj[_arrs[i].value] = true;
+                    }
+                }  
+                    return uniques
+        },
+   onChangeDeplist(value) {
+      return value;
+    },
+       async GetDepnameAndchild()
+    {
+      let _arr=[] 
+      let  userid= {AdminID:1} //在本地localStorage里拿到登陆后的管理员ID（AdminID）   
+      console.log(userid)
+      const roleslist= await getUserrolesbyAdminID({AdminID:userid.AdminID})//根据管理员ID 获取到RolesID 可能是一个也可以能是多个      
+          for (let x in roleslist.roles)
+          {
+             let result=await Select_PermissionsByRolesID({ID:roleslist.roles[x]})//根据rolesID 拿到Permissionlist 返回字符串类型  
+             _arr.push(result.res)          
+          }
+         console.log(_arr)
+         let arr=[]       
+          _arr.forEach(v => {
+            for(let x in v)
+            {
+               if(v[x].IsView && v[x].IsParent)
+               {
+                 let obj=new Object();               
+                  obj.label=v[x].label
+                  obj.value=v[x].value 
+                  obj.IsView=v[x].IsView                 
+                  let DepArr=[]                     
+                  v[x].actionOptions.forEach(s=>{
+                      let childObj=new Object();
+                    if(s.IsView && s.Permission_Key==obj.value ) 
+                    {                       
+                        // console.log(s)
+                         childObj.label=s.Abbreviation
+                         childObj.value=s.DepartmentId
+                         DepArr.push(childObj)                                        
+                    }
+                       obj.children=DepArr
+                  })                 
+                    arr.push(obj)
+               }               
+            }
+          });
+          let newarr=this.deteleObject(arr,'IsView',true)
+          console.log(newarr)
+            // console.log(arr);
+          return newarr        
+      },
     isclose(){
        this.Groupvisible=false;     
     },
@@ -352,24 +282,15 @@ export default {
       console.log(val)
       if(this.selectFlag==2)    
        {
-        this.mdl.chairManGroupID=val
+      this.mdl.meetingPersonGroupID=val
+      this.mdl.meetingUserID=''
       this.customGroupdata.forEach(v=>{
              if(v.value==val)
              {
                  this.mdl.chairManGroupname=v.text
              }       
          })
-       }
-      else if(this.selectFlag==4)
-      {
-      this.mdl.personGroupID=val
-          this.customGroupdata.forEach(v=>{
-             if(v.value==val)
-             {
-          this.mdl.personGroupName=v.text
-             }       
-         })
-      }
+       }      
      console.log(this.mdl)
     },
     handleGroupOk()
@@ -381,13 +302,7 @@ export default {
             this.form.setFieldsValue({
                 chairManGroupName:this.mdl.chairManGroupname
             }) 
-          }
-          if(this.selectFlag==4)
-          {
-              this.form.setFieldsValue({
-                personGroupName:this.mdl.personGroupName
-            }) 
-          }
+          }        
            this.Groupvisible=false
       }, 500);
          
@@ -427,7 +342,7 @@ export default {
       //  const { value ,id} = val.target  
       console.log(val)
       this.selectFlag=val;
-      if(val==2 || val==4)
+      if(val==2)
       {
           let _depid=this.$route.fullPath.split('/')[3];
           let data={
@@ -454,7 +369,7 @@ export default {
           console.log(grouplist);
         }     
     },
-        onSearchPhoneUser:_.debounce( function(val){        
+       onSearchPhoneUser:_.debounce( function(val){        
        const { value ,id} = val.target  
        if(value)
        {
@@ -466,14 +381,10 @@ export default {
          {
            if(id=='chairManGroupName')
            {
-             this.mdl.chairManGroupID=phoneUser.res.data[0].ID
+             this.mdl.meetingUserID=phoneUser.res.data[0].ID
              this.mdl.chairManGroupName=''
-           }
-           else
-           {
-            this.mdl.personGroupID=phoneUser.res.data[0].ID
-            this.mdl.personGroupName=''
-           }
+             this.mdl.meetingPersonGroupID=''
+           }        
            console.log(this.mdl)
          }
          else
@@ -484,14 +395,7 @@ export default {
              this.form.setFieldsValue({
                 chairManGroupName:''
             }) 
-           }
-           else
-           {
-            this.$message.error('系统内未找到该联系人，可能姓名输入错误，请重新输入')           
-            this.form.setFieldsValue({
-                personGroupName:''
-            }) 
-           }
+           }       
          }      
          }, 1000);
        }
@@ -509,28 +413,49 @@ export default {
       this.form.validateFields(async(err, values) => {
         // 验证表单没错误
         if (!err) 
-        {
+        { 
+           console.log(values.startTime)
+           console.log(values.endTime)
+           console.log(values.startTime._i)
+           console.log(values.endTime._i)
           let _obj=  Object.assign(values,_this.mdl)
-          console.log(_obj)
-          let startTime=  _this.$moment(values.meetingTimes[0]).format('YYYY-MM-DD HH:mm')
-          let endTime=  _this.$moment(values.meetingTimes[1]).format('YYYY-MM-DD HH:mm')
-          _obj.startTime=startTime
-          _obj.endTime=endTime
-          _obj.meetingStatus=1
-          _obj.meetingConvenDepID=this.$route.fullPath.split('/')[3];     
-          let addresult=await createMeet(_obj);
-           console.log(addresult)  
-           if(addresult.meetingID)
-           {
-              _this.$message.success('创建会议成功')
-              _this.meetingVisible=false;
-              _this.$refs.mytable.refresh()  
-           }   
+       
+          // _obj.startTime= _this.$moment(values.startTime._d).format('HH:mm')
+          // _obj.endTime= _this.$moment(values.endTime._d).format('HH:mm')
+          _obj.meetingSubjectDepID=values.DepKeylist[1]
+           console.log(_obj);
+           let result=await createMeetingSubject(_obj)
+           console.log(result)
+          // let result=await createSubmeetingUser(_arr);
+          // console.log(result)
+          // if(result.code==1)
+          // {
+          //    _this.$emit('ok')  
+          //    _this.submeetingUserVisible=false
+          //    _this.$message.success('添加成功')
+          // }
+          // let startTime=  _this.$moment(values.meetingTimes[0]).format('YYYY-MM-DD HH:mm:ss')
+          // let endTime=  _this.$moment(values.meetingTimes[1]).format('YYYY-MM-DD HH:mm:ss')
+          // _obj.startTime=startTime
+          // _obj.endTime=endTime
+          // _obj.meetingStatus=1
+          // _obj.meetingConvenDepID=this.$route.fullPath.split('/')[3];     
+          // let addresult=await createMeet(_obj);
+          //  console.log(addresult)  
+          //  if(addresult.meetingID)
+          //  {
+          //     _this.$message.success('创建会议成功')
+          //     _this.meetingVisible=false;
+          //     _this.$refs.mytable.refresh()  
+          //  }   
         }
       })
     },
-    set(){
-      this.meetingVisible=true;
+    set(record){
+      console.log(record)
+      // this.mdl.meetingSubjectID=record
+      this.submeetingVisible=true;
+      this.mdl.meetingID=record.meetingID
     },
       v(){     
         return Validate;

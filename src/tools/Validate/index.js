@@ -1,12 +1,13 @@
 import {GetUserInformationByUserNameLIke,asyncValidateTel,GetUserInformationByTelnum,GetuserInformationbyName,IsReference} from '@/api/manage'
 import store from '../../store/'
-
+import _ from 'lodash'
 const Validate={
   
   findbyUserInformation(obj)
   {
     var reg = /^1(3|4|5|7|8|9)\d{9}$/; //验证手机号  
     let reg2=/^[a-zA-Z\u4e00-\u9fa5]+$///验证中文和英文字符
+    let reg3=  /^([\u4e00-\u9fa5]{1,},){0,}([\u4e00-\u9fa5]{1,})$/;
     return new Promise(function(resolve){
       setTimeout(async() => {
         // let obj=new Object();
@@ -15,28 +16,33 @@ const Validate={
         // obj.pageSize=15    
         
         console.log(obj)
-        if(reg.test(obj.data)){
+        console.log(reg3.test(obj.data))
+        if(reg.test(obj.data))
+        {
           console.log('是电话 到这了')
           let res = await GetUserInformationByTelnum(obj);
         
-          console.log(res)
-        
+          console.log(res)        
           resolve(res)
         }
+        // else if(!reg3.test(obj.data))
+        // {
+        //   console.log(obj)
+        //   console.log(`含有逗号`)
+        //   resolve({isList:true})
+        // }
+
         else if(reg2.test(obj.data))
         { 
           console.log(obj);
-          let res = await GetUserInformationByUserNameLIke(obj);
-          // if(res==-1)
-          // {
-            
-          // }
+          console.log('like名字')
+          let res = await GetUserInformationByUserNameLIke(obj);     
           console.log(res)
           resolve(res);
-        }
+        }        
         else
         {
-          
+          console.log('是名字')
           let res = await GetuserInformationbyName(obj)
           resolve(res)
         }
@@ -376,32 +382,45 @@ async checkPhone(rule, value, callback) {
       
     } 
   },
-  async CheckNameAndTelNum(rule,value,callback)
-  {
-    var reg = /^1(3|4|5|7|8|9)\d{9}$/;   
-    let reg2 = /^[\u0391-\uFFE5]{0,4}$/;
-  // if(!reg.test(value))
-  // {
-  //   callback('姓名只能输入最多4个汉字')
-  //   return
-  // }
-    if(!value)
+  // onSearchPhoneUser:_.debounce(function(val){
+  //   const { value} = val.target  
+  //   console.log(value)  
+  //   if(value)
+  //   {
+  //     this.isSearch=true    
+  //     this.queryParam.data=value; 
+  //     this.$refs.mytable.refresh()  
+  //     console.log(this.queryParam);   
+  //   }
+  //   else
+  //   {
+  //     this.isSearch=false
+  //     this.queryParam.data=value
+  //     this.$refs.mytable.refresh()  
+  //   }
+  //  },1000),
+     CheckNameAndTelNum:_.debounce((rule,value,callback)=>{
+      var reg = /^1(3|4|5|7|8|9)\d{9}$/;   
+      let reg2 = /^[\u0391-\uFFE5]{0,4}$/;
+      // let reg3=  /^([\u4e00-\u9fa5]{1,},){0,}([\u4e00-\u9fa5]{1,})$/;
+        if(!value)
     {
       let obj=new Object();
-      obj.showAdd=false
-     
+      obj.showAdd=false     
       store.commit('SET_PhoneUSERINFO',obj)
       callback();                 
       return;
     }
-  
-    if (!reg.test(value) && !reg2.test(value)) {
-      callback('请输入正确的手机号或者姓名不得包含符号');              
-      return;
+    // if (!reg3.test(value)) 
+    // {
+    //   console.log(value)
+    //   callback(`批量添加请参照：（张三,李四）中间用逗号分隔`)  
+    // }   
+      if (!reg.test(value) && !reg2.test(value)) {
+      callback('请输入正确的手机号或者姓名不得包含符号');                
     }
-    else 
+    else
     {
-      console.log(value)
       let  parameter={
         pageNo:1,
         pageSize:10
@@ -409,17 +428,28 @@ async checkPhone(rule, value, callback) {
       let _obj=new Object();
       _obj.data=value
       _obj.parameter=parameter
-      let _s =await Validate.findbyUserInformation(_obj) 
-      console.log(_s)
-      let obj=new Object();
-      if(_s.code==-1)
+        Validate.findbyUserInformation(_obj).then(_s=>{
+        console.log(_obj)
+        console.log(_s)
+        let obj=new Object();
+       if(_s.code==-1)
       {
-        console.log(_s);
-        obj.showAdd=true
-        obj.code=-1
-        store.commit('SET_PhoneUSERINFO',obj)
-        callback('该手机号或姓名不存在，请直接添加');                 
-        return;
+        // console.log(reg3.test(value))
+          obj.showAdd=true
+          obj.code=-1
+          store.commit('SET_PhoneUSERINFO',obj)
+          callback('该手机号或姓名不存在，请直接添加');                 
+          return;
+        // if(!reg3.test(value))
+        // {
+        //   console.log(reg3.test(value))
+        //   console.log(`到这里了 code=-1`)
+        //   obj.showAdd=true
+        //   obj.code=-1
+        //   store.commit('SET_PhoneUSERINFO',obj)
+        //   callback('该手机号或姓名不存在，请直接添加');                 
+        //   return;
+        // }      
       } 
       else if(_s.isNum)
       {
@@ -429,9 +459,9 @@ async checkPhone(rule, value, callback) {
         obj.tel=_s.res.data[0].cellphone,   
         obj.UJOB=_s.res.data[0].UJOB,   
         obj.Abbreviation=_s.res.data[0]['ResferecDep.Abbreviation']
-        obj.showAdd=false   
-        
+        obj.showAdd=false           
         store.commit('SET_PhoneUSERINFO',obj); 
+        callback();  
       }
       else
       {
@@ -443,21 +473,110 @@ async checkPhone(rule, value, callback) {
         obj.UJOB=_s.res.data[0].UJOB,   
         obj.showAdd=false   
         store.commit('SET_PhoneUSERINFO',obj); 
-      }        
-//  UJOB
-// :
-// "信息化办主任"
-// UserName
-// :
-// "张海波"
-// cellphone
-// :
-// "13807399838"       
-      
+        callback();  
+      }      
+     })    
+    }    
+    },1000),
+  // {
+  //   var reg = /^1(3|4|5|7|8|9)\d{9}$/;   
+  //   let reg2 = /^[\u0391-\uFFE5]{0,4}$/;
+  //   let reg3=  /^([\u4e00-\u9fa5]{1,},){0,}([\u4e00-\u9fa5]{1,})$/;
+    // // console.log(reg3.test(value))
+    
+    // if(!reg3.test(value))
+    // {
+    //   console.log(`无逗号的`)
+    //   console.log(value)
+    //   callback('请输入正确格式如：张三,李四');   
+    //   return false; 
+    // }
+    // else
+    // {
+    //   console.log(`有逗号的`)
+    //   console.log(value)
+    
+    // }
+    
+    // console.log(reg.test(value) +`电话`)
+    // console.log(reg2.test(value) +`中文字符`)
+    // console.log(reg3.test(value) +`带逗号字符`)
+    // if(reg3.test(value))
+    // {
+    //   callback()
+    //   return
+    // }
+   
+    //   callback(`不是电话号码`)
+   
+    // if(!value)
+    // {
+    //   let obj=new Object();
+    //   obj.showAdd=false     
+    //   store.commit('SET_PhoneUSERINFO',obj)
+    //   callback();                 
+    //   return;
+    // }
+  
+    // if (!reg.test(value) && !reg2.test(value)) {
+    //   callback('请输入正确的手机号或者姓名不得包含符号');                
+    // }
+    // else 
+    // {
+    //   let  parameter={
+    //     pageNo:1,
+    //     pageSize:10
+    //   }
+    //   let _obj=new Object();
+    //   _obj.data=value
+    //   _obj.parameter=parameter
+      // let _s=new Promise(async resolve=>{
+      //   await Validate.findbyUserInformation(_obj).then(res=>{
+      //     console.log(res)
+      //     resolve(res)
+      //   }) 
+      // })
+      // _s.then(res=>{
+      //   console.log(res)
+      // })
        
-     
-    }   
-  },
+ 
+
+      // let obj=new Object();
+      // if(_s.code==-1)
+      // {
+       
+      //   obj.showAdd=true
+      //   obj.code=-1
+      //   store.commit('SET_PhoneUSERINFO',obj)
+      //   callback('该手机号或姓名不存在，请直接添加');                 
+      //   return;
+      // } 
+      // else if(_s.isNum)
+      // {
+      //   obj.username=_s.res.data[0].UserName,
+      //   obj.code=_s.code         
+      //   obj.id=_s.res.data[0].ID,      
+      //   obj.tel=_s.res.data[0].cellphone,   
+      //   obj.UJOB=_s.res.data[0].UJOB,   
+      //   obj.Abbreviation=_s.res.data[0]['ResferecDep.Abbreviation']
+      //   obj.showAdd=false   
+        
+      //   store.commit('SET_PhoneUSERINFO',obj); 
+      // }
+      // else
+      // {
+      //   obj.username=_s.res.data[0].UserName,
+      //   obj.code=_s.code         
+      //   obj.id=_s.res.data[0].ID,      
+      //   obj.Abbreviation=_s.res.data[0]['Abbreviation']
+      //   obj.tel=_s.res.data[0].cellphone,   
+      //   obj.UJOB=_s.res.data[0].UJOB,   
+      //   obj.showAdd=false   
+      //   store.commit('SET_PhoneUSERINFO',obj); 
+      // }         
+  //   } 
+  // },2000),
   async CheckPhoneNumAndchanese(value)//检测0到4位中文和正确的手机号
   {
     var reg = /^1(3|4|5|7|8|9)\d{9}$/;   

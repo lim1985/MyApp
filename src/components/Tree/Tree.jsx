@@ -271,7 +271,7 @@ export default {
       return this.renderItem(item)
     })
     console.log(dataSource);
-    console.log(list)
+    console.log(list);
   //    { showDepTree ?this.renderDepartmentName():null}
     return (
       <div class="tree-wrapper">
