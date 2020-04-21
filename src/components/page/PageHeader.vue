@@ -37,6 +37,7 @@
 
       </div>
     </div>
+   
   </div>
 </template>
 
@@ -46,7 +47,8 @@
   export default {
     name: "PageHeader",
     components: {
-      "s-breadcrumb": Breadcrumb
+      "s-breadcrumb": Breadcrumb,
+   
     },
     props: {
       title: {

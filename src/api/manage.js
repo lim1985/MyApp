@@ -5,6 +5,11 @@ const api = {
   service: '/service',
   orgTree: '/org/tree',
   permission: '/permission',
+  //电话记录模块
+  createPhoneRecord:'/api/createPhoneRecord',
+  GetRecordList:'/api/GetRecordList',
+
+  
   //会议管理模块
   createMeet: '/api/createMeet',//新增会议
   createMeetingSubject:'/api/createMeetingSubject',//新增议题
@@ -88,6 +93,11 @@ const api = {
   PostDepIDAndPermissionKey:'/api/PostDepIDAndPermissionKey',
   DeleteUserByUID:'/api/DeleteUser',//其实并不删除，只是将该联系人放到 其他 特定栏目中去
   GetuserInformationByTelNum:'/api/GetuserInformationbyTelNum',//获取用户信息By手机号
+  GetUserInfoByTelOrPhoneNum:'/api/GetUserInfoByTelOrPhoneNum',//获取用户信息By手机号
+
+
+
+
   GetuserInformationbyname:'/api/GetuserInformationbyname',//获取用户信息By用户名
   GetUserInformationByUserNameLIke:'/api/GetUserInformationByUserNameLIke',//获取用户信息By用户名  自定义组 和 首页搜索里用了该接口
   GetAllPhoneuser:'/api/GetAllPhoneuser',
@@ -149,6 +159,27 @@ const api = {
 }
 
 export default api
+//获取电话记录By单位ID
+export function GetRecordList(parameter) {
+  return axios({
+    url: api.GetRecordList,
+    method: 'get',
+    params: parameter  
+  })
+}
+//新增电话记录
+export function createPhoneRecord(parameter) {
+  return axios({
+    url: api.createPhoneRecord,
+    method: 'POST',
+    data:parameter,
+    async:false,
+    headers : {
+			'Accept' : 'application/json',
+			'Content-Type' : 'application/json; charset=utf-8'
+		},
+  })
+}
 //获取议题中的联系人集合用来发短信
 export function selectmeetSubUsers (parameter) {
   return axios({
@@ -473,6 +504,13 @@ export function GetAllUserList (parameter) {
 export function GetuserInformationbyName (parameter) {
   return axios({
     url: api.GetuserInformationbyname,
+    method: 'get',
+    params: parameter
+  })
+}
+export function GetUserInfoByTelOrPhoneNum (parameter) {//根据手机号，电话号码查询联系人及单位
+  return axios({
+    url: api.GetUserInfoByTelOrPhoneNum,
     method: 'get',
     params: parameter
   })

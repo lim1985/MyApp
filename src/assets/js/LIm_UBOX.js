@@ -27,7 +27,7 @@ class LUbox {
 	console.log('电话拿起了')
 	store.commit('SET_EVENT',event)	
 	ubox.lines[uboxhdl].state =  UBOX_STATE_HOOK_OFF;
-	LUbox.ubox_RecordFile();
+	LUbox.ubox_RecordFile();//开始录音
 }
 	static ubox_DeviceAlarm(uboxhdl, type)
 {
@@ -192,7 +192,8 @@ class LUbox {
 					if(msg.event =="plugin")
 					{
 						LUbox.Ubox_Plug_In(msg.handle);
-					}else if(msg.event == "joined")
+					}
+					else if(msg.event == "joined")
 					{
 						ubox.workpath = decodeURIComponent(msg.path);
 					console.log("connect websocket ok")
@@ -283,10 +284,12 @@ class LUbox {
 				else if(msg.event == 'dtmfdown')	
 				{										
 				store.commit('SET_NUMKEY', (msg.dtmfkey-48))								
-				}else if(msg.event=='ring')
+				}
+				else if(msg.event=='ring')
 				{
 				store.commit('SET_EVENT',msg.event)		
-				}else if(msg.event=='ringCancel')
+				}
+				else if(msg.event=='ringCancel')
 				{
 				store.commit('SET_EVENT',msg.event)		
 				}
@@ -395,8 +398,10 @@ class LUbox {
 			var seconds = curDate.getSeconds();
 
 			var rec_name = ubox.workpath+"ubox_record\\"+year+"-"+month+"-"+day+"-"+hours+"-"+minutes+"-"+seconds+".wav";
+			var record_name = year+"-"+month+"-"+day+"-"+hours+"-"+minutes+"-"+seconds+".wav";
 			//var rec_name = "E:\\usb\\gsm-usb\\bin\\ubox-record\\test.wav";
 			console.log(rec_name)
+			store.commit('SET_PHONEURL',record_name)	
 			// AppendStatus(rec_name);
 			//var msg = [];
 			if(hdl != -1)

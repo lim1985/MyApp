@@ -11,7 +11,7 @@ const UBOX = {
     PhoneNumber:'',
     NumKey:'',
     Numkeys:'',
-  
+    PHONEURL:'',
   },
 
   mutations: {
@@ -21,6 +21,9 @@ const UBOX = {
     },
     SET_EVENT: (state, Event) => {
       state.Event = Event
+    },
+    SET_PHONEURL: (state, PHONEURL) => {
+      state.PHONEURL = PHONEURL
     },
     SET_TYPE: (state, Type) => {
       state.Type = Type

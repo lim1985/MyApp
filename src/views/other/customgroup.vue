@@ -57,6 +57,9 @@
           <template slot="cellphone" slot-scope="text">
             <a @click="GetUboxToTel(text)">{{ text }}</a>
           </template>
+          <template slot="ToTel" slot-scope="text">
+            <a @click="GetUboxToTel(text)">{{ text }}</a>
+          </template>
           <span slot="action" slot-scope="text, record">                    
             <a v-show="record.Ustatus==9 || record.Ustatus==7" @click="handleEdit(record)">编辑</a>
             <a-divider type="vertical" />
@@ -178,9 +181,9 @@ export default {
         //  console.log(Object.assign(parameter,this.QueryUserParam))
         console.log(this.QueryUserParam)
          return FindAllUserByGroupID(Object.assign(parameter,this.QueryUserParam)).then(res=>{         
-
+             console.log(res)
            this.Pupu=res.result.data.map(item=>{
-            return {Phone:item.cellphone,username:item.UserName,DPname:item.Permission_name,ID:item.ID,UJOB:item.UJOB,checked:false}
+            return {Phone:item.cellphone,username:item.UserName,DPname:item.DepartmentName,ID:item.ID,UJOB:item.UJOB,checked:false}
             })  
           // if(res.result.totalCount==0&& this.isSearch)
           // {

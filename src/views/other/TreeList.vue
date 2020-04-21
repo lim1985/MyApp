@@ -233,7 +233,7 @@ export default {
               {        
                 console.log(res.res)                      
                 this.Pupu=res.res.data.map(item=>{
-                  return {Phone:item.cellphone,username:item.UserName,DPname:item["ResferecDep.Abbreviation"],ID:item.ID,UJOB:item.UJOB,checked:false}
+                  return {Phone:item.cellphone,username:item.UserName,DPname:item.Abbreviation,ID:item.ID,UJOB:item.UJOB,checked:false}
                 })                               
                 console.log(this.Pupu)           
                 return res.res
@@ -273,7 +273,7 @@ export default {
               console.log(res.result)
            
              this.Pupu=res.result.data.map(item=>{
-             return {Phone:item.cellphone,username:item.UserName,DPname:item.DepartmentName,ID:item.ID,UJOB:item.UJOB,checked:false}
+             return {Phone:item.cellphone,username:item.UserName,DPname:item.Abbreviation,ID:item.ID,UJOB:item.UJOB,checked:false}
            })  
             console.log(this.Pupu) 
               return res.result
@@ -317,7 +317,7 @@ export default {
             console.log(res)
             console.log(`000000999999`)             
                this.Pupu=res.result.data.map(item=>{
-             return {Phone:item.cellphone,username:item.UserName,DPname:item.DepartmentName,ID:item.ID,UJOB:item.UJOB,checked:false}
+             return {Phone:item.cellphone,username:item.UserName,DPname:item.Abbreviation,ID:item.ID,UJOB:item.UJOB,checked:false}
            })  
             console.log(this.Pupu)
             this.seach=res.result 

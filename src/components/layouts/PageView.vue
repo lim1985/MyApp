@@ -66,8 +66,7 @@
         extraImage: '',
         search: false,
         tabs: {},
-        showDepListSearch:false
-             
+        showDepListSearch:false             
       }
     },  
   

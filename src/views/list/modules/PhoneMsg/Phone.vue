@@ -13,18 +13,31 @@
       <a-spin :spinning="confirmLoading">
         <a-form
           :form="form"       
-        > 
-          <a-row>         
-            <a-col :span="24">
+        >
+          <a-row>  
+            <a-row> 
+              <a-col :span="24">
+                <h3>部门：{{ PhoneInfo.DepName }}</h3>
+              </a-col>                               
+            </a-row>    
+            <a-row>                 
+              <a-col :span="24">
+                <h3>姓名：{{ PhoneInfo.UserName }}</h3>
+              </a-col>                      
+            </a-row>  
+            <a-row>  
+              <a-col :span="24">
+                <h3>职务：{{ !PhoneInfo.UJob?"无":PhoneInfo.UJob }}</h3>
+              </a-col>    
+            </a-row> 
+            <a-col :span="24">               
               <h1>{{ keys }}</h1>             
             </a-col>
-            <a-col :span="24">{{ result }}</a-col>
-
-          
+            <a-col :span="24">{{ result }}</a-col>          
           <!--<a-col :span="16"><a-cascader placeholder="选择部门类别" v-decorator="['DepKeylist',{initialValue:this.DepValue,rules: [{ required: true, message: '部门不能为空！' }]}]" :showSearch="{filter}" :options="options" @change="onChangeDeplist"/></a-col>
           <a-col :span="4"></a-col> -->
           <!-- ReferenceStatus -->
-          </a-row>   
+          </a-row>  
         </a-form> 
       </a-spin>
     </a-modal>   
@@ -33,6 +46,7 @@
 
 <script> 
    import { mapState} from 'vuex'
+   import { GetUserInfoByTelOrPhoneNum,createPhoneRecord} from '@/api/manage'
    import Validate from '@/tools/Validate/index'
   //GetALLByDepID,asyncValidateTel
 export default {
@@ -40,6 +54,7 @@ export default {
  
   data () {
   return {    
+      PhoneInfo:{},
       formItemLayout: {
          labelCol: {
           xs: { span: 12 },
@@ -59,7 +74,9 @@ export default {
       keys:'',
       result:'',
       telmsg:'',
-      isclick:false
+      isclick:false,
+      PHONEURL:'',
+      DEPID:''
       
     }
   },
@@ -74,15 +91,19 @@ export default {
   }, 
     computed:{
       ...mapState({
+        Phoneurl:state=>state.L_Ubox.PHONEURL,
         handleID:state=>state.L_Ubox.HandleID,
         event:state=>state.L_Ubox.Event,
         phonenumber:state=>state.L_Ubox.PhoneNumber,
         type:state=>state.L_Ubox.Type,
         numkeys:state=>state.L_Ubox.Numkeys,
+        depid:state=>state.user.SendSmsList[0]
+        // DepID=this.$route.path.split('/')[3]
       }),   
             
     },
    watch:{   
+    
      'numkeys':{
       handler(value){
         this.getkeys(value)
@@ -91,6 +112,11 @@ export default {
       },
       // deep:true
     },
+      Phoneurl(val)
+      {         
+        console.log(val)
+        this.PHONEURL=val;              
+      },
        phonenumber(val)
       {         
         this.PhoneNumber=val;              
@@ -114,12 +140,14 @@ export default {
       }
    },
   async mounted(){   
+        console.log(`getPhoneModel`)
     // console.log(`event`)
     // console.log(this.Events)
     //  this.showPhone();
 
     },
   methods:{
+
     Ishandle(){
       console.log(this.HandleID)
       if(this.HandleID==-1)
@@ -132,9 +160,31 @@ export default {
       //   // alert('没有插入')
       // }
     },
+    getPhoneInfo(num)
+    {
+         GetUserInfoByTelOrPhoneNum({tel:num}).then(res=>{
+             if(res.code==-1)
+         {
+          this.PhoneInfo.UserName='陌生来电'
+          this.PhoneInfo.UJob=''
+          this.PhoneInfo.DepName=''         
+         }
+         else
+         {
+          this.PhoneInfo.UserName=res.res.UserName
+          this.PhoneInfo.UJob=res.res.UJOB
+          this.PhoneInfo.DepName=res.res['ResferecDep.DepartmentName']
+         } 
+          // this.PhoneInfo.UserName=res.res.UserName
+          // this.PhoneInfo.UJob=res.res.UJOB
+          // this.PhoneInfo.DepName=res.res['ResferecDep.DepartmentName']
+          this.Phonevisible=true
+            console.log(this.PhoneInfo)
+        })
+    },
     get(val){
-      
-      this.Phonevisible=true
+      this.PhoneInfo.PhoneNum=val
+      this.getPhoneInfo(val)
       this.keys=val;
       this.result='提起电话将自动拨号'
       this.isclick=true;      
@@ -162,39 +212,133 @@ export default {
         {         
           this.result='电话接通中...'
         }   
+      this.PhoneInfo.PhoneNum=this.keys
       console.log(val)
     },
     showPhone(val){
       console.log(val)
-        this.result=''   
+      this.result=''   
       if(val=='hookoff' || this.Types==0)
       {            
-          // this.Phonevisible=false  
-        
+          // this.Phonevisible=false          
           this.result='请输入号码'           
       }
       if(val=='callerId')
       { 
-        this.Phonevisible=true
+      
         this.keys=this.phonenumber        
         this.telmsg='来电'
+       GetUserInfoByTelOrPhoneNum({tel:this.keys}).then(res=>{
+         if(res.code==-1)
+         {
+          this.PhoneInfo.UserName='陌生来电'
+          this.PhoneInfo.UJob=''
+          this.PhoneInfo.DepName=''         
+         }
+         else
+         {
+          this.PhoneInfo.UserName=res.res.UserName
+          this.PhoneInfo.UJob=res.res.UJOB
+          this.PhoneInfo.DepName=res.res['ResferecDep.DepartmentName']
+         }      
+          this.PhoneInfo.PhoneNum=this.keys    
+          this.Phonevisible=true
+          this.result=''
+          // this.result='拿起电话即可接听'
+            console.log(this.PhoneInfo)
+        })
+        
+        console.log(this.phonenumber)
       }
       if(val=='hookoff' && this.keys &&this.isclick)
       {
         console.log(this.keys)
         this.telmsg='去电'
         this.$LUBOX.ubox_dialnum(this.keys) 
-      }
+            GetUserInfoByTelOrPhoneNum({tel:this.keys}).then(res=>{
+
+        if(res.code==-1)
+         {
+          this.PhoneInfo.UserName='陌生来电'
+          this.PhoneInfo.UJob=''
+          this.PhoneInfo.DepName=''         
+         }
+         else
+         {
+          this.PhoneInfo.UserName=res.res.UserName
+          this.PhoneInfo.UJob=res.res.UJOB
+          this.PhoneInfo.DepName=res.res['ResferecDep.DepartmentName']
+         } 
+          // this.PhoneInfo.UserName =res.res.UserName
+          // this.PhoneInfo.UJob=res.res.UJOB
+          // this.PhoneInfo.DepName=res.res['ResferecDep.DepartmentName']
+          this.Phonevisible=true
+            console.log(this.PhoneInfo)
+        })        
+      }     
       if(val=='hookup' || val=='ringCancel')
-      {    
-        this.Phonevisible=false
-        this.isclick=false
-        this.keys=''
+      { 
+        // createPhoneRecord   
+        //1 去电
+        //2 来电
+        //3 未接来电
+
+        console.log(this.keys)
+        let PhoneStatus
+        PhoneStatus= this.telmsg=='去电'?1:2
+        if(val=='ringCancel')
+        {
+          PhoneStatus=3
+        }       
+        this.PhoneInfo.status=PhoneStatus
+        this.PhoneInfo.Intime=this.$moment().format('YYYY-MM-DD HH:mm:ss')
+        this.PhoneInfo.recordUrl=this.PHONEURL
+        this.PhoneInfo.DepID=this.depid
+        
+        createPhoneRecord(this.PhoneInfo).then(res=>{
+          console.log(res)
+          if(res)
+          {
+            this.Phonevisible=false
+            this.isclick=false
+            this.keys=''
+            this.telmsg=''
+          }
+        })
+      
+        
+        //来电人姓名UserName 
+        //来点人手机号PhoneNum
+        //来电人单位DepName
+        //来电状态status
+        //来电时间Intime
+        //来电录音地址recordUrl
+        console.log(PhoneStatus)
+        console.log(this.PhoneInfo)
+        console.log(this.PHONEURL)       
+        console.log(this.depid)
         console.log(this.keys+'_'+this.result)
       }      
     },
   
-    
+    // getPhoneStatus(val)
+    // {
+    //     let status
+    //     switch(val) {
+    //     case 'ringCancel'://来电未接
+    //         status=3
+    //         break;
+    //     case 'hookoff'://去电
+    //         status=1
+    //         break;
+    //     case 'callerId'://来电
+    //         status=2
+    //         break;
+    //     default:
+            
+    // } 
+    // return status
+    // },
    
      filter(inputValue, path) {
        

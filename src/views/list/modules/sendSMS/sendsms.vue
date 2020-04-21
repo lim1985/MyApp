@@ -248,7 +248,8 @@ export default {
             {            // params.mobiles
               
                   let data={//组成一条发送记录插入数据库
-                          DepID:params.DepID,                         
+                          DepID:params.DepID,    
+                          DPname:this.Pupuarr[x].DPname,              
                           mobile:this.Pupuarr[x].Phone,
                           GuID:this.GuID,//唯一组ID 
                           TID:_json.msgGroup,//短信宝返回的唯一发送ID
@@ -268,7 +269,6 @@ export default {
       })
       .then(r=>{
         let newSmsCount=0
-
         newSmsCount =this.SmsCount-r.length<=0?0:this.SmsCount-r.length    
         console.log(newSmsCount)
  UpdateDepSmsCount({DepID:params.DepID,SMSCount:newSmsCount})

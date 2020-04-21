@@ -57,6 +57,7 @@
         </a-table>
       </a-tab-pane>
     </a-tabs>
+    <PhoneModal ref="PhoneModal"/>
     <!-- <UpdateUserModal ref="UpdateUserPhonemodal" @ok="handleSaveOk" @close="handleSaveClose"/> -->
   </div>
 </template>
@@ -79,6 +80,11 @@
       dataIndex: 'UserName',
       width: 100,
     },
+     {
+      title: '单位名称',
+      dataIndex: 'DPname',
+      width: 160,
+    },    
     //   {
     //   title: '组ID',
     //   dataIndex: 'TID',
@@ -87,7 +93,7 @@
     {
       title: '短信内容',
       dataIndex: 'SMSContent',
-       width: 720,
+       width: 660,
     },
     {
       title: '发送状态',
@@ -135,6 +141,12 @@
       width: 120,
     },
     {
+      title: '单位名称',
+      dataIndex: 'moDepName',
+      width: 160,
+    },
+    
+    {
       title: '手机号',
       dataIndex: 'moible',
       width: 120,
@@ -147,7 +159,7 @@
     {
       title: '回复内容',
       dataIndex: 'moContent',
-       width: 680,
+       width: 600,
     },
     // {
     //   title: '发送状态',
@@ -195,6 +207,7 @@
 //  import UpdateUserModal from '@views/list/modules/UserPhone/UpdateUserPhone'
  import {  GetSmsRecord ,GetSmsmo} from '@/api/manage'
  import moment from 'moment'
+ import PhoneModal from '@/views/list/modules/PhoneMsg/Phone'
 //  import { mapState} from 'vuex'
   export default {
     name:"SmsrecordLayout",
@@ -221,6 +234,7 @@
       }
     },
      components: {
+       PhoneModal
       // UpdateUserModal,
      
     },
@@ -319,7 +333,8 @@
             return {
               ID:item.ID,
               UserName:item.UserName,
-              TID:item.TID,
+              DPname:item.DPname,
+              TID:item.TID,            
               status:item.status,
               time:this.$moment(item.time,).format('YYYY-MM-DD HH:mm:ss'),
               SMSContent:item.SMSContent
@@ -349,16 +364,18 @@
              _obj.UserName=item.UserName
              _obj.moible=item.moible
              _obj.ID=item.ID,
+             _obj.moDepName=item.moDepName,
              _obj.moContent=item.moContent,
              _obj.sendtime=this.$moment(item.sendtime).format('YYYY-MM-DD HH:mm:ss')   //().format('YYYY-MM-DDTHH:mm:ss.SSS[Z]');
            _arr.push(_obj);
            });           
            resolve(_arr)
            }
-            })
+          })
           
             this.isloading=false
             this.Modata=await list
+            console.log(this.Modata)
         }
       
         // console.log(_key)
