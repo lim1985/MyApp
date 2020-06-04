@@ -201,7 +201,7 @@ export default {
    {
     //  CMCCSendSMS
       // console.log(this.SmsCount-1000<=0)
-     
+     console.log(`开始发送`)
      if(this.countSms==0)
        {
          alert('请选择联系人')
@@ -209,7 +209,7 @@ export default {
        }   
       if(this.SmsCount==0)
     {
-        this.$message.error('您的短信余额不足，请充值。');
+        this.$message.error('您的短信余额不足，请联系运营商客户经理');
         return 
     }
        this.sendedCount=0
@@ -220,8 +220,7 @@ export default {
        this.GuID=this.genID(1);     
        let params={}  
        let mobilesArr=[]
-       console.log(this.AdminID)       
-       console.log(this.Pupuarr)
+      
      
          for(let x in this.Pupuarr)
       {
@@ -230,19 +229,20 @@ export default {
             mobilesArr.push(this.Pupuarr[x].Phone)            
         }
       }
-      let strMobiles=mobilesArr.join(',');    //生成发送号码串  
+      let strMobiles=mobilesArr.join(',');    //生成发送号码串     
       params.mobiles=strMobiles
       params.content=this.vmodelContent
       params.DepID=this.IsSendSms[0]//选出权限内第一个单位的部门ID
       params.soucers=1  //普通短信发送  
-      console.log(params);
-         newChinaCMCCSendSMS(params).then(r=>{  
+    
+      let smsArr=   newChinaCMCCSendSMS(params).then(r=>{  
            console.log(r)       
            let _json= JSON.parse(r.res)  
-           let _smsArr=[]  
-              
+           let _smsArr=[]
+           console.log(_json)
         if(_json.rspcod=='success' && _json.success==true)
-        {   for(let x in this.Pupuarr)
+        {  
+           for(let x in this.Pupuarr)
           {
               if(!this.Pupuarr[x].checked==false)      
             {            // params.mobiles
@@ -266,15 +266,25 @@ export default {
         }   
         //"{"msgGroup":"0129002605000000904249","rspcod":"success","success":true}"
        return _smsArr
+      }).catch(err=>{
+        alert(err)
       })
-      .then(r=>{
+      let r=await smsArr;
+      console.log(r)
+//       .then(async r=>{
+        if(!r ||r.length==0)
+        {
+          alert(`短信发送失败`)
+          return false
+        }
         let newSmsCount=0
         newSmsCount =this.SmsCount-r.length<=0?0:this.SmsCount-r.length    
-        console.log(newSmsCount)
- UpdateDepSmsCount({DepID:params.DepID,SMSCount:newSmsCount})
- this.$store.commit("SET_COUNT", newSmsCount);   
+      
+         await UpdateDepSmsCount({DepID:params.DepID,SMSCount:newSmsCount})
+         this.$store.commit("SET_COUNT", newSmsCount);   
+
  SmsAddrecord(r).then(res=>{//写入本地数据库以后记录 返回 GUID 
-                console.log(res)
+              console.log(res)
                 let _GUID= this.GuID
                 let _Data={
                     GUID:_GUID
@@ -293,12 +303,15 @@ export default {
                        }                                         
                      })
                 }, 4000);      //4秒执行一次查询        
+             }).catch(err=>{
+               alert(err)
              })
 
-      })
+    
    },
    async sendsms()
    {    
+     console.log(`点了`)
        if(this.countSms==0)
        {
          alert('短信条数余额为0，请购买短信。')
@@ -332,7 +345,7 @@ export default {
          return res
        })
        .then(r=>{
-        //  console.log(r)
+         console.log(r)
          let _arr= r.code.split(/[\s\n]/)
           console.log(_arr)
        let data={//组成一条发送记录插入数据库
@@ -347,7 +360,8 @@ export default {
               }
               return data
          })
-        .then(data=>{                 
+        .then(data=>{       
+          console.log(data)          
              SmsAddrecord(data).then(res=>{//写入本地数据库以后记录 返回 GUID 
                 let _GUID=res.result.GuID
                 let _Data={

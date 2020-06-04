@@ -22,7 +22,7 @@
           <a href="_self">条款</a>
         </div>
         <div class="copyright">
-          Copyright &copy; 2019 技术支持：大祥区电政办（0739-5396272）
+          Copyright &copy; 2019 
         </div>
       </div>
     </div>

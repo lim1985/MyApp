@@ -114,20 +114,20 @@ const api = {
   IsReference:'/api/IsReference',//用于判断该单位是否引用过该用户{DEPid，userid}999
   
  //发短信接口
-   sendsms:'http://api.dxzc.gov.cn:3000/api/sendsms',
+   sendsms:'http://59.230.230.39:3000/api/sendsms',
    GetVerificatCode:'/api/GetVerificatCode',   
-   smsstatus:'http://api.dxzc.gov.cn:3000/api/status',
-   SmsAddRecord:'http://api.dxzc.gov.cn:3000/api/smsAddrecord',
-   smssucceedcount:'http://api.dxzc.gov.cn:3000/api/GetSmsSucceedCount',
-   ChinaCMCCSendSMS:'http://api.dxzc.gov.cn:3000/api/sendCMCC',
-   newChinaCMCCSendSMS:'http://api.dxzc.gov.cn:3000/api/newsendCMCC',
-   GetSmsRecord:'http://api.dxzc.gov.cn:3000/api/getsmsrecord',
-   GetSmsmo:'http://api.dxzc.gov.cn:3000/api/getsmsmo',
+   smsstatus:'http://59.230.230.39:3000/api/status',
+   SmsAddRecord:'http://59.230.230.39:3000/api/smsAddrecord',
+   smssucceedcount:'http://59.230.230.39:3000/api/GetSmsSucceedCount',
+   ChinaCMCCSendSMS:'http://59.230.230.39:3000/api/sendCMCC',
+   newChinaCMCCSendSMS:'http://59.230.230.39:3000/api/newsendCMCC',
+   GetSmsRecord:'http://59.230.230.39:3000/api/getsmsrecord',
+   GetSmsmo:'http://59.230.230.39:3000/api/getsmsmo',
   //  api.dxzc.gov.cn:3000/api/getsmsmo?DepID=158
    
 //通过省里的深度融合接口返回数据
    //http://api.dxzc.gov.cn:3000/api/getalluserinfo
-   GetUserInformation:'http://api.dxzc.gov.cn:3000/api/getalluserinfo',
+   GetUserInformation:'http://59.230.230.39:3000/api/getalluserinfo',
    //添加自定义组
    CreateCustomGroup:'/api/createGroup',
    GetCustomGroup:'/api/GetGroup',

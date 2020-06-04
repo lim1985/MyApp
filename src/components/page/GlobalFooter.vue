@@ -1,7 +1,7 @@
 <template>
   <div class="footer">
     <div class="links">
-      <a href="#" target="_blank">首页</a>
+      <a href="#" target="_blank">返回首页</a>
       <!-- <a href="https://github.com/ant-design/ant-design-pro" target="_blank">
         <a-icon type="github"/>
       </a>
@@ -11,7 +11,7 @@
     <div class="copyright">
       Copyright
       <a-icon type="copyright"/>
-      2018 <span>大祥区信息中心技术支持</span>
+      2019 <span></span>
     </div>
   </div>
 </template>

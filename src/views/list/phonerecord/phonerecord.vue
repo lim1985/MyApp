@@ -23,7 +23,7 @@
       
       <span slot="action" slot-scope="text, record">
         <!-- <a @click="hearRecord(record)">重发</a> -->
-        <a :href="'http://127.0.0.1:8808/'+record.recordUrl" target="_blank">听录音</a>
+        <a v-if="record.recordUrl" :href="'http://127.0.0.1:8808/'+record.recordUrl" target="_blank">听录音</a>
         <a-divider type="vertical" />
         <!-- <a href="javascript:;">Delete</a>
         <a-divider type="vertical" />

@@ -611,8 +611,10 @@
       }      
     },
   watch: {
-    '$route'()
+    '$route'(to,from)
     {        
+      console.log(to)
+      console.log(from)
       console.log(this.$route.meta)
       this.$store.commit('SET_DEPKEY',this.$route.meta.permission[0]);     
       this.$refs.mytable.refresh()     
