@@ -1,6 +1,6 @@
-// import Vue from 'vue'
+ import Vue from 'vue'
 // import { login, getAdminInfo, getInfo,logout } from "@/api/login"
-// import { ACCESS_TOKEN ,User_ID} from "@/store/mutation-types"
+import { PHONE_UrI } from "@/store/mutation-types"
 // import { welcome } from "@/utils/util"
 
 const UBOX = {
@@ -24,12 +24,13 @@ const UBOX = {
     },
     SET_PHONEURL: (state, PHONEURL) => {
       state.PHONEURL = PHONEURL
+      Vue.ls.set(PHONE_UrI,PHONEURL)
     },
     SET_TYPE: (state, Type) => {
       state.Type = Type
     },
     SET_PHONENUMER: (state, PhoneNumber) => {
-      state.PhoneNumber = PhoneNumber
+            state.PhoneNumber = PhoneNumber           
     },
     SET_NUMKEY: (state, NumKey) => {
       state.Numkeys+= NumKey

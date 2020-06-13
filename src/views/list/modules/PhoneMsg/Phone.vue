@@ -45,6 +45,8 @@
 </template>
 
 <script> 
+   import Vue from 'vue'
+   import { PHONE_BODY ,PHONE_UrI,PHONE_NUM} from "@/store/mutation-types"
    import { mapState} from 'vuex'
    import { GetUserInfoByTelOrPhoneNum,createPhoneRecord} from '@/api/manage'
    import Validate from '@/tools/Validate/index'
@@ -115,11 +117,12 @@ export default {
       Phoneurl(val)
       {         
         console.log(val)
-        this.PHONEURL=val;              
+        this.PHONEURL=val    
       },
-       phonenumber(val)
-      {         
-        this.PhoneNumber=val;              
+       phonenumber(newval)
+      {               
+        this.PhoneNumber=newval;    
+        console.log(newval)          
       },
        'handleID':{
          handler(value){
@@ -140,6 +143,7 @@ export default {
       }
    },
   async mounted(){   
+   
         console.log(`getPhoneModel`)
     // console.log(`event`)
     // console.log(this.Events)
@@ -212,21 +216,47 @@ export default {
         {         
           this.result='电话接通中...'
         }   
-      this.PhoneInfo.PhoneNum=this.keys
+     
       console.log(val)
+         this.PhoneInfo={}
+         GetUserInfoByTelOrPhoneNum({tel:val}).then(res=>{
+         if(res.code==-1)
+         {
+          this.PhoneInfo.UserName='陌生号码'
+          this.PhoneInfo.UJob=''
+          this.PhoneInfo.DepName=''         
+         }
+         else
+         {
+          this.PhoneInfo.UserName=res.res.UserName
+          this.PhoneInfo.UJob=res.res.UJOB
+          this.PhoneInfo.DepName=res.res['ResferecDep.DepartmentName']
+         }      
+          this.PhoneInfo.PhoneNum=this.keys    
+           Vue.ls.set(PHONE_NUM,this.keys) 
+          this.Phonevisible=true
+          this.result=''
+          // this.result='拿起电话即可接听'
+          
+        })
     },
     showPhone(val){
       console.log(val)
       this.result=''   
       if(val=='hookoff' || this.Types==0)
       {            
-          // this.Phonevisible=false          
+          // this.Phonevisible=false  
+          console.log(`进这里面了`) 
+          this.Phonevisible=true   
+          this.telmsg='去电'    
           this.result='请输入号码'           
       }
       if(val=='callerId')
       { 
       
-        this.keys=this.phonenumber        
+        this.keys=  this.phonenumber
+        Vue.ls.set(PHONE_NUM,this.keys) 
+        //  console.log(this.phonenumber)   
         this.telmsg='来电'
        GetUserInfoByTelOrPhoneNum({tel:this.keys}).then(res=>{
          if(res.code==-1)
@@ -246,17 +276,16 @@ export default {
           this.result=''
           // this.result='拿起电话即可接听'
             console.log(this.PhoneInfo)
-        })
-        
-        console.log(this.phonenumber)
+        })        
       }
       if(val=='hookoff' && this.keys &&this.isclick)
       {
         console.log(this.keys)
+
         this.telmsg='去电'
         this.$LUBOX.ubox_dialnum(this.keys) 
+        Vue.ls.set(PHONE_NUM,this.keys) 
             GetUserInfoByTelOrPhoneNum({tel:this.keys}).then(res=>{
-
         if(res.code==-1)
          {
           this.PhoneInfo.UserName='陌生来电'
@@ -282,20 +311,42 @@ export default {
         //1 去电
         //2 来电
         //3 未接来电
-
+        console.log(`取消了`)
         console.log(this.keys)
-        let PhoneStatus
-        PhoneStatus= this.telmsg=='去电'?1:2
+        let PhoneStatus= this.telmsg=='去电'?1:2
+        console.log(this.telmsg)
         if(val=='ringCancel')
         {
           PhoneStatus=3
-        }       
+        }             
+    // || Vue.ls.get(PHONE_NUM)   
+        let _phonenNum=Vue.ls.get(PHONE_NUM)  
+        //        GetUserInfoByTelOrPhoneNum({tel:_phonenNum}).then(res=>{
+        // if(res.code==-1)
+        //  {
+        //   this.PhoneInfo.UserName='陌生来电'
+        //   this.PhoneInfo.UJob=''
+        //   this.PhoneInfo.DepName=''         
+        //  }
+        //  else
+        //  {
+        //   this.PhoneInfo.UserName=res.res.UserName
+        //   this.PhoneInfo.UJob=res.res.UJOB
+        //   this.PhoneInfo.DepName=res.res['ResferecDep.DepartmentName']
+        //  }       
+        // })    
+        this.PhoneInfo.PhoneNum=_phonenNum    
         this.PhoneInfo.status=PhoneStatus
         this.PhoneInfo.Intime=this.$moment().format('YYYY-MM-DD HH:mm:ss')
-        this.PhoneInfo.recordUrl=this.PHONEURL
-        this.PhoneInfo.DepID=this.depid
-        
-        createPhoneRecord(this.PhoneInfo).then(res=>{
+        this.PhoneInfo.recordUrl=this.PHONEURL|| Vue.ls.get(PHONE_UrI)           
+        this.PhoneInfo.DepID=this.depid    
+     
+         Vue.ls.set(PHONE_BODY, this.PhoneInfo) 
+          //  Vue.ls.set(fromUrl, this.$route.fullPath);
+        // console.log(this.PhoneInfo)
+        let _phoneBody=Vue.ls.get(PHONE_BODY);
+        console.log(_phoneBody)
+        createPhoneRecord(_phoneBody).then(res=>{
           console.log(res)
           if(res)
           {
@@ -303,10 +354,12 @@ export default {
             this.isclick=false
             this.keys=''
             this.telmsg=''
+            Vue.ls.set(PHONE_BODY,'')
           }
         })
       
-        
+         this.Phonevisible=false
+         this.isclick=false
         //来电人姓名UserName 
         //来点人手机号PhoneNum
         //来电人单位DepName
@@ -320,6 +373,7 @@ export default {
         console.log(this.keys+'_'+this.result)
       }      
     },
+  
   
     // getPhoneStatus(val)
     // {

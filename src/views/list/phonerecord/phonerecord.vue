@@ -12,6 +12,9 @@
       :scroll="{ y: 680 }"
       :rowKey="data => data.ID"
     >
+      <template slot="Tel" slot-scope="text">
+        <a @click="GetUboxToTel(text)">{{ text }}</a>
+      </template>
       <template slot="F_recordTime" slot-scope="text">
         {{ text|F_formatTime }} 
       </template>
@@ -67,7 +70,8 @@
     {
       title: '来电号码',
       dataIndex: 'PhoneNum',
-       width: 200,
+      width: 200,
+      scopedSlots: { customRender: 'Tel' },
     },
     {
       title: '状态',
@@ -116,13 +120,14 @@
  import { GetRecordList } from '@/api/manage'
  import moment from 'moment'
  import PhoneModal from '@/views/list/modules/PhoneMsg/Phone'
+ 
 //  import { mapState} from 'vuex'
   export default {
     name:"PhonerecordLayout",
      filters:{
        F_formatTime:function(value)
        {
-         console.log(value)
+        
             return moment(value).format('YYYY-MM-DD HH:mm:ss') 
         //  return !value.users?value.Group.GroupName:value.users.UserName       
        },
@@ -200,6 +205,7 @@
       // })   
     },
     mounted(){
+      
       console.log(this.$route.path)
       this.DepID=this.$route.path.split('/')[3]
       // this.callback(1);
@@ -211,6 +217,10 @@
       
     },
     methods: {
+        GetUboxToTel(e)
+      {
+        this.$refs.PhoneModal.get(e)          
+      },
       async GetRecordList(DEPID)
       {
          let result=await GetRecordList({DepID:DEPID})
