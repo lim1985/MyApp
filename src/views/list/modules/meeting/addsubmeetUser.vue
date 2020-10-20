@@ -1,6 +1,6 @@
 <template>
   <div>
-   <a-modal
+    <a-modal
       title="选择自定义组"
       :width="400"
       :afterClose="isclose"
@@ -17,8 +17,8 @@
               style="width: 200px"                     
               @change="customGrouphandleChange"              
             >
-    <a-select-option v-for="d in customGroupdata" :key="d.value">{{d.text}}</a-select-option>
-  </a-select>
+              <a-select-option v-for="d in customGroupdata" :key="d.value">{{ d.text }}</a-select-option>
+            </a-select>
             <!-- <a-cascader placeholder="选择部门类别" :options="options" @change="onChangeDeplist" :showSearch="{ filter }" :defaultValue="DepValue" /> -->
             <!-- <a-cascader placeholder="选择部门类别" v-decorator="['DepKeylist',{initialValue:this.DepValue,rules: [{ required: true, message: '部门不能为空！' }]}]" :showSearch="{filter}" :options="options" @change="onChangeDeplist"/>
              -->
@@ -37,28 +37,28 @@
     >
       <a-spin :spinning="confirmLoading">
         <a-form :form="form">   
-           <a-form-item   
+          <a-form-item   
             v-bind="formItemLayout"         
             label='参会人姓名/组'
             hasFeedback         
           >
-          <a-input  
-            @change="onSearchPhoneUser"            
-            placeholder='请输入参会人姓名/组' 
-            v-decorator="['chairManGroupName',{rules: [{ required: true },{ validator:v().checkcharacter }]}]">
-          <a-select
-            @change="selectGroup"
-            slot="addonBefore"
-            v-decorator="['prefix2', { initialValue: '1' }]"
-            style="width: 80px"
-        >
-          <a-select-option value="1">
-           姓名
-          </a-select-option>
-          <a-select-option value="2">
-           组名
-          </a-select-option>
-        </a-select> 
+            <a-input  
+              @change="onSearchPhoneUser"            
+              placeholder='请输入参会人姓名/组' 
+              v-decorator="['chairManGroupName',{rules: [{ required: true },{ validator:v().checkcharacter }]}]">
+              <a-select
+                @change="selectGroup"
+                slot="addonBefore"
+                v-decorator="['prefix2', { initialValue: '1' }]"
+                style="width: 80px"
+              >
+                <a-select-option value="1">
+                  姓名
+                </a-select-option>
+                <a-select-option value="2">
+                  组名
+                </a-select-option>
+              </a-select> 
               
             </a-input>          
           </a-form-item>
@@ -88,7 +88,7 @@
     >
      
     </a-modal> -->
-     <!-- <a-table :columns="columns" :dataSource="AddUserData">
+    <!-- <a-table :columns="columns" :dataSource="AddUserData">
         <a slot="name" slot-scope="text" href="javascript:;">{{ text }}</a>
         <span slot="customTitle"><a-icon type="smile-o" /> 姓名</span>      
         <span slot="action" slot-scope="text, record">   
@@ -101,8 +101,8 @@
 <script>
  
   import { mapState} from 'vuex'
-  import {GetUserInformationByUserNameLIke,GetCustomGroupByDepID,createMeet,createSubmeetingUser} from '@/api/manage'//Select_PermissionsByRolesID,getUserrolesbyAdminID,AddPhoneUser,ReferenceAdd,
-  import { Promise } from 'q';
+  import {GetUserInformationByUserNameLIke,GetCustomGroupByDepID,createSubmeetingUser} from '@/api/manage'//Select_PermissionsByRolesID,getUserrolesbyAdminID,AddPhoneUser,ReferenceAdd,createMeet
+  // import { Promise } from 'q';
   import Validate from '@/tools/Validate/index'
   // import { error } from 'util';
   import _ from 'lodash'

@@ -27,6 +27,7 @@ class LUbox {
 	console.log('电话拿起了')
 	store.commit('SET_EVENT',event)	
 	ubox.lines[uboxhdl].state =  UBOX_STATE_HOOK_OFF;
+	hdl=ubox.lines[uboxhdl].handle
 	LUbox.ubox_RecordFile();//开始录音
 }
 	static ubox_DeviceAlarm(uboxhdl, type)

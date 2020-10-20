@@ -4,14 +4,14 @@ const path = require('path')
 //用于生产环境去除多余的css
 // const PurgecssPlugin = require("purgecss-webpack-plugin");
 //压缩代码并去掉console
- const TerserPlugin = require("terser-webpack-plugin");
+const TerserPlugin = require("terser-webpack-plugin");
 //代码打包zip
-  //  const CompressionWebpackPlugin = require("compression-webpack-plugin");
-  //  const productionGzipExtensions = /\.(js|css|json|txt|html|ico|svg)(\?.*)?$/i;
+//  const CompressionWebpackPlugin = require("compression-webpack-plugin");
+//  const productionGzipExtensions = /\.(js|css|json|txt|html|ico|svg)(\?.*)?$/i;
 // //
 //  const isProduction = process.env.NODE_ENV === 'production'
- const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
- function resolve (dir) {
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+function resolve (dir) {
   return path.join(__dirname, dir)
 }
 
@@ -34,42 +34,42 @@ module.exports = {
     }
   },
   */
- //打包配置开始
-//  configureWebpack: config => {
-//   const plugins = [];
-//  // 启用代码压缩
-//   plugins.push(
-//     new TerserPlugin({
-//       terserOptions: {
-//         compress: {
-//           warnings: false,
-//           drop_console: true,
-//           drop_debugger: false,
-//           pure_funcs: ["console.log"] //移除console
-//         }
-//       },
-//       sourceMap: false,
-//       parallel: true
-//     })
-//   ),
-//    // 代码压缩打包
-//     // plugins.push(
-//     //   new CompressionWebpackPlugin({
-//     //     filename: "[path].gz[query]",
-//     //     algorithm: "gzip",
-//     //     test: productionGzipExtensions,
-//     //     threshold: 10240,
-//     //     minRatio: 0.8
-//     //   })
-//     // );
-//     plugins.push(
-//       new BundleAnalyzerPlugin()
-//     );
-//   config.plugins = [...config.plugins, ...plugins];
-// },
-//显示项目架构
- 
- configureWebpack: {
+  //打包配置开始
+  //  configureWebpack: config => {
+  //   const plugins = [];
+  //  // 启用代码压缩
+  //   plugins.push(
+  //     new TerserPlugin({
+  //       terserOptions: {
+  //         compress: {
+  //           warnings: false,
+  //           drop_console: true,
+  //           drop_debugger: false,
+  //           pure_funcs: ["console.log"] //移除console
+  //         }
+  //       },
+  //       sourceMap: false,
+  //       parallel: true
+  //     })
+  //   ),
+  //    // 代码压缩打包
+  //     // plugins.push(
+  //     //   new CompressionWebpackPlugin({
+  //     //     filename: "[path].gz[query]",
+  //     //     algorithm: "gzip",
+  //     //     test: productionGzipExtensions,
+  //     //     threshold: 10240,
+  //     //     minRatio: 0.8
+  //     //   })
+  //     // );
+  //     plugins.push(
+  //       new BundleAnalyzerPlugin()
+  //     );
+  //   config.plugins = [...config.plugins, ...plugins];
+  // },
+  //显示项目架构
+
+  configureWebpack: {
     // performance: {
     //   hints:false
     // }
@@ -86,7 +86,7 @@ module.exports = {
     //     return assetFilename.endsWith('.js');
     //   }
     // }
- },  
+  },
   chainWebpack: (config) => {
     config.resolve.alias
       .set('@$', resolve('src'))
@@ -116,7 +116,7 @@ module.exports = {
   devServer: {
     open: true,
     port: 8080,
-   
+
     proxy: {
       //https://daxiang-wap.rednet.cn
       '/getrednetlive': {
@@ -124,33 +124,33 @@ module.exports = {
         ws: true,  // proxy websockets 
         changeOrigin: true,  // needed for virtual hosted sites
         pathRewrite: {
-            '^/getrednetlive': ''  // rewrite path
+          '^/getrednetlive': ''  // rewrite path
         }
-    },
-        '/apis': {
-            target: 'http://zwfw.hunan.gov.cn/hnvirtualhall/yzCertificatenodo.jsp',  // target host
-            ws: true,  // proxy websockets 
-            changeOrigin: true,  // needed for virtual hosted sites
-            pathRewrite: {
-                '^/apis': ''  // rewrite path
-            }
-        },
-        '/api': {
-          target: 'https://www.hnroger.com/',  // target host
-          ws: true,  // proxy websockets 
-          changeOrigin: true,  // needed for virtual hosted sites
-          secure:true,
-          pathRewrite: {
-              '^/api': 'user/auth'  // rewrite path
-          }
       },
-      '/getCode':{
-        target:'https://www.hnroger.com/user/getcode',
-        ws:true,
+      '/apis': {
+        target: 'http://zwfw.hunan.gov.cn/hnvirtualhall/yzCertificatenodo.jsp',  // target host
+        ws: true,  // proxy websockets 
         changeOrigin: true,  // needed for virtual hosted sites
-        secure:true,
         pathRewrite: {
-            '^/getCode': ''  // rewrite path
+          '^/apis': ''  // rewrite path
+        }
+      },
+      '/api': {
+        target: 'https://www.hnroger.com/',  // target host
+        ws: true,  // proxy websockets 
+        changeOrigin: true,  // needed for virtual hosted sites
+        secure: true,
+        pathRewrite: {
+          '^/api': 'user/auth'  // rewrite path
+        }
+      },
+      '/getCode': {
+        target: 'https://www.hnroger.com/user/getcode',
+        ws: true,
+        changeOrigin: true,  // needed for virtual hosted sites
+        secure: true,
+        pathRewrite: {
+          '^/getCode': ''  // rewrite path
         }
       },
       '/yuqinglogin': {
@@ -159,9 +159,9 @@ module.exports = {
         changeOrigin: true,  // needed for virtual hosted sites
         // secure:true,
         pathRewrite: {
-            '^/yuqinglogin': ''  // rewrite path
+          '^/yuqinglogin': ''  // rewrite path
         }
-    },
+      },
 
       //https://jiance.hnroger.com
       //   '/ProxyLogin': {
@@ -206,6 +206,6 @@ module.exports = {
     //   //   }
     //   // }
     // }
-  } 
-  
+  }
+
 }
